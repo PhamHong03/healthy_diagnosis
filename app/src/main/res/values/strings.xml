@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">healthy_diagnosis</string>
+    <string name="app_logo">App Logo</string>
+    <string name="the_logo_text">The H&amp;D</string>
+    <string name="find_house">Bảo vệ sức khỏe</string>
+    <string name="login">ĐĂNG NHẬP</string>
+    <string name="continue_with">Tiếp tục với</string>
+    <string name="web_client_id">273718825037-ikp3v00l8rcqkthloe1doci95692jln4.apps.googleusercontent.com</string>
+    <string name="usecamera">Chọn ảnh từ thư viện</string>
+    <string name="roleDoctor">Tôi là Bác sĩ?</string>
+    <string name="roleCustomer">Tôi không phải Bác sĩ?</string>
+    <string name="booking">Hôm nay bạn thế nào?</string>
+    <string name="commitment">Tôi sẵn sàng chịu trách nhiệm dưới pháp luật, nếu thông tin cung cấp dưới đây là không đúng sự thật?</string>
+</resources>

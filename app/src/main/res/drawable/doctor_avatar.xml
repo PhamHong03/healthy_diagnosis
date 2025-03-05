@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="100dp"
+    android:height="100dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Màu xám xanh -->
+    <path
+        android:fillColor="#FF94A3B8"
+        android:pathData="M12,2C10.34,2 9,3.34 9,5C9,6.66 10.34,8 12,8C13.66,8 15,6.66 15,5C15,3.34 13.66,2 12,2M12,10C8.69,10 6,12.69 6,16V21H18V16C18,12.69 15.31,10 12,10M12,12C14.21,12 16,13.79 16,16V19H8V16C8,13.79 9.79,12 12,12Z"/>
+</vector>
