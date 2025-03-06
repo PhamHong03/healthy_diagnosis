@@ -25,6 +25,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.healthy_diagnosis.ui.theme.BlueGray
 import com.example.healthy_diagnosis.ui.theme.LightBlueWhite
+import com.example.healthy_diagnosis.ui.theme.LightPink
+import com.example.healthy_diagnosis.ui.theme.LightPink2
 
 @Composable
 fun SocialMedia(
@@ -59,11 +61,11 @@ fun Modifier.socialMedia() : Modifier = composed {
     if (isSystemInDarkTheme()) {
         background(Color.Transparent).border(
             width = 1.dp,
-            color = BlueGray,
+            color = Color(0xFFFFD8E0),
             shape = RoundedCornerShape(4.dp)
         )
     }else{
-        background(LightBlueWhite)
+        background(LightPink2)
     }
 }
 

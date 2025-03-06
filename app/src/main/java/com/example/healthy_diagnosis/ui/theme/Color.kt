@@ -16,7 +16,8 @@ val Pink40 = Color(0xFF7D5260)
 val Black = Color(0xFF000113)
 val LightBlueWhite = Color(0xFFF1F5F9)
 val BlueGray = Color(0xFF334155)
-
+val LightPink = Color(0xFFFFDCEC)
+val LightPink2 = Color(0xFFFFF0F5 )
 
 val ColorScheme.focusedTextFieldText
     @Composable

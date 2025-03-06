@@ -46,6 +46,7 @@ import com.example.healthy_diagnosis.core.utils.TextFieldLoginRegister
 import com.example.healthy_diagnosis.core.utils.TopSection
 import com.example.healthy_diagnosis.ui.theme.Black
 import com.example.healthy_diagnosis.ui.theme.BlueGray
+import com.example.healthy_diagnosis.ui.theme.LightPink
 import com.example.healthy_diagnosis.ui.theme.Roboto
 
 @Composable
@@ -67,6 +68,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(25.dp))
             SocialMediaSection()
             val uiColor: Color = if (isSystemInDarkTheme()) Color.White else Color.Black
+            Spacer(modifier = Modifier.height(10.dp))
             Box(
                 modifier = Modifier
                     .fillMaxHeight(fraction = 0.8f)
@@ -112,12 +114,12 @@ fun SignUpPromt(uiColor: Color) {
     }
     ClickableText(
         text = annotatedString,
-        onClick = { }
-//        { offset ->
-//            if (offset in signupStartIndex until (signupStartIndex + signUpText.length)) {
+        onClick =
+        { offset ->
+            if (offset in signupStartIndex until (signupStartIndex + signUpText.length)) {
 //                navController.navigate("signup")
-//            }
-//        }
+            }
+        }
     )
 }
 
@@ -167,7 +169,9 @@ fun LoginSection(
         isPasswordVisible = isPasswordVisible
     )
     Spacer(modifier = Modifier.height(7.dp))
-    Box(modifier = Modifier){
+    Box(
+        modifier = Modifier,
+    ){
         TextButton(onClick = {}) {
             Text(
                 text = "Quên mật khẩu?",
@@ -195,14 +199,23 @@ fun LoginSection(
         },
 //        enabled = authState.value != AuthState.Loading,
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSystemInDarkTheme()) BlueGray else Black,
+//            containerColor = if (isSystemInDarkTheme()) BlueGray else Black,
+            containerColor = LightPink,
             contentColor = Color.White
         ),
-        shape = RoundedCornerShape(size = 4.dp)
+        shape = RoundedCornerShape(size = 5.dp)
     ) {
         Text(
             text = "ĐĂNG NHẬP",
-            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium)
+            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Medium),
+            color = Color.Black,
+            fontWeight = FontWeight.Bold
         )
     }
+}
+
+@Composable
+@Preview(showBackground = true, showSystemUi = true)
+fun PreviewLogin(){
+    LoginScreen()
 }

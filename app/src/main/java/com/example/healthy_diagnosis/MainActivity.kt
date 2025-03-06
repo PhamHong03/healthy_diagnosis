@@ -12,7 +12,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.healthy_diagnosis.presentation.navigation.MyAppNavigation
 import com.example.healthy_diagnosis.ui.theme.Healthy_diagnosisTheme
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,9 +22,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Healthy_diagnosisTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
-
-                }
+                MyAppNavigation()
             }
         }
     }
