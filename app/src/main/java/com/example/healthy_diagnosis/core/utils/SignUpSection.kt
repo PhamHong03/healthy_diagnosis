@@ -54,7 +54,7 @@ fun SignUpSection(
     var username by remember {
         mutableStateOf("")
     }
-    var phone by remember {
+    var phoneNumber by remember {
         mutableStateOf("")
     }
     var password by remember {
@@ -62,6 +62,9 @@ fun SignUpSection(
     }
     var isPasswordVisible by remember { mutableStateOf(false) }
 
+    var role by remember {
+        mutableStateOf("account")
+    }
     val context = LocalContext.current
 //    LaunchedEffect(authState) {
 //        when (authState) {
@@ -98,8 +101,8 @@ fun SignUpSection(
             )
         },
         modifier = Modifier.fillMaxWidth(),
-        textInput = phone,
-        onTextChanged = {phone = it}
+        textInput = phoneNumber,
+        onTextChanged = {phoneNumber = it}
     )
     Spacer(modifier = Modifier.height(10.dp))
     TextFieldLoginRegister(

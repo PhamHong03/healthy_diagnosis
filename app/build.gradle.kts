@@ -71,6 +71,8 @@ dependencies {
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.room.ktx)
     kapt(libs.hilt.android.compiler)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
