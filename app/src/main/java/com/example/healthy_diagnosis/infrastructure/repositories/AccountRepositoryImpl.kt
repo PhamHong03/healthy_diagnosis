@@ -7,6 +7,7 @@ import com.example.healthy_diagnosis.domain.usecases.register.RegisterResponse
 import com.example.healthy_diagnosis.domain.repositories.AccountRepository
 import com.example.healthy_diagnosis.domain.usecases.register.RegisterRequest
 import com.example.healthy_diagnosis.infrastructure.datasources.AccountDAO
+import com.example.healthy_diagnosis.infrastructure.datasources.AppDatabase
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import okhttp3.ResponseBody
@@ -15,9 +16,11 @@ import kotlinx.coroutines.tasks.await
 import retrofit2.Response
 
 class AccountRepositoryImpl (
-    private val accountDao : AccountDAO,
+    private val database: AppDatabase,
     private val apiService: ApiService
 ): AccountRepository {
+    private val accountDao = database.accountDao()
+
     override suspend fun insertAccount(account: AccountEntity) {
         accountDao.insertAccount(account)
     }

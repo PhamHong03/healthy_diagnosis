@@ -10,12 +10,12 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
     private val BASE_URL = "http://192.168.1.6:5000"
+
     @Provides
     @Singleton
     fun provideRetrofit(): Retrofit {
@@ -25,6 +25,7 @@ object NetworkModule {
             .client(OkHttpClient.Builder().build())
             .build()
     }
+
     @Provides
     @Singleton
     fun provideApiService(retrofit: Retrofit): ApiService {

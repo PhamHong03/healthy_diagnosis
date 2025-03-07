@@ -1,7 +1,7 @@
 package com.example.healthy_diagnosis.domain.repositories
 
-
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -9,12 +9,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class FirebaseAuthRepository @Inject constructor(
-    private val firebaseAuth: FirebaseAuth
-) {
+class FirebaseAuthRepository @Inject constructor() {
     suspend fun registerFirebaseUser(email: String, password: String): Result<String> =
         suspendCoroutine { continuation ->
-            firebaseAuth.createUserWithEmailAndPassword(email, password)
+            Firebase.auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         continuation.resume(Result.success("Đăng ký thành công!"))
@@ -26,7 +24,7 @@ class FirebaseAuthRepository @Inject constructor(
 
     suspend fun loginFirebaseUser(email: String, password: String): Result<String> =
         suspendCoroutine { continuation ->
-            firebaseAuth.signInWithEmailAndPassword(email, password)
+            Firebase.auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         continuation.resume(Result.success("Đăng nhập thành công!"))
@@ -38,7 +36,7 @@ class FirebaseAuthRepository @Inject constructor(
 
     suspend fun getFirebaseToken(): String? {
         return try {
-            val user = firebaseAuth.currentUser ?: return null
+            val user = Firebase.auth.currentUser ?: return null
             val tokenResult = user.getIdToken(true).await()
             tokenResult.token
         } catch (e: Exception) {

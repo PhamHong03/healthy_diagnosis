@@ -15,42 +15,12 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-@Module
+@Module(
+    includes = [
+        NetworkModule::class,
+        DatabaseModule::class,
+        RepositoryModule::class
+    ]
+)
 @InstallIn(SingletonComponent::class)
-object AppModule {
-
-    @Provides
-    @Singleton
-    fun provideDatabase(context: Context): AppDatabase {
-        return AppDatabase.getDatabase(context)
-    }
-
-//    @Provides
-//    fun provideAccountDAO(database: AppDatabase): AccountDAO {
-//        return database.accountDAO()
-//    }
-
-    @Provides
-    @Singleton
-    fun provideAccountRepository(
-        accountDAO: AccountDAO,
-        apiService: ApiService
-    ): AccountRepository {
-        return AccountRepositoryImpl(accountDAO, apiService)
-    }
-
-    @Provides
-    @Singleton
-    fun provideRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl("https://your-api-url.com/") // ⚠️ Cần thay thế bằng URL API thực tế
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiService {
-        return retrofit.create(ApiService::class.java)
-    }
-}
+object AppModule {}
