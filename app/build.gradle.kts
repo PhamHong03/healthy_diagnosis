@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.dagger.hilt)
+    alias(libs.plugins.ksp)
     kotlin("kapt")
 }
 
@@ -43,7 +45,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.13"
+        kotlinCompilerExtensionVersion = "1.5.12"
     }
     packaging {
         resources {
@@ -53,13 +55,13 @@ android {
 }
 
 dependencies {
+
+    implementation(libs.ksp.processing)
+    implementation("com.squareup:javapoet:1.11.1")
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-
     implementation(libs.material3)
-
 //    implementation(libs.firebase.auth.ktx)
     implementation(libs.play.services.auth)
-
     implementation(libs.hilt.android)
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.androidx.navigation.testing)
@@ -74,18 +76,14 @@ dependencies {
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
     kapt(libs.hilt.android.compiler)
-    kapt(libs.hilt.compiler)
+//    kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
-
     implementation(libs.coil.compose)
-
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
-
     implementation(libs.compose.compiler)
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

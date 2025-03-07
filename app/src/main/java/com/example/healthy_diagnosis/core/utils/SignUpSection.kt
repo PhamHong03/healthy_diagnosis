@@ -1,8 +1,6 @@
 package com.example.healthy_diagnosis.core.utils
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,7 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,17 +33,16 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.healthy_diagnosis.ui.theme.Black
-import com.example.healthy_diagnosis.ui.theme.BlueGray
+import com.example.healthy_diagnosis.domain.usecases.register.RegisterRequest
+import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 import com.example.healthy_diagnosis.ui.theme.LightPink
 import com.example.healthy_diagnosis.ui.theme.Roboto
 
 @Composable
 fun SignUpSection(
-
+    navController: NavController,
+    viewModel: AuthViewModel
 ) {
-
-//    val authState by authViewModel.authState.observeAsState()
 
     var email by remember {
         mutableStateOf("")
@@ -65,19 +61,6 @@ fun SignUpSection(
     var role by remember {
         mutableStateOf("account")
     }
-    val context = LocalContext.current
-//    LaunchedEffect(authState) {
-//        when (authState) {
-//            is AuthState.Authenticated -> {
-//                navController.navigate("login")
-//            }
-//            is AuthState.Error -> {
-//                val errorMessage = (authState as AuthState.Error).message
-//                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-//            }
-//            else -> Unit
-//        }
-//    }
 
     TextFieldLoginRegister(
         label = "Tên của bạn",
@@ -137,10 +120,16 @@ fun SignUpSection(
     Button(
         modifier = Modifier.fillMaxWidth(),
         onClick = {
-//            authViewModel.signup(email,password,username, phone)
+            val accountRequest = RegisterRequest(
+                email = email,
+                password = password,
+                username = username,
+                phone_number = phoneNumber,
+                role = role
+            )
+            viewModel.registerAccount(accountRequest)
         },
         colors = ButtonDefaults.buttonColors(
-//            containerColor = if (isSystemInDarkTheme()) BlueGray else Black,
             containerColor = LightPink,
             contentColor = Color.White
         ),
@@ -155,15 +144,14 @@ fun SignUpSection(
     }
 }
 
-
 @Composable
 fun LoginPrompt(
-    uiColor: Color
+    uiColor: Color,
+    navController: NavController
 ) {
     val signUpText = "Đăng nhập"
     val fullText = "Bạn đã có tài khoản? $signUpText"
 
-    // xac dinh vi tri bat dau cua dang ky
     val signupStartIndex = fullText.indexOf((signUpText))
 
     val annotatedString = buildAnnotatedString {
@@ -193,7 +181,7 @@ fun LoginPrompt(
         text = annotatedString,
         onClick = { offset ->
             if (offset in signupStartIndex until (signupStartIndex + signUpText.length)) {
-//                navController.navigate("login")
+                navController.navigate("login")
             }
         }
     )

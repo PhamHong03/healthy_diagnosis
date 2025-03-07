@@ -13,15 +13,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.healthy_diagnosis.core.utils.LoginPrompt
 import com.example.healthy_diagnosis.core.utils.SignUpSection
 import com.example.healthy_diagnosis.core.utils.TopSection
+import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 
 @Composable
 fun RegisterScreen(
-
+    navController: NavController,
+    viewModel: AuthViewModel
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -34,10 +36,10 @@ fun RegisterScreen(
                 .padding(horizontal = 30.dp)
         ){
 
-            SignUpSection()
+            SignUpSection(navController, viewModel)
 
             Spacer(modifier = Modifier.height(25.dp))
-//            SocialMediaSection(authViewModel)
+
             val uiColor: Color = if (isSystemInDarkTheme()) Color.White else Color.Black
             Box(
                 modifier = Modifier
@@ -45,14 +47,8 @@ fun RegisterScreen(
                     .fillMaxWidth(),
                 contentAlignment = Alignment.BottomCenter
             ){
-                LoginPrompt(uiColor)
+                LoginPrompt(uiColor, navController)
             }
         }
     }
-}
-
-@Composable
-@Preview(showBackground = true, showSystemUi = true)
-fun RegisterPreview(){
-    RegisterScreen()
 }

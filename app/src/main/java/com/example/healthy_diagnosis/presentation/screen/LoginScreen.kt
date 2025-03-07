@@ -24,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,14 +45,15 @@ import androidx.navigation.NavController
 import com.example.healthy_diagnosis.core.utils.SocialMediaSection
 import com.example.healthy_diagnosis.core.utils.TextFieldLoginRegister
 import com.example.healthy_diagnosis.core.utils.TopSection
-import com.example.healthy_diagnosis.ui.theme.Black
-import com.example.healthy_diagnosis.ui.theme.BlueGray
+import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 import com.example.healthy_diagnosis.ui.theme.LightPink
 import com.example.healthy_diagnosis.ui.theme.Roboto
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 @Composable
 fun LoginScreen(
-
+    navController: NavController,
+    viewModel: AuthViewModel
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -64,7 +66,7 @@ fun LoginScreen(
                 .padding(horizontal = 30.dp)
         ){
 
-            LoginSection()
+            LoginSection(navController, viewModel)
             Spacer(modifier = Modifier.height(25.dp))
             SocialMediaSection()
             val uiColor: Color = if (isSystemInDarkTheme()) Color.White else Color.Black
@@ -126,7 +128,8 @@ fun SignUpPromt(uiColor: Color) {
 
 @Composable
 fun LoginSection(
-
+    navController: NavController,
+    viewModel: AuthViewModel
 ) {
     var email by remember {
         mutableStateOf("")
@@ -137,6 +140,7 @@ fun LoginSection(
     var isPasswordVisible by remember { mutableStateOf(false) }
     var isLoginTriggered by remember { mutableStateOf(false) }
 
+//    val loginState by viewModel.loginResult.collectAsState()
     val context = LocalContext.current
 //    val authState = authViewModel.authState.observeAsState()
 
@@ -191,6 +195,20 @@ fun LoginSection(
 //        }
 //    }
 
+//    loginState?.let {
+//        when {
+//            it.isSuccess -> {
+//                LaunchedEffect(Unit) {
+//                    navController.navigate("home") {
+//                        popUpTo("login")
+//                    }
+//                }
+//            }
+//            it.isFailure -> {
+//                Text(text = "Đăng nhập thất bại:: ${it.exceptionOrNull()?.message}")
+//            }
+//        }
+//    }
     Button(
         modifier = Modifier.fillMaxWidth(),
         onClick = {
@@ -217,5 +235,5 @@ fun LoginSection(
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
 fun PreviewLogin(){
-    LoginScreen()
+//    LoginScreen()
 }

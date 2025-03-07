@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.healthy_diagnosis.data.entities.Account
+import com.example.healthy_diagnosis.data.entities.AccountEntity
 
-@Database(entities = [Account::class], version = 1)
+@Database(entities = [AccountEntity::class], version = 1)
 abstract class AppDatabase : RoomDatabase(){
     abstract fun accountDao(): AccountDAO
 

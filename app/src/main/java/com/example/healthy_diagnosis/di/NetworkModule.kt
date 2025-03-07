@@ -15,11 +15,12 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+    private val BASE_URL = "http://192.168.1.6:5000"
     @Provides
     @Singleton
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("")
+            .baseUrl(BASE_URL)
             .addConverterFactory((GsonConverterFactory.create()))
             .client(OkHttpClient.Builder().build())
             .build()
