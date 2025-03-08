@@ -121,7 +121,7 @@ fun SignUpSection(
         isPasswordVisible = isPasswordVisible
     )
     Spacer(modifier = Modifier.height(10.dp))
-    RoleSelection()
+
     Spacer(modifier = Modifier.height(20.dp))
     Button(
         modifier = Modifier.fillMaxWidth(),
@@ -191,39 +191,4 @@ fun LoginPrompt(
             }
         }
     )
-}
-
-@Composable
-fun RoleSelection() {
-    var selectedRole by remember { mutableStateOf<String?>(null) }
-
-    Column {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.clickable { selectedRole = "Doctor" }
-        ) {
-            Checkbox(
-                checked = selectedRole == "Doctor",
-                onCheckedChange = { selectedRole = "Doctor" }
-            )
-            Text(
-                text = stringResource(id = R.string.roleDoctor),
-                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium)
-            )
-        }
-        Spacer(modifier = Modifier.height(10.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.clickable { selectedRole = "Customer" }
-        ) {
-            Checkbox(
-                checked = selectedRole == "Customer",
-                onCheckedChange = { selectedRole = "Customer" }
-            )
-            Text(
-                text = stringResource(id = R.string.roleCustomer),
-                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium)
-            )
-        }
-    }
 }

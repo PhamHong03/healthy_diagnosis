@@ -4,6 +4,6 @@ data class RegisterResponse(
     val id: Int,
     val username:String,
     val email:String,
-    val phonember:String,
+    val phoneNumber:String,
     val role:String
 )

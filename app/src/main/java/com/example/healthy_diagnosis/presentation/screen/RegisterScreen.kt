@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.healthy_diagnosis.core.utils.LoginPrompt
 import com.example.healthy_diagnosis.core.utils.SignUpSection
@@ -29,29 +30,36 @@ import kotlinx.coroutines.delay
 import  androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.Auth
+import dagger.hilt.android.AndroidEntryPoint
 
 
 @Composable
 fun RegisterScreen(
     navController: NavController,
-    viewModel: AuthViewModel = viewModel(),
+    viewModel: AuthViewModel = hiltViewModel(),
 ) {
     val authState by viewModel.authState.collectAsState()
     val context = LocalContext.current
     LaunchedEffect(authState) {
+        println("Auth State: $authState")
         authState?.let { result ->
             when {
                 result.isSuccess -> {
+                    println("Đăng ký thành công: ${result.getOrNull()}")
                     Toast.makeText(context, result.getOrNull(), Toast.LENGTH_SHORT).show()
                     delay(1000)
-                    navController.navigate("login")
+                    navController.navigate("login"){
+                        popUpTo("register") { inclusive = true }
+                    }
                 }
                 result.isFailure -> {
+                    println("Đăng ký thất bại: ${result.exceptionOrNull()?.message}")
                     Toast.makeText(context, result.exceptionOrNull()?.message ?: "Đăng ký thất bại", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -78,11 +86,4 @@ fun RegisterScreen(
             }
         }
     }
-}
-
-@Composable
-@Preview(showBackground = true, showSystemUi = true)
-fun PreviewRegister(){
-    val viewModel: AuthViewModel = viewModel()
-    RegisterScreen(navController = rememberNavController(), viewModel = viewModel)
 }
