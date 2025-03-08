@@ -1,5 +1,6 @@
 package com.example.healthy_diagnosis.presentation.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -45,6 +46,7 @@ import androidx.navigation.NavController
 import com.example.healthy_diagnosis.core.utils.SocialMediaSection
 import com.example.healthy_diagnosis.core.utils.TextFieldLoginRegister
 import com.example.healthy_diagnosis.core.utils.TopSection
+import com.example.healthy_diagnosis.domain.usecases.login.LoginRequest
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 import com.example.healthy_diagnosis.ui.theme.LightPink
 import com.example.healthy_diagnosis.ui.theme.Roboto
@@ -138,12 +140,20 @@ fun LoginSection(
         mutableStateOf("")
     }
     var isPasswordVisible by remember { mutableStateOf(false) }
-    var isLoginTriggered by remember { mutableStateOf(false) }
 
-//    val loginState by viewModel.loginResult.collectAsState()
     val context = LocalContext.current
-//    val authState = authViewModel.authState.observeAsState()
+    val loginState by viewModel.loginState.collectAsState()
 
+    LaunchedEffect(loginState) {
+        loginState?.let { result ->
+            result.onSuccess {
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                navController.navigate("home") // Chuyển hướng sau khi đăng nhập thành công
+            }.onFailure { error ->
+                Toast.makeText(context, error.message ?: "Đăng nhập thất bại", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
     TextFieldLoginRegister(
         label = "Email",
         trailingIcon = {
@@ -176,7 +186,16 @@ fun LoginSection(
     Box(
         modifier = Modifier,
     ){
-        TextButton(onClick = {}) {
+        TextButton(onClick = {
+            if(email.isNotEmpty() && password.isNotEmpty()) {
+                viewModel.loginUser(email, password)
+            }else{
+                Toast.makeText(context, "Vui lòng nhập đủ thông tin", Toast.LENGTH_SHORT).show()
+            }
+        },
+            colors = ButtonDefaults.buttonColors(containerColor = LightPink, contentColor = Color.White),
+            shape = RoundedCornerShape(size = 5.dp)
+        ) {
             Text(
                 text = "Quên mật khẩu?",
                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium)
@@ -184,40 +203,12 @@ fun LoginSection(
         }
     }
     Spacer(modifier = Modifier.height(7.dp))
-
-//    LaunchedEffect(authState.value) {
-//        if (authState.value is AuthState.Authenticated &&
-//            navController.currentDestination?.route != "select_role"
-//        ) {
-//            navController.navigate("select_role") {
-//                popUpTo("login") { inclusive = true }
-//            }
-//        }
-//    }
-
-//    loginState?.let {
-//        when {
-//            it.isSuccess -> {
-//                LaunchedEffect(Unit) {
-//                    navController.navigate("home") {
-//                        popUpTo("login")
-//                    }
-//                }
-//            }
-//            it.isFailure -> {
-//                Text(text = "Đăng nhập thất bại:: ${it.exceptionOrNull()?.message}")
-//            }
-//        }
-//    }
     Button(
         modifier = Modifier.fillMaxWidth(),
         onClick = {
-//            isLoginTriggered = true
-//            authViewModel.login(email, password)
+
         },
-//        enabled = authState.value != AuthState.Loading,
         colors = ButtonDefaults.buttonColors(
-//            containerColor = if (isSystemInDarkTheme()) BlueGray else Black,
             containerColor = LightPink,
             contentColor = Color.White
         ),
@@ -230,10 +221,4 @@ fun LoginSection(
             fontWeight = FontWeight.Bold
         )
     }
-}
-
-@Composable
-@Preview(showBackground = true, showSystemUi = true)
-fun PreviewLogin(){
-//    LoginScreen()
 }

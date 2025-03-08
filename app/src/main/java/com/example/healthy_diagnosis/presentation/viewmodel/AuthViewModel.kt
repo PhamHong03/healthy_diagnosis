@@ -25,6 +25,10 @@ class AuthViewModel @Inject constructor(
 
     private val _authState = MutableStateFlow<Result<String>?>(null)
     val authState: StateFlow<Result<String>?> = _authState
+    private val _loginState = MutableStateFlow<Result<String>?>(null)
+    val loginState: StateFlow<Result<String>?> = _loginState
+
+
     private val _trigger = MutableStateFlow(0)
     fun registerAccount(accountRequest: RegisterRequest) {
         viewModelScope.launch {

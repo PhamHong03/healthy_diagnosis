@@ -1,5 +1,6 @@
 package com.example.healthy_diagnosis.data.api
 
+import com.example.healthy_diagnosis.domain.usecases.login.LoginResponse
 import com.example.healthy_diagnosis.domain.usecases.register.RegisterRequest
 import com.example.healthy_diagnosis.domain.usecases.register.RegisterResponse
 import okhttp3.ResponseBody
@@ -19,7 +20,7 @@ interface ApiService {
     @POST("login")
     suspend fun loginAccount(
         @Header("Authorization") token: String
-    ):Response<RegisterResponse>
+    ):Response<LoginResponse>
 
 
     @POST("sendFirebaseToken")
