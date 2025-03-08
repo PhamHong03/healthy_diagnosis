@@ -1,6 +1,8 @@
 package com.example.healthy_diagnosis.core.utils
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,6 +16,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,9 +25,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -33,6 +37,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.healthy_diagnosis.R
 import com.example.healthy_diagnosis.domain.usecases.register.RegisterRequest
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 import com.example.healthy_diagnosis.ui.theme.LightPink
@@ -40,7 +45,6 @@ import com.example.healthy_diagnosis.ui.theme.Roboto
 
 @Composable
 fun SignUpSection(
-    navController: NavController,
     viewModel: AuthViewModel
 ) {
 
@@ -116,7 +120,9 @@ fun SignUpSection(
         isPasswordField = true,
         isPasswordVisible = isPasswordVisible
     )
-    Spacer(modifier = Modifier.height(30.dp))
+    Spacer(modifier = Modifier.height(10.dp))
+    RoleSelection()
+    Spacer(modifier = Modifier.height(20.dp))
     Button(
         modifier = Modifier.fillMaxWidth(),
         onClick = {
@@ -185,4 +191,39 @@ fun LoginPrompt(
             }
         }
     )
+}
+
+@Composable
+fun RoleSelection() {
+    var selectedRole by remember { mutableStateOf<String?>(null) }
+
+    Column {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.clickable { selectedRole = "Doctor" }
+        ) {
+            Checkbox(
+                checked = selectedRole == "Doctor",
+                onCheckedChange = { selectedRole = "Doctor" }
+            )
+            Text(
+                text = stringResource(id = R.string.roleDoctor),
+                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium)
+            )
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.clickable { selectedRole = "Customer" }
+        ) {
+            Checkbox(
+                checked = selectedRole == "Customer",
+                onCheckedChange = { selectedRole = "Customer" }
+            )
+            Text(
+                text = stringResource(id = R.string.roleCustomer),
+                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium)
+            )
+        }
+    }
 }

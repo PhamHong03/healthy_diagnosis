@@ -11,17 +11,17 @@ import com.example.healthy_diagnosis.presentation.screen.RegisterScreen
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 
 @Composable
-fun MyAppNavigation() {
+fun MyAppNavigation(
+    authViewModel: AuthViewModel
+) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "signup") {
 
         composable(route = "signup") {
-            val authViewModel: AuthViewModel = hiltViewModel()
             RegisterScreen(navController = navController, viewModel = authViewModel)
         }
 
         composable(route = "login") {
-            val authViewModel: AuthViewModel = hiltViewModel()
             LoginScreen(navController = navController, viewModel = authViewModel)
         }
     }

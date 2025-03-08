@@ -1,70 +1,41 @@
 {
   "project_info": {
-    "project_number": "273718825037",
-    "project_id": "heathyadndiagnoise",
-    "storage_bucket": "heathyadndiagnoise.firebasestorage.app"
+    "project_number": "724351087660",
+    "project_id": "healthydiagnosis-68ca3",
+    "storage_bucket": "healthydiagnosis-68ca3.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:273718825037:android:0e8ec61e3d4525445a8c04",
-        "android_client_info": {
-          "package_name": "com.example.hd_project"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "273718825037-3llpiq4qa4pnlde231tcjll8rdqbm79l.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.hd_project",
-            "certificate_hash": "3ed6a72a792e0f6c6548ee8730facc9dc040aa8f"
-          }
-        },
-        {
-          "client_id": "273718825037-ikp3v00l8rcqkthloe1doci95692jln4.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCWCPRF-jKOT8_RjV8h8I_yvVwKq94edJk"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "273718825037-ikp3v00l8rcqkthloe1doci95692jln4.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:273718825037:android:70b4a7e7881d10b65a8c04",
+        "mobilesdk_app_id": "1:724351087660:android:5b77e631d331c50f584d89",
         "android_client_info": {
           "package_name": "com.example.healthy_diagnosis"
         }
       },
       "oauth_client": [
         {
-          "client_id": "273718825037-ikp3v00l8rcqkthloe1doci95692jln4.apps.googleusercontent.com",
+          "client_id": "724351087660-ln5arn2hknq40elj8sqq6dh0v4gr03f1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.healthy_diagnosis",
+            "certificate_hash": "3ed6a72a792e0f6c6548ee8730facc9dc040aa8f"
+          }
+        },
+        {
+          "client_id": "724351087660-rn564mqkn5j6kfsh2ickqd23b3p10tr9.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCWCPRF-jKOT8_RjV8h8I_yvVwKq94edJk"
+          "current_key": "AIzaSyBozDGoN3jIuOE8HCr6aohCryJ42Ft1HoA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "273718825037-ikp3v00l8rcqkthloe1doci95692jln4.apps.googleusercontent.com",
+              "client_id": "724351087660-rn564mqkn5j6kfsh2ickqd23b3p10tr9.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

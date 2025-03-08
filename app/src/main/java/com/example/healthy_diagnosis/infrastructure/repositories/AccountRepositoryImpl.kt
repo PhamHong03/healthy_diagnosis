@@ -1,10 +1,12 @@
 package com.example.healthy_diagnosis.infrastructure.repositories
 
 
+import android.util.Log
 import com.example.healthy_diagnosis.data.api.ApiService
 import com.example.healthy_diagnosis.data.entities.AccountEntity
 import com.example.healthy_diagnosis.domain.usecases.register.RegisterResponse
 import com.example.healthy_diagnosis.domain.repositories.AccountRepository
+import com.example.healthy_diagnosis.domain.repositories.FirebaseAuthRepository
 import com.example.healthy_diagnosis.domain.usecases.register.RegisterRequest
 import com.example.healthy_diagnosis.infrastructure.datasources.AccountDAO
 import com.example.healthy_diagnosis.infrastructure.datasources.AppDatabase
@@ -30,7 +32,11 @@ class AccountRepositoryImpl (
     }
 
     override suspend fun registerAccount(registerRequest: RegisterRequest): Response<ResponseBody> {
-        val token = getFirebaseToken().await()
+//        val token = getFirebaseToken().await()
+        val token = FirebaseAuthRepository().getFirebaseToken() ?: ""
+        if (token.isEmpty()) {
+            return Response.error(401, ResponseBody.create(null, "Token không hợp lệ"))
+        }
         return apiService.registerAccount("Bearer $token", registerRequest)
     }
 
@@ -53,12 +59,5 @@ class AccountRepositoryImpl (
         } catch (e: Exception) {
             Result.failure(e)
         }
-    }
-
-
-    private fun getFirebaseToken(): Task<String> {
-        val  account = FirebaseAuth.getInstance().currentUser
-        return account?.getIdToken(true)?.continueWith{task -> task.result?.token ?: ""}
-            ?: Tasks.forResult("")
     }
 }
