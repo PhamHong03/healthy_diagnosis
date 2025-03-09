@@ -1,9 +1,8 @@
 package com.example.healthy_diagnosis.presentation.viewmodel
 
-import android.content.Context
 import android.util.Log
-import android.widget.Toast
-import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.healthy_diagnosis.data.api.ApiService
@@ -13,7 +12,6 @@ import com.example.healthy_diagnosis.domain.usecases.TokenRequest
 import com.example.healthy_diagnosis.domain.usecases.register.RegisterRequest
 import com.example.healthy_diagnosis.domain.usecases.register.RegisterUsecase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -26,6 +24,10 @@ class AuthViewModel @Inject constructor(
     private val firebaseAuthRepository: FirebaseAuthRepository,
     private val apiService: ApiService
 ) : ViewModel() {
+
+
+    private val _username = MutableLiveData<String>()
+    val username: LiveData<String> = _username
 
     private val _authState = MutableStateFlow<Result<String>?>(null)
     val authState: StateFlow<Result<String>?> = _authState
@@ -76,7 +78,6 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             val result = firebaseAuthRepository.loginFirebaseUser(email, password)
             if (result.isSuccess) {
-//                delay(2000)
                 val token = firebaseAuthRepository.getFirebaseToken()
                 token?.let { sendTokenToServer(it) }
                 _loginState.value = Result.success("Đăng nhập thành công!")

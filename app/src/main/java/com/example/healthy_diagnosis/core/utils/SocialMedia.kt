@@ -23,9 +23,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.healthy_diagnosis.ui.theme.BlueGray
-import com.example.healthy_diagnosis.ui.theme.LightBlueWhite
-import com.example.healthy_diagnosis.ui.theme.LightPink
 import com.example.healthy_diagnosis.ui.theme.LightPink2
 
 @Composable

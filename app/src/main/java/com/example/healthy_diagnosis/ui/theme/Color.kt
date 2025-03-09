@@ -18,6 +18,8 @@ val LightBlueWhite = Color(0xFFF1F5F9)
 val BlueGray = Color(0xFF334155)
 val LightPink = Color(0xFFFFDCEC)
 val LightPink2 = Color(0xFFFFF0F5 )
+val BannerColor = Color(0xFF83BDF7)
+val MenuItemColor = Color(0xFF008ECC)
 
 val ColorScheme.focusedTextFieldText
     @Composable

@@ -4,13 +4,11 @@ import android.util.Log
 import com.example.healthy_diagnosis.data.api.ApiService
 import com.example.healthy_diagnosis.domain.usecases.TokenRequest
 import com.example.healthy_diagnosis.domain.usecases.login.LoginResponse
-import com.example.healthy_diagnosis.domain.usecases.register.RegisterResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
-import retrofit2.Response
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import javax.inject.Inject
@@ -53,18 +51,6 @@ class FirebaseAuthRepository @Inject constructor(
                     }
                 }
         }
-//
-//    suspend fun loginFirebaseUser(email: String, password: String): Result<String> =
-//        suspendCoroutine { continuation ->
-//            Firebase.auth.signInWithEmailAndPassword(email, password)
-//                .addOnCompleteListener { task ->
-//                    if (task.isSuccessful) {
-//                        continuation.resume(Result.success("Đăng nhập thành công!"))
-//                    } else {
-//                        continuation.resume(Result.failure(task.exception ?: Exception("Lỗi Firebase")))
-//                    }
-//                }
-//        }
 
     suspend fun loginFirebaseUser(email: String, password: String): Result<LoginResponse> {
         return try {
@@ -72,7 +58,6 @@ class FirebaseAuthRepository @Inject constructor(
             val idToken = getFirebaseToken() ?: return Result.failure(Exception("Không thể lấy ID token"))
 
             val response = apiService.login(TokenRequest(idToken))
-//            val response = apiService.loginAccount("Bearer $idToken")
             if (response.isSuccessful && response.body() != null) {
                 Result.success(response.body()!!)
             } else {
@@ -103,8 +88,5 @@ class FirebaseAuthRepository @Inject constructor(
     fun getFirebaseUid(): String? {
         return FirebaseAuth.getInstance().currentUser?.uid
     }
-
-
-
 
 }

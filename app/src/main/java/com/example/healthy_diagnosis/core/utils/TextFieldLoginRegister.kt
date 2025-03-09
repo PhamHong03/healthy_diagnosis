@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 
 import com.example.healthy_diagnosis.ui.theme.focusedTextFieldText
 import com.example.healthy_diagnosis.ui.theme.textFieldContainer
@@ -51,10 +50,4 @@ fun TextFieldLoginRegister(
         trailingIcon = trailingIcon,
         singleLine = true
     )
-}
-
-@Composable
-@Preview(showBackground = true, showSystemUi = true)
-fun PreviewTextField() {
-    TextFieldLoginRegister(label = "", textInput = "", onTextChanged = {})
 }

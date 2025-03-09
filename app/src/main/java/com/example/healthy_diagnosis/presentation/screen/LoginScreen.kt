@@ -39,18 +39,15 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.healthy_diagnosis.core.utils.SocialMediaSection
 import com.example.healthy_diagnosis.core.utils.TextFieldLoginRegister
 import com.example.healthy_diagnosis.core.utils.TopSection
-import com.example.healthy_diagnosis.domain.usecases.login.LoginRequest
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 import com.example.healthy_diagnosis.ui.theme.LightPink
 import com.example.healthy_diagnosis.ui.theme.Roboto
-import dagger.hilt.android.lifecycle.HiltViewModel
 
 @Composable
 fun LoginScreen(
@@ -94,14 +91,14 @@ fun LoginScreen(
                     .fillMaxWidth(),
                 contentAlignment = Alignment.BottomCenter
             ){
-                SignUpPromt(uiColor)
+                SignUpPromt(uiColor, navController)
             }
         }
     }
 }
 
 @Composable
-fun SignUpPromt(uiColor: Color) {
+fun SignUpPromt(uiColor: Color,  navController: NavController) {
     val signUpText = "Đăng ký"
     val fullText = "Bạn chưa có tài khoản? $signUpText"
 
@@ -136,7 +133,7 @@ fun SignUpPromt(uiColor: Color) {
         onClick =
         { offset ->
             if (offset in signupStartIndex until (signupStartIndex + signUpText.length)) {
-//                navController.navigate("signup")
+                navController.navigate("signup")
             }
         }
     )

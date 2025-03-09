@@ -18,11 +18,6 @@ interface ApiService {
         @Body account : RegisterRequest
     ): Response<ResponseBody>
 
-//    @POST("login")
-//    suspend fun loginAccount(
-//        @Header("Authorization") token: String
-//    ):Response<LoginResponse>
-
     @POST("login")
     suspend fun login(@Body request: TokenRequest): Response<LoginResponse>
 
