@@ -7,7 +7,7 @@ import javax.inject.Inject
 class LoginUsecase @Inject constructor(
     private val authRepository : AccountRepository
 ){
-    suspend operator fun invoke(token:String) : RegisterResponse {
+    suspend operator fun invoke(token:String) : Result<LoginResponse> {
         return authRepository.loginWithToken(token)
     }
 }

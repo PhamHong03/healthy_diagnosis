@@ -2,6 +2,7 @@ package com.example.healthy_diagnosis.domain.repositories
 
 import android.util.Log
 import com.example.healthy_diagnosis.data.api.ApiService
+import com.example.healthy_diagnosis.domain.usecases.TokenRequest
 import com.example.healthy_diagnosis.domain.usecases.login.LoginResponse
 import com.example.healthy_diagnosis.domain.usecases.register.RegisterResponse
 import com.google.firebase.auth.FirebaseAuth
@@ -64,28 +65,24 @@ class FirebaseAuthRepository @Inject constructor(
 //                    }
 //                }
 //        }
+
     suspend fun loginFirebaseUser(email: String, password: String): Result<LoginResponse> {
         return try {
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).await()
+            val idToken = getFirebaseToken() ?: return Result.failure(Exception("Không thể lấy ID token"))
 
-            val idToken = FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
-
-            if (idToken.isNullOrEmpty()) {
-                return Result.failure(Exception("Không thể lấy ID token"))
-            }
-
-            val response: Response<LoginResponse> = apiService.loginAccount("Bearer $idToken")
-
-            if(response.isSuccessful && response.body() != null) {
+            val response = apiService.login(TokenRequest(idToken))
+//            val response = apiService.loginAccount("Bearer $idToken")
+            if (response.isSuccessful && response.body() != null) {
                 Result.success(response.body()!!)
-            }else {
-                Result.failure(Exception("Lỗi đăng nhập: ${response.message()}"))
+            } else {
+                val errorMessage = response.errorBody()?.string() ?: "Lỗi không xác định"
+                Result.failure(Exception("Lỗi đăng nhập: $errorMessage"))
             }
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
-
 
     suspend fun getFirebaseToken(): String? {
         return try {
@@ -106,5 +103,8 @@ class FirebaseAuthRepository @Inject constructor(
     fun getFirebaseUid(): String? {
         return FirebaseAuth.getInstance().currentUser?.uid
     }
+
+
+
 
 }

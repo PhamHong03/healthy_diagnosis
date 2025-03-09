@@ -1,5 +1,6 @@
 package com.example.healthy_diagnosis.data.api
 
+import com.example.healthy_diagnosis.domain.usecases.TokenRequest
 import com.example.healthy_diagnosis.domain.usecases.login.LoginResponse
 import com.example.healthy_diagnosis.domain.usecases.register.RegisterRequest
 import com.example.healthy_diagnosis.domain.usecases.register.RegisterResponse
@@ -17,14 +18,18 @@ interface ApiService {
         @Body account : RegisterRequest
     ): Response<ResponseBody>
 
+//    @POST("login")
+//    suspend fun loginAccount(
+//        @Header("Authorization") token: String
+//    ):Response<LoginResponse>
+
     @POST("login")
-    suspend fun loginAccount(
-        @Header("Authorization") token: String
-    ):Response<LoginResponse>
+    suspend fun login(@Body request: TokenRequest): Response<LoginResponse>
 
 
     @POST("sendFirebaseToken")
     suspend fun sendFirebaseToken(
-        @Body token: String
+        @Body tokenRequest: TokenRequest
     ): Response<Unit>
+
 }

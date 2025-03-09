@@ -1,6 +1,7 @@
 package com.example.healthy_diagnosis.di
 import com.example.healthy_diagnosis.data.api.ApiService
 import com.example.healthy_diagnosis.domain.repositories.AccountRepository
+import com.example.healthy_diagnosis.domain.repositories.FirebaseAuthRepository
 import com.example.healthy_diagnosis.infrastructure.datasources.AccountDAO
 import com.example.healthy_diagnosis.infrastructure.datasources.AppDatabase
 import com.example.healthy_diagnosis.infrastructure.repositories.AccountRepositoryImpl
@@ -18,8 +19,9 @@ object RepositoryModule {
     @Singleton
     fun provideAccountRepository(
         database: AppDatabase,
-        apiService: ApiService
+        apiService: ApiService,
+        firebaseAuthRepository: FirebaseAuthRepository
     ): AccountRepository {
-        return AccountRepositoryImpl(database, apiService)
+        return AccountRepositoryImpl(database, apiService, firebaseAuthRepository)
     }
 }

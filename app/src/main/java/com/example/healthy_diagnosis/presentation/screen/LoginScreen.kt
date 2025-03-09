@@ -57,6 +57,21 @@ fun LoginScreen(
     navController: NavController,
     viewModel: AuthViewModel
 ) {
+    val loginState by viewModel.loginState.collectAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(loginState) {
+        loginState?.let { result ->
+            result.onSuccess {
+                Toast.makeText(context, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
+                navController.navigate("home")
+                viewModel.resetLoginState()
+            }.onFailure { error ->
+                Toast.makeText(context, error.message ?: "Đăng nhập thất bại", Toast.LENGTH_SHORT).show()
+                viewModel.resetLoginState()
+            }
+        }
+    }
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -142,18 +157,6 @@ fun LoginSection(
     var isPasswordVisible by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
-    val loginState by viewModel.loginState.collectAsState()
-
-    LaunchedEffect(loginState) {
-        loginState?.let { result ->
-            result.onSuccess {
-                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-                navController.navigate("home") // Chuyển hướng sau khi đăng nhập thành công
-            }.onFailure { error ->
-                Toast.makeText(context, error.message ?: "Đăng nhập thất bại", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
     TextFieldLoginRegister(
         label = "Email",
         trailingIcon = {
@@ -187,14 +190,8 @@ fun LoginSection(
         modifier = Modifier,
     ){
         TextButton(onClick = {
-            if(email.isNotEmpty() && password.isNotEmpty()) {
-                viewModel.loginUser(email, password)
-            }else{
-                Toast.makeText(context, "Vui lòng nhập đủ thông tin", Toast.LENGTH_SHORT).show()
-            }
-        },
-            colors = ButtonDefaults.buttonColors(containerColor = LightPink, contentColor = Color.White),
-            shape = RoundedCornerShape(size = 5.dp)
+
+        }
         ) {
             Text(
                 text = "Quên mật khẩu?",
@@ -206,7 +203,11 @@ fun LoginSection(
     Button(
         modifier = Modifier.fillMaxWidth(),
         onClick = {
-
+            if(email.isNotEmpty() && password.isNotEmpty()) {
+                viewModel.loginUser(email, password)
+            }else{
+                Toast.makeText(context, "Vui lòng nhập đủ thông tin", Toast.LENGTH_SHORT).show()
+            }
         },
         colors = ButtonDefaults.buttonColors(
             containerColor = LightPink,
