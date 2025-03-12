@@ -12,6 +12,7 @@ import com.example.healthy_diagnosis.data.models.PhysicianEntity
     entities = [
         AccountEntity::class,
         EducationEntity::class,
+        PhysicianEntity::class,
         PhysicianEntity::class],
     version = 1
 )
@@ -19,6 +20,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun accountDao(): AccountDAO
     abstract fun educationDao(): EducationDao
     abstract fun physicianDao(): PhysicianDao
+    abstract fun patientDao(): PatientDao
 
     companion object {
         fun getDatabase(context: Context): AppDatabase {

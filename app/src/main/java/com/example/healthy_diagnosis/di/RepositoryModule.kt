@@ -4,11 +4,14 @@ import com.example.healthy_diagnosis.domain.repositories.AccountRepository
 import com.example.healthy_diagnosis.domain.repositories.FirebaseAuthRepository
 import com.example.healthy_diagnosis.data.datasources.local.AppDatabase
 import com.example.healthy_diagnosis.data.datasources.remote.EducationApiService
+import com.example.healthy_diagnosis.data.datasources.remote.PatientApiService
 import com.example.healthy_diagnosis.data.datasources.remote.PhysicianApiService
 import com.example.healthy_diagnosis.domain.repositories.EducationRepository
+import com.example.healthy_diagnosis.domain.repositories.PatientRepository
 import com.example.healthy_diagnosis.domain.repositories.PhysicianRepository
 import com.example.healthy_diagnosis.infrastructure.repositories.AccountRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.EducationRepositoryImpl
+import com.example.healthy_diagnosis.infrastructure.repositories.PatientRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.PhysicianRepositoryImpl
 import dagger.Module
 import dagger.Provides
@@ -46,5 +49,14 @@ object RepositoryModule {
         physicianApiService: PhysicianApiService
     ): PhysicianRepository {
         return PhysicianRepositoryImpl(database.physicianDao(), physicianApiService)
+    }
+
+    @Provides
+    @Singleton
+    fun providePatientRepository(
+        database: AppDatabase,
+        patientApiService: PatientApiService
+    ): PatientRepository {
+        return PatientRepositoryImpl(database.patientDao(), patientApiService)
     }
 }
