@@ -1,14 +1,14 @@
 package com.example.healthy_diagnosis.infrastructure.repositories
 
 
-import com.example.healthy_diagnosis.data.api.ApiService
-import com.example.healthy_diagnosis.data.entities.AccountEntity
+import com.example.healthy_diagnosis.data.datasources.remote.ApiService
+import com.example.healthy_diagnosis.data.models.AccountEntity
 import com.example.healthy_diagnosis.domain.repositories.AccountRepository
 import com.example.healthy_diagnosis.domain.repositories.FirebaseAuthRepository
 import com.example.healthy_diagnosis.domain.usecases.TokenRequest
 import com.example.healthy_diagnosis.domain.usecases.login.LoginResponse
 import com.example.healthy_diagnosis.domain.usecases.register.RegisterRequest
-import com.example.healthy_diagnosis.infrastructure.datasources.AppDatabase
+import com.example.healthy_diagnosis.data.datasources.local.AppDatabase
 import okhttp3.ResponseBody
 import retrofit2.Response
 import javax.inject.Inject

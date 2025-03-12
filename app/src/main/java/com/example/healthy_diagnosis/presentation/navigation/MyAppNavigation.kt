@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.healthy_diagnosis.presentation.screen.LoginScreen
 import com.example.healthy_diagnosis.presentation.screen.RegisterScreen
 import com.example.healthy_diagnosis.presentation.screen.doctors.DiagnosisScreen
+import com.example.healthy_diagnosis.presentation.screen.doctors.Education
 import com.example.healthy_diagnosis.presentation.screen.doctors.HomeScreen
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 
@@ -36,6 +37,10 @@ fun MyAppNavigation(
         }
         composable(route = "diagnosis"){
             DiagnosisScreen(navController = navController, authViewModel = authViewModel)
+        }
+
+        composable(route = "healthcare") {
+            Education()
         }
     }
 }

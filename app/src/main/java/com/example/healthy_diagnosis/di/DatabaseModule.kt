@@ -1,10 +1,7 @@
 package com.example.healthy_diagnosis.di
 
-import android.app.Application
 import android.content.Context
-import androidx.room.Room
-import com.example.healthy_diagnosis.infrastructure.datasources.AccountDAO
-import com.example.healthy_diagnosis.infrastructure.datasources.AppDatabase
+import com.example.healthy_diagnosis.data.datasources.local.AppDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

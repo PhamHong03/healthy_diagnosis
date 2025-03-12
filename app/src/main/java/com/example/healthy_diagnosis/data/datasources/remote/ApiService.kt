@@ -1,9 +1,8 @@
-package com.example.healthy_diagnosis.data.api
+package com.example.healthy_diagnosis.data.datasources.remote
 
 import com.example.healthy_diagnosis.domain.usecases.TokenRequest
 import com.example.healthy_diagnosis.domain.usecases.login.LoginResponse
 import com.example.healthy_diagnosis.domain.usecases.register.RegisterRequest
-import com.example.healthy_diagnosis.domain.usecases.register.RegisterResponse
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body

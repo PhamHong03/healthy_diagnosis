@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.healthy_diagnosis.data.api.ApiService
+import com.example.healthy_diagnosis.data.datasources.remote.ApiService
 import com.example.healthy_diagnosis.domain.repositories.AccountRepository
 import com.example.healthy_diagnosis.domain.repositories.FirebaseAuthRepository
 import com.example.healthy_diagnosis.domain.usecases.TokenRequest

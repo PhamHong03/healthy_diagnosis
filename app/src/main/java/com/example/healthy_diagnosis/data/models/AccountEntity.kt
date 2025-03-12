@@ -1,4 +1,4 @@
-package com.example.healthy_diagnosis.data.entities
+package com.example.healthy_diagnosis.data.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

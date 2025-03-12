@@ -1,6 +1,6 @@
 package com.example.healthy_diagnosis.domain.repositories
 
-import com.example.healthy_diagnosis.data.entities.AccountEntity
+import com.example.healthy_diagnosis.data.models.AccountEntity
 import com.example.healthy_diagnosis.domain.usecases.login.LoginResponse
 import com.example.healthy_diagnosis.domain.usecases.register.RegisterRequest
 import okhttp3.ResponseBody

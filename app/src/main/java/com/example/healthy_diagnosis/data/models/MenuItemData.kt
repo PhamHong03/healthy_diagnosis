@@ -1,4 +1,4 @@
-package com.example.healthy_diagnosis.data.entities
+package com.example.healthy_diagnosis.data.models
 
 data class MenuItemData(
     val title: String,

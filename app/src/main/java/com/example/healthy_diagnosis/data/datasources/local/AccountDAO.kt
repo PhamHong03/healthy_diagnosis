@@ -1,10 +1,10 @@
-package com.example.healthy_diagnosis.infrastructure.datasources
+package com.example.healthy_diagnosis.data.datasources.local
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.healthy_diagnosis.data.entities.AccountEntity
+import com.example.healthy_diagnosis.data.models.AccountEntity
 
 @Dao
 interface AccountDAO {

@@ -29,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -39,7 +38,7 @@ import androidx.navigation.NavController
 import com.example.healthy_diagnosis.R
 import com.example.healthy_diagnosis.core.utils.HeaderSection
 import com.example.healthy_diagnosis.core.utils.SearchBar
-import com.example.healthy_diagnosis.data.entities.MenuItemData
+import com.example.healthy_diagnosis.data.models.MenuItemData
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 import com.example.healthy_diagnosis.ui.theme.BannerColor
 import com.example.healthy_diagnosis.ui.theme.MenuItemColor

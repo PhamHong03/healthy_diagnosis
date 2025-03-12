@@ -1,7 +1,7 @@
 package com.example.healthy_diagnosis.domain.repositories
 
 import android.util.Log
-import com.example.healthy_diagnosis.data.api.ApiService
+import com.example.healthy_diagnosis.data.datasources.remote.ApiService
 import com.example.healthy_diagnosis.domain.usecases.TokenRequest
 import com.example.healthy_diagnosis.domain.usecases.login.LoginResponse
 import com.google.firebase.auth.FirebaseAuth
