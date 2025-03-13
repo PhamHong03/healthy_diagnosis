@@ -1,19 +1,19 @@
 package com.example.healthy_diagnosis.data.models
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.type.DateTime
 
 @Entity (tableName = "patients")
 data class PatientEntity (
-    @PrimaryKey(autoGenerate = true) val id: Int = 1,
+    @PrimaryKey(autoGenerate = true) val id: Int ,
     val name: String,
-    val day_of_birth : DateTime,
+    @ColumnInfo(name = "day_of_birth") val dayOfBirth : String,
     val gender : String,
     val phone : String,
     val email: String,
     val job: String,
-    val medical_code_card: String,
-    val code_card_day_start: DateTime,
-    val status: String
+    @ColumnInfo(name = "medical_code_card") val medicalCodeCard: String,
+    @ColumnInfo(name = "code_card_day_start") val codeCardDayStart: String,
+    val status: Int
 )

@@ -2,6 +2,7 @@ package com.example.healthy_diagnosis.di
 
 import com.example.healthy_diagnosis.data.datasources.remote.ApiService
 import com.example.healthy_diagnosis.data.datasources.remote.EducationApiService
+import com.example.healthy_diagnosis.data.datasources.remote.PatientApiService
 import com.example.healthy_diagnosis.data.datasources.remote.PhysicianApiService
 import dagger.Module
 import dagger.Provides
@@ -44,5 +45,11 @@ object NetworkModule {
     @Singleton
     fun providePhysicianService(retrofit: Retrofit): PhysicianApiService {
         return retrofit.create(PhysicianApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePatientService(retrofit: Retrofit): PatientApiService {
+        return retrofit.create(PatientApiService::class.java)
     }
 }

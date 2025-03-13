@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.healthy_diagnosis"
-        minSdk = 24
+        minSdk = 26
         //noinspection OldTargetApi
         targetSdk = 34
         versionCode = 1
@@ -47,7 +47,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.12"
+        kotlinCompilerExtensionVersion = "1.6.0"
     }
 
     packaging {

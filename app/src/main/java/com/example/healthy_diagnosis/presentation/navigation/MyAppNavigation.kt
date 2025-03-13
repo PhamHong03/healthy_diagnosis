@@ -13,13 +13,16 @@ import com.example.healthy_diagnosis.presentation.screen.RegisterScreen
 import com.example.healthy_diagnosis.presentation.screen.doctors.DiagnosisScreen
 import com.example.healthy_diagnosis.presentation.screen.doctors.Education
 import com.example.healthy_diagnosis.presentation.screen.doctors.HomeScreen
+import com.example.healthy_diagnosis.presentation.screen.doctors.Patient
 import com.example.healthy_diagnosis.presentation.screen.doctors.ProfileDoctor
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.PatientViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MyAppNavigation(
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    patientViewModel: PatientViewModel
 ) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "home") {
@@ -49,5 +52,9 @@ fun MyAppNavigation(
         composable(route = "profile") {
             ProfileDoctor()
         }
+        composable(route = "patients") {
+            Patient(navController = navController, viewModel = patientViewModel)
+        }
+
     }
 }

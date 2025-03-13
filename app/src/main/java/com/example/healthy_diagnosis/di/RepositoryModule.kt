@@ -57,6 +57,6 @@ object RepositoryModule {
         database: AppDatabase,
         patientApiService: PatientApiService
     ): PatientRepository {
-        return PatientRepositoryImpl(database.patientDao(), patientApiService)
+        return PatientRepositoryImpl(database.patientDao(),patientApiService)
     }
 }
