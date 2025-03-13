@@ -207,7 +207,7 @@ fun LoginSection(
             }
         },
         colors = ButtonDefaults.buttonColors(
-            containerColor = LightPink,
+            containerColor = Color.Black,
             contentColor = Color.White
         ),
         shape = RoundedCornerShape(size = 5.dp)
@@ -215,7 +215,7 @@ fun LoginSection(
         Text(
             text = "ĐĂNG NHẬP",
             style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Medium),
-            color = Color.Black,
+            color = Color.White,
             fontWeight = FontWeight.Bold
         )
     }

@@ -130,7 +130,7 @@ fun SignUpSection(
             viewModel.registerAccount(accountRequest)
         },
         colors = ButtonDefaults.buttonColors(
-            containerColor = LightPink,
+            containerColor = Color.Black,
             contentColor = Color.White
         ),
         shape = RoundedCornerShape(size = 5.dp)
@@ -138,7 +138,7 @@ fun SignUpSection(
         Text(
             text = "ĐĂNG KÝ",
             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium),
-            color = Color.Black,
+            color = Color.White,
             fontWeight = FontWeight.Bold
         )
     }
