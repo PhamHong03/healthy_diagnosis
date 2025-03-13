@@ -1,5 +1,6 @@
 package com.example.healthy_diagnosis.data.models
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -11,6 +12,6 @@ data class PhysicianEntity (
     val phone: String,
     val address: String,
     val gender: String,
-    val specialization_id: Int,
-    val education_id: Int,
+    @ColumnInfo(name = "specialization_id") val specializationId: Int,
+    @ColumnInfo(name = "education_id") val educationId: Int,
 )
