@@ -1,7 +1,5 @@
-package com.example.healthy_diagnosis.presentation.screen.doctors
+package com.example.healthy_diagnosis.presentation.screen.customers
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,15 +14,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.*
 import androidx.navigation.NavController
 import com.example.healthy_diagnosis.core.utils.TopBarScreen
 
 @Composable
-fun AddPatient(
+fun InfoCustomer(
     navController: NavController
 ){
     var name by remember { mutableStateOf("") }
@@ -37,7 +35,10 @@ fun AddPatient(
     var codeCardDayStart by remember { mutableStateOf("") }
     var status by remember { mutableStateOf("") }
 
-    // Danh sách các biến và label tương ứng
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+
     val fields = listOf(
         "Tên bệnh nhân" to name,
         "Ngày sinh" to dayOfBirth,
@@ -55,19 +56,21 @@ fun AddPatient(
             TopBarScreen(
                 title = "Thêm bệnh nhân",
                 onBackClick = { navController.popBackStack() },
-                actionIcon = Icons.Default.Add,
-                onActionClick = { navController.navigate("add_patient")}
+                actionIcon = Icons.Default.Favorite,
+                onActionClick = { }
             )
         }
     ) { paddingValues ->
-        LazyColumn(modifier = Modifier.padding(paddingValues).padding(16.dp)) {
+        LazyColumn(modifier = Modifier
+            .padding(paddingValues)
+            .padding(16.dp)) {
             items(fields) { (label, value) ->
                 AddPatientItem(
                     label = label,
                     text = value,
                     onValueChange = {
                         when (label) {
-                            "Tên bệnh nhân" -> name = it
+                            "Họ tên" -> name = it
                             "Ngày sinh" -> dayOfBirth = it
                             "Giới tính" -> gender = it
                             "Số điện thoại" -> phone = it
@@ -82,18 +85,26 @@ fun AddPatient(
             }
             item {
                 Button(
-                    onClick = {},
+                    onClick = {showDialog = true},
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
-                    Text(text = "Thêm bệnh nhân")
+                    Text(text = "Lưu thông tin")
                 }
             }
         }
     }
-
+//    if (showDialog) {
+//        ConfirmSaveDialog(
+//            onDismiss = { showDialog = false },
+//            navController = navController
+//        )
+//    }
 }
+
+
+
 @Composable
 fun AddPatientItem(
     label: String,
@@ -110,3 +121,4 @@ fun AddPatientItem(
             .padding(vertical = 8.dp)
     )
 }
+

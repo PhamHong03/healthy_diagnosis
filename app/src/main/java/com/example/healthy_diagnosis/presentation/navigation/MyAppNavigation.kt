@@ -10,23 +10,29 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.healthy_diagnosis.presentation.screen.LoginScreen
 import com.example.healthy_diagnosis.presentation.screen.RegisterScreen
-import com.example.healthy_diagnosis.presentation.screen.doctors.AddPatient
 import com.example.healthy_diagnosis.presentation.screen.doctors.DiagnosisScreen
 import com.example.healthy_diagnosis.presentation.screen.doctors.Education
 import com.example.healthy_diagnosis.presentation.screen.doctors.HomeScreen
+import com.example.healthy_diagnosis.presentation.screen.doctors.InfoDoctor
 import com.example.healthy_diagnosis.presentation.screen.doctors.Patient
 import com.example.healthy_diagnosis.presentation.screen.doctors.ProfileDoctor
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.EducationViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.PatientViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.PhysicianViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.SpecializationViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MyAppNavigation(
     authViewModel: AuthViewModel,
-    patientViewModel: PatientViewModel
+    patientViewModel: PatientViewModel,
+    physicianViewModel: PhysicianViewModel,
+    specializationViewModel: SpecializationViewModel,
+    educationViewModel: EducationViewModel
 ) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "home") {
+    NavHost(navController = navController, startDestination = "input_infoDoctor") {
 
         composable(route = "signup") {
             RegisterScreen(navController = navController, viewModel = authViewModel)
@@ -35,7 +41,15 @@ fun MyAppNavigation(
         composable(route = "login") {
             LoginScreen(navController = navController, viewModel = authViewModel)
         }
-
+        // Doctor screen
+        composable(route  = "input_infoDoctor"){
+            InfoDoctor(
+                navController = navController,
+                physicianViewModel = physicianViewModel,
+                specializationViewModel = specializationViewModel,
+                educationViewModel = educationViewModel
+            )
+        }
         composable(route = "home") {
             HomeScreen(
                 navController = navController,
@@ -56,8 +70,8 @@ fun MyAppNavigation(
         composable(route = "patients") {
             Patient(navController = navController, viewModel = patientViewModel)
         }
-        composable(route = "add_patient") {
-            AddPatient(navController)
-        }
+
+
+        //Customer screen
     }
 }

@@ -61,7 +61,7 @@ fun LoginScreen(
         loginState?.let { result ->
             result.onSuccess {
                 Toast.makeText(context, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
-                navController.navigate("home")
+                navController.navigate("input_infoDoctor")
                 viewModel.resetLoginState()
             }.onFailure { error ->
                 Toast.makeText(context, error.message ?: "Đăng nhập thất bại", Toast.LENGTH_SHORT).show()

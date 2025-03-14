@@ -1,5 +1,7 @@
 package com.example.healthy_diagnosis.presentation.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.healthy_diagnosis.data.models.EducationEntity
@@ -20,19 +22,16 @@ class EducationViewModel @Inject constructor(
     private val _educationList = MutableStateFlow<List<EducationEntity>>(emptyList())
     val educationList = _educationList
 
-
     private val _addEducationResult = MutableStateFlow<String?>(null)
     val addEducationResult: StateFlow<String?> = _addEducationResult
 
-    //Tranag thai loading
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
-    //lay danh sach education tu database
     fun fetchEducations(){
         viewModelScope.launch {
             _isLoading.value = true
-            _educationList.value = educationRepository.getAllEducation()
+            _educationList.value = educationRepository.getAllEducations()
             _isLoading.value = false
 
         }

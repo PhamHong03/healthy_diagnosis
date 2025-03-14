@@ -1,6 +1,8 @@
 package com.example.healthy_diagnosis.data.datasources.remote
 
+import com.example.healthy_diagnosis.data.models.EducationEntity
 import com.example.healthy_diagnosis.data.models.PhysicianEntity
+import com.example.healthy_diagnosis.data.models.SpecializationEntity
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -23,4 +25,6 @@ interface PhysicianApiService {
 
     @DELETE("physicians/{id}")
     suspend fun deletePhysican(@Path("id") id: Int): Response<Void>
+
+
 }

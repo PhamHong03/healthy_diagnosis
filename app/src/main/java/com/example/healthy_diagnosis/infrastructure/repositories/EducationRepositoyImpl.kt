@@ -25,8 +25,20 @@ class EducationRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getAllEducation(): List<EducationEntity> {
-        return educationDao.getAllEducation()
+    override suspend fun getAllEducations(): List<EducationEntity> {
+        return educationApiService.getAllEducations()
+//        return try {
+//            val response = educationApiService.getAllEducations()
+//            if (response.isSuccessful) {
+//                response.body() ?: emptyList()
+//            } else {
+//                Log.e("PhysicianRepo", "Lỗi lấy danh sách chuyên môn: ${response.code()} - ${response.errorBody()?.string()}")
+//                emptyList()
+//            }
+//        } catch (e: Exception) {
+//            Log.e("PhysicianRepo", "Lỗi kết nối API (specializations): ${e.message}")
+//            emptyList()
+//        }
     }
 
     override suspend fun deleteEducation(id: Int) {

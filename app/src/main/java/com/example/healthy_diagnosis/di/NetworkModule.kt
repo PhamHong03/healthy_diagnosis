@@ -4,6 +4,7 @@ import com.example.healthy_diagnosis.data.datasources.remote.ApiService
 import com.example.healthy_diagnosis.data.datasources.remote.EducationApiService
 import com.example.healthy_diagnosis.data.datasources.remote.PatientApiService
 import com.example.healthy_diagnosis.data.datasources.remote.PhysicianApiService
+import com.example.healthy_diagnosis.data.datasources.remote.SpecializationApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,7 +18,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private val BASE_URL = "http://192.168.1.6:5000"
+    private val BASE_URL = "http://192.168.1.7:5000"
 
     @Provides
     @Singleton
@@ -40,6 +41,13 @@ object NetworkModule {
     fun provideEducationService(retrofit: Retrofit): EducationApiService {
         return retrofit.create(EducationApiService::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideSpecializationService(retrofit: Retrofit): SpecializationApiService {
+        return retrofit.create(SpecializationApiService::class.java)
+    }
+
 
     @Provides
     @Singleton

@@ -10,21 +10,24 @@ import com.example.healthy_diagnosis.data.models.AccountEntity
 import com.example.healthy_diagnosis.data.models.EducationEntity
 import com.example.healthy_diagnosis.data.models.PatientEntity
 import com.example.healthy_diagnosis.data.models.PhysicianEntity
+import com.example.healthy_diagnosis.data.models.SpecializationEntity
 
 @Database(
     entities = [
         AccountEntity::class,
         EducationEntity::class,
         PhysicianEntity::class,
-        PatientEntity::class
+        PatientEntity::class,
+        SpecializationEntity::class
                ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 
 abstract class AppDatabase : RoomDatabase() {
     abstract fun accountDao(): AccountDAO
     abstract fun educationDao(): EducationDao
+    abstract fun specializationDao(): SpecializationDao
     abstract fun physicianDao(): PhysicianDao
     abstract fun patientDao(): PatientDao
 

@@ -25,8 +25,8 @@ import com.example.healthy_diagnosis.ui.theme.LightBlueWhite
 fun TopBarScreen(
     title: String,
     onBackClick: () -> Unit,
-    actionIcon: ImageVector,
-    onActionClick: () -> Unit
+    actionIcon: ImageVector? = null,
+    onActionClick: (() -> Unit)? = null
 ) {
     TopAppBar(
         title = {
@@ -43,8 +43,10 @@ fun TopBarScreen(
             }
         },
         actions = {
-            IconButton(onClick = onActionClick) {
-                Icon(imageVector = actionIcon, contentDescription = "Action")
+            if (actionIcon != null && onActionClick != null) {
+                IconButton(onClick = onActionClick) {
+                    Icon(imageVector = actionIcon, contentDescription = "Action")
+                }
             }
         },
         colors = TopAppBarDefaults.mediumTopAppBarColors(

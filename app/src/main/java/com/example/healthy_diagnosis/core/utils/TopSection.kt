@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.example.healthy_diagnosis.R
 
 @Composable
-fun TopSection(text: String) {
+fun TopSection(text: String? = null) {
     Box(
         contentAlignment = Alignment.TopCenter
     ) {
@@ -59,12 +59,16 @@ fun TopSection(text: String) {
                 )
             }
         }
-        Text(
-            modifier = Modifier.run { padding(bottom = 10.dp).align(alignment = Alignment.BottomCenter) },
-            text = text,
-            style = MaterialTheme.typography.headlineLarge,
-            fontWeight = FontWeight.Bold
-        )
+        text?.let {
+            Text(
+                modifier = Modifier
+                    .padding(bottom = 10.dp)
+                    .align(Alignment.BottomCenter),
+                text = it,
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold
+            )
+        }
 
     }
 }

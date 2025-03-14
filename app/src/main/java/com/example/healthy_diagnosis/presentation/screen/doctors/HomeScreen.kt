@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -71,7 +72,7 @@ fun HomeScreen(
             HeaderSection(authViewModel, notificationCount, "Hello Dr. ")
             SearchBar()
             Spacer(modifier = Modifier.height(10.dp))
-            Banner()
+            Banner(padding = 10.dp)
             MenuGridWithRows(items, navController)
         }
 
@@ -79,12 +80,12 @@ fun HomeScreen(
 }
 
 @Composable
-fun Banner() {
+fun Banner(padding : Dp) {
     Card(
         shape = RoundedCornerShape(10.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp),
+            .padding(padding),
         colors = CardDefaults.cardColors(containerColor = BannerColor)
     ) {
         Column(
