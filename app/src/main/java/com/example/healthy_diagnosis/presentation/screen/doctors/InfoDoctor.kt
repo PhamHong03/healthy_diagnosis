@@ -27,9 +27,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import com.example.healthy_diagnosis.core.utils.BannerInfo
 import com.example.healthy_diagnosis.core.utils.ButtonClick
 import com.example.healthy_diagnosis.core.utils.ConfirmSaveDialog
 import com.example.healthy_diagnosis.domain.usecases.physician.PhysicianRequest
@@ -46,13 +48,16 @@ fun InfoDoctor(
     specializationViewModel: SpecializationViewModel,
     educationViewModel: EducationViewModel
 ) {
+
+    val context = LocalContext.current
+
     var name by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var address by remember { mutableStateOf("") }
     var gender by remember { mutableStateOf("") }
-    var specializationId by remember { mutableStateOf("") }
-    var educationId by remember { mutableStateOf("") }
+    var specializationId by remember { mutableStateOf(0) }
+    var educationId by remember { mutableStateOf(0) }
 
     LaunchedEffect(Unit) {
         specializationViewModel.fetchSpecializations()
@@ -69,23 +74,13 @@ fun InfoDoctor(
 
     Scaffold(
         topBar = {
-//            CenterAlignedTopAppBar(
-//                title = {
-//                    Text(
-//                        text = "THÔNG TIN BÁC SĨ",
-//                        color = Color.Black,
-//                        fontSize = 20.sp,
-//                        modifier = Modifier.padding(top = 12.dp)
-//                    )
-//                }
-//            )
-            Banner(padding = 0.dp)
+            BannerInfo(padding = 0.dp)
         }
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
                 .padding(paddingValues)
-                .padding(14.dp),
+                .padding(10.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             item {
@@ -110,9 +105,9 @@ fun InfoDoctor(
             item {
                 DoctorDropdownField(
                     label = "Chuyên môn",
-                    value = specializations.find { it.id.toString() == specializationId }?.name ?: "",
+                    value = specializations.find { it.id == specializationId }?.name ?: "Chọn chuyên môn",
                     onValueChange = { selected ->
-                        specializationId = specializations.find { it.name == selected }?.id.toString()
+                        specializationId = specializations.find { it.name == selected }?.id ?: 0
                     },
                     options = specializationOptions
                 )
@@ -120,29 +115,55 @@ fun InfoDoctor(
             item {
                 DoctorDropdownField(
                     label = "Trình độ học vấn",
-                    value = educations.find { it.id.toString() == educationId }?.name ?: "",
+                    value = educations.find { it.id == educationId }?.name ?: "Chọn trình độ",
                     onValueChange = { selected ->
-                        educationId = educations.find { it.name == selected }?.id.toString()
+                        educationId = educations.find { it.name == selected }?.id ?: 0
                     },
-                    options = educationOptions
+                    options = specializationOptions
                 )
             }
-            item {
-                ButtonClick(text = "Lưu thông tin", onClick = { showDialog = true })
+            item{
+                ButtonClick(text = "Lưu thông tin", onClick = {
+                    showDialog = true
+                })
             }
         }
     }
     if (showDialog) {
         ConfirmSaveDialog(
             onDismiss = { showDialog = false },
-            onConfirm = { navController.navigate("home") }
+            onConfirm = {
+                physicianViewModel.insertPhysician(
+                    name = name,
+                    email = email,
+                    phone = phone,
+                    address = address,
+                    gender = gender,
+                    specializationId = specializationId,
+                    educationId = educationId
+                )
+                showDialog = false
+            }
         )
+    }
+    val isSaved by physicianViewModel.isSaved.collectAsState()
+
+    LaunchedEffect(isSaved) {
+        if (isSaved) {
+            Toast.makeText(context, "Đăng ký bác sĩ thành công!", Toast.LENGTH_SHORT).show()
+            navController.navigate("home") {
+                popUpTo("infoDoctor") { inclusive = true }
+            }
+        }
     }
 }
 
 @Composable
-fun DoctorInputField(label: String, value: String, onValueChange: (String) -> Unit) {
-
+fun DoctorInputField(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit
+){
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
@@ -159,7 +180,12 @@ fun DoctorInputField(label: String, value: String, onValueChange: (String) -> Un
 }
 
 @Composable
-fun DoctorDropdownField(label: String, value: String, onValueChange: (String) -> Unit, options: List<String>) {
+fun DoctorDropdownField(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    options: List<String>
+){
     var expanded by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier

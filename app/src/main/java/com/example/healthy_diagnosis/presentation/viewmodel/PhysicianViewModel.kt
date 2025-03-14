@@ -27,6 +27,10 @@ class PhysicianViewModel @Inject constructor(
     private val _addphysicianResult = MutableStateFlow<String?>(null)
     val addPhysicianResult : StateFlow<String?> = _addphysicianResult
 
+
+    private val _isSaved = MutableStateFlow(false)
+    val isSaved: StateFlow<Boolean> get() = _isSaved
+
     private val _isLoading = MutableStateFlow(false)
 
     val isLoading = _isLoading.asStateFlow()
@@ -42,7 +46,20 @@ class PhysicianViewModel @Inject constructor(
         }
     }
 
-    fun addPhysician(name: String, email: String, phone: String, address: String, gender: String, specializationId: Int, educationId: Int){
+    fun insertPhysician(name: String, email: String, phone: String, address: String, gender: String, specializationId: Int, educationId: Int){
+        viewModelScope.launch {
+            try {
+                val physicianEntity = PhysicianEntity(name = name, email = email, phone = phone, address = address, gender = gender, specializationId = specializationId, educationId = educationId)
+                physicianRepository.insertPhysician(physicianEntity)
+                _addphysicianResult.value = " Thêm thành công"
+                fetchPhysician()
+            }catch (e:Exception){
+                _addphysicianResult.value = "Lỗi :; ${e.message}"
+            }
+        }
+    }
+
+    fun insertPhysician1(name: String, email: String, phone: String, address: String, gender: String, specializationId: Int, educationId: Int){
         viewModelScope.launch {
             try {
                 val physicianEntity = PhysicianEntity(name = name, email = email, phone = phone, address = address, gender = gender, specializationId = specializationId, educationId = educationId)

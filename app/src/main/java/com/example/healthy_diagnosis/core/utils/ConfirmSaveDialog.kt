@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.healthy_diagnosis.ui.theme.BannerColor
 
 @Composable
 fun ConfirmSaveDialog(
@@ -38,7 +39,7 @@ fun ConfirmSaveDialog(
         confirmButton = {
             Button(
                 onClick = onConfirm,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB3E5FC)), // Màu xanh nhạt
+                colors = ButtonDefaults.buttonColors(containerColor = BannerColor),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Xác nhận", color = Color.Black)
