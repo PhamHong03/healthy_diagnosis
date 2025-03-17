@@ -97,11 +97,31 @@ fun InfoDoctor(
                     )
                 }
             }
-            item { DoctorInputField(label = "Họ tên", value = name, onValueChange = { name = it }) }
-            item { DoctorInputField(label = "Giới tính", value = gender, onValueChange = { gender = it }) }
-            item { DoctorInputField(label = "Số điện thoại", value = phone, onValueChange = { phone = it }) }
-            item { DoctorInputField(label = "Email", value = email, onValueChange = { email = it }) }
-            item { DoctorInputField(label = "Địa chỉ", value = address, onValueChange = { address = it }) }
+            item { DoctorInputField(
+                label = "Họ tên",
+                value = name,
+                onValueChange = { name = it }
+            ) }
+            item { DoctorInputField(
+                label = "Giới tính",
+                value = gender,
+                onValueChange = { gender = it }
+            ) }
+            item { DoctorInputField(
+                label = "Số điện thoại",
+                value = phone,
+                onValueChange = { phone = it }
+            ) }
+            item { DoctorInputField(
+                label = "Email",
+                value = email,
+                onValueChange = { email = it }
+            ) }
+            item { DoctorInputField(
+                label = "Địa chỉ",
+                value = address,
+                onValueChange = { address = it }
+            ) }
             item {
                 DoctorDropdownField(
                     label = "Chuyên môn",
@@ -175,7 +195,8 @@ fun DoctorInputField(
             unfocusedContainerColor = Color.Transparent,
             focusedBorderColor = Color.Gray,
             unfocusedBorderColor = Color.Gray
-        )
+        ),
+        enabled = true
     )
 }
 

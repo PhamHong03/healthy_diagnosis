@@ -49,26 +49,65 @@ import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 import com.example.healthy_diagnosis.ui.theme.LightPink
 import com.example.healthy_diagnosis.ui.theme.Roboto
 
+
 @Composable
 fun LoginScreen(
     navController: NavController,
     viewModel: AuthViewModel
 ) {
     val loginState by viewModel.loginState.collectAsState()
+
     val context = LocalContext.current
+
+    val role by viewModel.userRole.collectAsState()
+    val isFirstLogin = viewModel.isFirstLogin.collectAsState().value
 
     LaunchedEffect(loginState) {
         loginState?.let { result ->
             result.onSuccess {
-                Toast.makeText(context, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
-                navController.navigate("input_infoDoctor")
-                viewModel.resetLoginState()
+                println("🔍 Role trong LoginScreen: $role")
+                println("🔍 ROLE NHẬN ĐƯỢC: $role")
+                println("🔍 isFirstLogin: $isFirstLogin")
+
+                when {
+                    isFirstLogin == true && role == "Doctor" -> {
+                        navController.navigate("input_infoDoctor") {
+                            Toast.makeText(context, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
+                            popUpTo("login") { inclusive = true }
+                        }
+                    }
+                    isFirstLogin == true && role == "Patient" -> {
+                        navController.navigate("input_patient") {
+                            Toast.makeText(context, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
+                            popUpTo("login") { inclusive = true }
+                        }
+                    }
+//                    role == "Doctor" -> {
+//                        navController.navigate("home") {
+//                            Toast.makeText(context, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
+//                            popUpTo("login") { inclusive = true }
+//                        }
+//                    }
+//                    role == "Patient" -> {
+//                        navController.navigate("home_patient") {
+//                            Toast.makeText(context, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
+//                            popUpTo("login") { inclusive = true }
+//                        }
+//                    }
+                    else -> {
+                        Toast.makeText(context, "Lỗi: Role không hợp lệ ($role)", Toast.LENGTH_SHORT).show()
+                        navController.navigate("signup") {
+                            popUpTo("login") { inclusive = true }
+                        }
+                    }
+                }
             }.onFailure { error ->
                 Toast.makeText(context, error.message ?: "Đăng nhập thất bại", Toast.LENGTH_SHORT).show()
-                viewModel.resetLoginState()
             }
+            viewModel.resetLoginState()
         }
     }
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {

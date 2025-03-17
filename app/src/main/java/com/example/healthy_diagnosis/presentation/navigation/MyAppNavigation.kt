@@ -10,6 +10,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.healthy_diagnosis.presentation.screen.LoginScreen
 import com.example.healthy_diagnosis.presentation.screen.RegisterScreen
+import com.example.healthy_diagnosis.presentation.screen.customers.HomeScreenCustomer
+import com.example.healthy_diagnosis.presentation.screen.customers.InfoCustomer
 import com.example.healthy_diagnosis.presentation.screen.doctors.DiagnosisScreen
 import com.example.healthy_diagnosis.presentation.screen.doctors.Education
 import com.example.healthy_diagnosis.presentation.screen.doctors.HomeScreen
@@ -32,7 +34,7 @@ fun MyAppNavigation(
     educationViewModel: EducationViewModel
 ) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "input_infoDoctor") {
+    NavHost(navController = navController, startDestination = "home") {
 
         composable(route = "signup") {
             RegisterScreen(navController = navController, viewModel = authViewModel)
@@ -73,5 +75,11 @@ fun MyAppNavigation(
 
 
         //Customer screen
+        composable(route = "input_patient" ) {
+            InfoCustomer(navController = navController)
+        }
+        composable(route = "home_patient") {
+            HomeScreenCustomer()
+        }
     }
 }
