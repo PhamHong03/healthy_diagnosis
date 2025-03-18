@@ -13,7 +13,7 @@ interface EducationDao {
     suspend fun getAllEducation(): List<EducationEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertEducation(educationEntity: EducationEntity)
+    suspend fun insertEducation(education: EducationEntity)
 
     @Query("DELETE FROM educations WHERE id = :id")
     suspend fun deleteEducation(id: Int)

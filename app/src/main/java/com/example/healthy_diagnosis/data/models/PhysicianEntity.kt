@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 
 @Entity(
     tableName = "physicians",
@@ -22,13 +23,14 @@ import androidx.room.PrimaryKey
         )
     ]
 )
+
 data class PhysicianEntity (
-    @PrimaryKey(autoGenerate = true) val id: Int = 1,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
     val email: String,
     val phone: String,
     val address: String,
     val gender: String,
-    @ColumnInfo(name = "specialization_id") val specializationId: Int,
-    @ColumnInfo(name = "education_id") val educationId: Int
+    val education_id: Int,
+    val specialization_id: Int
 )

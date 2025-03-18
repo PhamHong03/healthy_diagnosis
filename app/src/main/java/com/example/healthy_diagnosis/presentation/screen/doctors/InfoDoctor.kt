@@ -1,12 +1,12 @@
 package com.example.healthy_diagnosis.presentation.screen.doctors
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,21 +24,16 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.example.healthy_diagnosis.core.utils.BannerInfo
 import com.example.healthy_diagnosis.core.utils.ButtonClick
 import com.example.healthy_diagnosis.core.utils.ConfirmSaveDialog
-import com.example.healthy_diagnosis.domain.usecases.physician.PhysicianRequest
 import com.example.healthy_diagnosis.presentation.viewmodel.EducationViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.PhysicianViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.SpecializationViewModel
-import com.example.healthy_diagnosis.ui.theme.BannerColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,25 +51,27 @@ fun InfoDoctor(
     var email by remember { mutableStateOf("") }
     var address by remember { mutableStateOf("") }
     var gender by remember { mutableStateOf("") }
-    var specializationId by remember { mutableStateOf(0) }
-    var educationId by remember { mutableStateOf(0) }
+    var specialization_id by remember { mutableStateOf(0) }
+    var education_id by remember { mutableStateOf(0) }
 
     LaunchedEffect(Unit) {
         specializationViewModel.fetchSpecializations()
         educationViewModel.fetchEducations()
     }
-
     val specializations by specializationViewModel.specializationList.collectAsState()
     val educations by educationViewModel.educationList.collectAsState()
 
-    val specializationOptions = specializations.map { it.name }
-    val educationOptions = educations.map { it.name }
+    Log.d("Debug", "Specialization List: $specializations")
+    Log.d("Debug", "Education List: $educations")
+    val specializationOptions = specializations.map { it.id to it.name }
+    val educationOptions = educations.map { it.id to it.name }
+
 
     var showDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
-            BannerInfo(padding = 0.dp)
+            BannerInfo(padding = 0.dp, "Trung tâm chuẩn đoán")
         }
     ) { paddingValues ->
         LazyColumn(
@@ -102,11 +99,14 @@ fun InfoDoctor(
                 value = name,
                 onValueChange = { name = it }
             ) }
-            item { DoctorInputField(
+
+             item { DoctorInputField(
                 label = "Giới tính",
                 value = gender,
                 onValueChange = { gender = it }
             ) }
+
+
             item { DoctorInputField(
                 label = "Số điện thoại",
                 value = phone,
@@ -124,22 +124,22 @@ fun InfoDoctor(
             ) }
             item {
                 DoctorDropdownField(
-                    label = "Chuyên môn",
-                    value = specializations.find { it.id == specializationId }?.name ?: "Chọn chuyên môn",
-                    onValueChange = { selected ->
-                        specializationId = specializations.find { it.name == selected }?.id ?: 0
-                    },
-                    options = specializationOptions
+                    label = "Trình độ học vấn",
+                    selectedId = education_id,
+                    onValueChange = { selectedId -> education_id = selectedId },
+                    options = educationOptions
                 )
             }
+
             item {
                 DoctorDropdownField(
-                    label = "Trình độ học vấn",
-                    value = educations.find { it.id == educationId }?.name ?: "Chọn trình độ",
-                    onValueChange = { selected ->
-                        educationId = educations.find { it.name == selected }?.id ?: 0
-                    },
+                    label = "Chuyên môn",
+                    selectedId = specialization_id,
+                    onValueChange = { selectedId ->
+                        specialization_id = selectedId
+                        Log.d("Debug", "Selected specializationId: $selectedId")},
                     options = specializationOptions
+
                 )
             }
             item{
@@ -153,18 +153,20 @@ fun InfoDoctor(
         ConfirmSaveDialog(
             onDismiss = { showDialog = false },
             onConfirm = {
+                Toast.makeText(context, "Chuyên môn: $specialization_id, Học vấn: $education_id", Toast.LENGTH_SHORT).show()
                 physicianViewModel.insertPhysician(
                     name = name,
                     email = email,
                     phone = phone,
                     address = address,
                     gender = gender,
-                    specializationId = specializationId,
-                    educationId = educationId
+                    education_id = education_id,
+                    specialization_id = specialization_id
                 )
                 showDialog = false
             }
         )
+
     }
     val isSaved by physicianViewModel.isSaved.collectAsState()
 
@@ -203,20 +205,22 @@ fun DoctorInputField(
 @Composable
 fun DoctorDropdownField(
     label: String,
-    value: String,
-    onValueChange: (String) -> Unit,
-    options: List<String>
+    selectedId: Int,
+    onValueChange: (Int) -> Unit,
+    options: List<Pair<Int, String>>
 ){
     var expanded by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(vertical = 6.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp)
+    ) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { expanded = true },
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFD0E8FF)) // Xanh nhạt
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFD0E8FF))
         ) {
             Row(
                 modifier = Modifier
@@ -225,9 +229,9 @@ fun DoctorDropdownField(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = value.ifEmpty { "Chọn $label" },
+                    text = options.find { it.first == selectedId }?.second ?: "Chọn $label",
                     fontSize = 14.sp,
-                    color = if (value.isEmpty()) Color.Blue else Color.Black
+                    color = if (selectedId == 0) Color.Blue else Color.Black
                 )
                 Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = "Dropdown")
             }
@@ -236,11 +240,11 @@ fun DoctorDropdownField(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            options.forEach { option ->
+            options.forEach { (id, name) ->
                 DropdownMenuItem(
-                    text = { Text(option) },
+                    text = { Text(name) },
                     onClick = {
-                        onValueChange(option)
+                        onValueChange(id)
                         expanded = false
                     }
                 )
@@ -248,6 +252,7 @@ fun DoctorDropdownField(
         }
     }
 }
+
 
 @Composable
 fun DoctorItem(

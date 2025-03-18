@@ -31,7 +31,7 @@ import kotlin.math.exp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookingScreen(modifier: Modifier = Modifier) {
+fun BookingScreen() {
 
     var name by remember {
         mutableStateOf("")

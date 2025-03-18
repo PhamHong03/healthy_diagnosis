@@ -1,5 +1,6 @@
 package com.example.healthy_diagnosis.presentation.viewmodel
 
+import android.util.Log
 import androidx.compose.ui.util.fastCbrt
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -45,24 +46,45 @@ class PhysicianViewModel @Inject constructor(
 
         }
     }
-
-    fun insertPhysician(name: String, email: String, phone: String, address: String, gender: String, specializationId: Int, educationId: Int){
+    fun insertPhysician(name: String, email: String, phone: String, address: String, gender: String, education_id: Int, specialization_id: Int){
         viewModelScope.launch {
             try {
-                val physicianEntity = PhysicianEntity(name = name, email = email, phone = phone, address = address, gender = gender, specializationId = specializationId, educationId = educationId)
+                Log.d("InsertPhysician", "Đang thêm bác sĩ: name=$name, specializationId=$specialization_id, educationId=$education_id")
+
+                val physicianEntity = PhysicianEntity(name = name, email = email, phone = phone, address = address, gender = gender, education_id = education_id, specialization_id = specialization_id)
                 physicianRepository.insertPhysician(physicianEntity)
-                _addphysicianResult.value = " Thêm thành công"
+
+                Log.d("InsertPhysician", "Nhập thông tin thành công")
                 fetchPhysician()
-            }catch (e:Exception){
-                _addphysicianResult.value = "Lỗi :; ${e.message}"
+            } catch (e: Exception) {
+                Log.d("InsertPhysician", "Checking specializationId: $specialization_id")
+
+                Log.e("InsertPhysician", "Lỗi khi thêm bác sĩ", e)
+
             }
         }
     }
 
+//    fun insertPhysician(name: String, email: String, phone: String, address: String, gender: String, specializationId: Int, educationId: Int){
+//        viewModelScope.launch {
+//            try {
+//                val physicianEntity = PhysicianEntity(name = name, email = email, phone = phone, address = address, gender = gender, specializationId = specializationId, educationId = educationId)
+//                physicianRepository.insertPhysician(physicianEntity)
+//                _addphysicianResult.value = " Thêm thành công"
+//
+//                Log.d("Physicians", "Nhập thông tin thành công")
+//                fetchPhysician()
+//            }catch (e:Exception){
+//                _addphysicianResult.value = "Lỗi : ${e.message}"
+//                Log.e("Physicians", "Lỗi : ${e.message}")
+//            }
+//        }
+//    }
+
     fun insertPhysician1(name: String, email: String, phone: String, address: String, gender: String, specializationId: Int, educationId: Int){
         viewModelScope.launch {
             try {
-                val physicianEntity = PhysicianEntity(name = name, email = email, phone = phone, address = address, gender = gender, specializationId = specializationId, educationId = educationId)
+                val physicianEntity = PhysicianEntity(name = name, email = email, phone = phone, address = address, gender = gender, education_id = educationId,  specialization_id = specializationId)
                 physicianRepository.insertPhysician(physicianEntity)
                 _addphysicianResult.value = " Thêm thành công"
                 fetchPhysician()

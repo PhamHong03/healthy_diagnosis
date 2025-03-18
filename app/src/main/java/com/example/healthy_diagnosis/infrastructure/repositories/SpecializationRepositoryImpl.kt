@@ -17,14 +17,17 @@ class SpecializationRepositoryImpl @Inject constructor(
         return try {
             val response = specializationApiService.getSpecializations()
             if (response.isSuccessful) {
-                response.body() ?: emptyList()
+                val specializations = response.body() ?: emptyList()
+                specializationDao.insertSpecializations(specializations) // Lưu vào Room
+                specializations
             } else {
-                Log.e("PhysicianRepo", "Lỗi lấy danh sách chuyên môn: ${response.code()} - ${response.errorBody()?.string()}")
+                Log.e("SpecializationRepo", "Lỗi lấy danh sách chuyên môn: ${response.code()} - ${response.errorBody()?.string()}")
                 emptyList()
             }
         } catch (e: Exception) {
-            Log.e("PhysicianRepo", "Lỗi kết nối API (specializations): ${e.message}")
+            Log.e("SpecializationRepo", "Lỗi kết nối API (specializations): ${e.message}")
             emptyList()
         }
     }
+
 }

@@ -29,7 +29,7 @@ import com.example.healthy_diagnosis.R
 import com.example.healthy_diagnosis.ui.theme.BannerColor
 
 @Composable
-fun BannerInfo(padding : Dp) {
+fun BannerInfo(padding : Dp, text: String) {
     Card(
         shape = RoundedCornerShape(2.dp),
         modifier = Modifier
@@ -48,7 +48,7 @@ fun BannerInfo(padding : Dp) {
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Trung tâm chuẩn đoán",
+                        text = text,
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
                         color = Color.White

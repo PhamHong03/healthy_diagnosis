@@ -9,13 +9,21 @@ import com.example.healthy_diagnosis.data.models.PhysicianEntity
 @Dao
 interface PhysicianDao {
 
-    @Query("SELECT * FROM physicians")
-    suspend fun getAllPhysician(): List<PhysicianEntity>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPhysician(physicianEntity: PhysicianEntity)
+
+    @Query("SELECT * FROM physicians WHERE id = :id LIMIT 1")
+    suspend fun getPhysicianById(id: Int): PhysicianEntity?
 
     @Query("DELETE FROM physicians WHERE id = :id")
     suspend fun deletePhysician(id: Int)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(physicians: List<PhysicianEntity>)
+
+    @Query("DELETE FROM physicians")
+    suspend fun deleteAll()
+
+    @Query("SELECT * FROM physicians")
+    suspend fun getAllPhysician(): List<PhysicianEntity>
 }
