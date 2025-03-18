@@ -42,7 +42,7 @@ fun ConfirmSaveDialog(
                 colors = ButtonDefaults.buttonColors(containerColor = BannerColor),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Xác nhận", color = Color.Black)
+
             }
         },
         dismissButton = {

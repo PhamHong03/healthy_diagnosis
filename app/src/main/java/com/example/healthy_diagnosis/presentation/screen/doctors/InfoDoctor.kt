@@ -153,7 +153,7 @@ fun InfoDoctor(
         ConfirmSaveDialog(
             onDismiss = { showDialog = false },
             onConfirm = {
-                Toast.makeText(context, "Chuyên môn: $specialization_id, Học vấn: $education_id", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, "Chuyên môn: $specialization_id, Học vấn: $education_id", Toast.LENGTH_SHORT).show()
                 physicianViewModel.insertPhysician(
                     name = name,
                     email = email,
@@ -176,6 +176,7 @@ fun InfoDoctor(
             navController.navigate("home") {
                 popUpTo("infoDoctor") { inclusive = true }
             }
+            physicianViewModel.resetIsSaved() // Reset trạng thái sau khi điều hướng
         }
     }
 }

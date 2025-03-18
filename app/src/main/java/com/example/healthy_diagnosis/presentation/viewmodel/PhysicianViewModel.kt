@@ -49,18 +49,25 @@ class PhysicianViewModel @Inject constructor(
     fun insertPhysician(name: String, email: String, phone: String, address: String, gender: String, education_id: Int, specialization_id: Int){
         viewModelScope.launch {
             try {
-                Log.d("InsertPhysician", "Đang thêm bác sĩ: name=$name, specializationId=$specialization_id, educationId=$education_id")
-
-                val physicianEntity = PhysicianEntity(name = name, email = email, phone = phone, address = address, gender = gender, education_id = education_id, specialization_id = specialization_id)
+                val physicianEntity = PhysicianEntity(
+                    name = name,
+                    email = email,
+                    phone = phone,
+                    address = address,
+                    gender = gender,
+                    education_id = education_id,
+                    specialization_id = specialization_id
+                )
                 physicianRepository.insertPhysician(physicianEntity)
 
                 Log.d("InsertPhysician", "Nhập thông tin thành công")
+
+                _isSaved.value = true  // Cập nhật trạng thái khi lưu thành công
                 fetchPhysician()
+
             } catch (e: Exception) {
-                Log.d("InsertPhysician", "Checking specializationId: $specialization_id")
-
                 Log.e("InsertPhysician", "Lỗi khi thêm bác sĩ", e)
-
+                _isSaved.value = false  // Nếu lỗi, không cập nhật trạng thái lưu thành công
             }
         }
     }
@@ -100,5 +107,9 @@ class PhysicianViewModel @Inject constructor(
             fetchPhysician()
         }
 
+    }
+
+    fun resetIsSaved() {
+        _isSaved.value = false
     }
 }

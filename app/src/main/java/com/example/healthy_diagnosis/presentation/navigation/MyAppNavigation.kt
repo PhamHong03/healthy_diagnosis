@@ -35,7 +35,7 @@ fun MyAppNavigation(
     educationViewModel: EducationViewModel
 ) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "input_infoDoctor") {
+    NavHost(navController = navController, startDestination = "home") {
 
         composable(route = "signup") {
             RegisterScreen(navController = navController, viewModel = authViewModel)
@@ -61,7 +61,7 @@ fun MyAppNavigation(
             )
         }
         composable(route = "diagnosis"){
-            DiagnosisScreen(navController = navController, authViewModel = authViewModel)
+            DiagnosisScreen(navController = navController, authViewModel = authViewModel, patientViewModel)
         }
 
         composable(route = "healthcare") {
