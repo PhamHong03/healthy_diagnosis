@@ -8,8 +8,10 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.healthy_diagnosis.data.models.AccountEntity
 import com.example.healthy_diagnosis.data.models.EducationEntity
+import com.example.healthy_diagnosis.data.models.MedicalHistoryEntity
 import com.example.healthy_diagnosis.data.models.PatientEntity
 import com.example.healthy_diagnosis.data.models.PhysicianEntity
+import com.example.healthy_diagnosis.data.models.RoomEntity
 import com.example.healthy_diagnosis.data.models.SpecializationEntity
 
 @Database(
@@ -18,9 +20,11 @@ import com.example.healthy_diagnosis.data.models.SpecializationEntity
         EducationEntity::class,
         PhysicianEntity::class,
         PatientEntity::class,
-        SpecializationEntity::class
+        SpecializationEntity::class,
+        RoomEntity::class,
+        MedicalHistoryEntity::class
                ],
-    version = 4,
+    version =6,
     exportSchema = false
 )
 
@@ -30,6 +34,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun specializationDao(): SpecializationDao
     abstract fun physicianDao(): PhysicianDao
     abstract fun patientDao(): PatientDao
+    abstract fun roomDao(): RoomDao
+    abstract fun medicalhistoryDao():MedicalHistoryDao
 
     companion object {
         fun getDatabase(context: Context): AppDatabase {
@@ -76,6 +82,33 @@ abstract class AppDatabase : RoomDatabase() {
                 database.execSQL("ALTER TABLE patients_new RENAME TO patients")
             }
         }
+//        val MIGRATION_5_6 = object : Migration(5, 6) {
+//            override fun migrate(database: SupportSQLiteDatabase) {
+//                // Kiểm tra nếu cột "date" chưa tồn tại thì mới thêm
+//                val cursor = database.query("PRAGMA table_info(MedicalHistoryEntity)")
+//                var columnExists = false
+//                while (cursor.moveToNext()) {
+//                    val columnName = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+//                    if (columnName == "date") {
+//                        columnExists = true
+//                        break
+//                    }
+//                }
+//                cursor.close()
+//
+//                if (!columnExists) {
+//                    database.execSQL(
+//                        """
+//                ALTER TABLE MedicalHistoryEntity ADD COLUMN date TEXT NOT NULL DEFAULT ''
+//                """.trimIndent()
+//                    )
+//                }
+//            }
+//        }
+
+
+
+
     }
 
 

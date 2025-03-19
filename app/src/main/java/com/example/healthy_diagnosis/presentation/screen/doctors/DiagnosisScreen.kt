@@ -57,6 +57,8 @@ import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import com.example.healthy_diagnosis.core.utils.ButtonClick
 import com.example.healthy_diagnosis.core.utils.ConfirmSaveDialog
@@ -71,12 +73,19 @@ import kotlinx.coroutines.launch
 fun DiagnosisScreen(
     navController: NavController,
     authViewModel: AuthViewModel,
-    viewModelPatientViewModel: PatientViewModel
+    patientViewModel: PatientViewModel
 ) {
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     val notificationCount by remember { mutableStateOf(5) }
-    var selectedPatient by remember { mutableStateOf<String?>(null) }
-    var patients = listOf("Bệnh nhân A", "Bệnh nhân B", "Bệnh nhân C")
+    var selectedPatientId by remember { mutableStateOf<Int?>(null) }
+
+    LaunchedEffect(Unit) {
+        patientViewModel.fetchPatients()
+    }
+
+    val patient by patientViewModel.patientList.collectAsState()
+
+    val patients = patient.map{it.id to it.name}
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -125,20 +134,9 @@ fun DiagnosisScreen(
                 SelectedPatient(
                     navController = navController,
                     patients = patients,
-                    selectedPatient = selectedPatient,
-                    onPatientSelected = { selectedPatient = it },
-                    onAddPatient = { showAddPatientDialog = true }
+                    selectedPatientId = selectedPatientId,
+                    onPatientSelected = { id -> selectedPatientId = id }
                 )
-
-                if (showAddPatientDialog) {
-                    AddPatientDialog(
-                        onDismiss = { showAddPatientDialog = false },
-                        onConfirm = { newPatient ->
-                            showAddPatientDialog = false
-                        } ,
-                        viewModel = viewModelPatientViewModel,
-                    )
-                }
 
                 Diagnosis(
                     onClick = {
@@ -193,142 +191,61 @@ fun DiagnosisScreen(
         )
     }
 }
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectedPatient(
     navController: NavController,
-    patients: List<String>,
-    selectedPatient: String?,
-    onPatientSelected: (String) -> Unit,
-    onAddPatient: () -> Unit
+    patients: List<Pair<Int, String>>,  // Danh sách (ID, Tên)
+    selectedPatientId: Int?,  // Lưu ID của bệnh nhân đã chọn
+    onPatientSelected: (Int) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Row(
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(16.dp)
     ) {
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = it }
-        ) {
-            OutlinedTextField(
-                value = selectedPatient ?: "Chọn bệnh nhân",
-                onValueChange = {},
-                readOnly = true,
-                modifier = Modifier
-                    .weight(1f)
-                    .menuAnchor(),
-            )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                patients.forEach { patient ->
-                    DropdownMenuItem(
-                        text = { Text(patient) },
-                        onClick = {
-                            onPatientSelected(patient)
-                            expanded = false
+        // Hiển thị tên bệnh nhân đã chọn
+        OutlinedTextField(
+            value = patients.find { it.first == selectedPatientId }?.second ?: "Chọn bệnh nhân",
+            onValueChange = {},
+            readOnly = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .menuAnchor(),
+            trailingIcon = {
+                if (selectedPatientId != null) {
+                    Text(
+                        text = "Chi tiết",
+                        color = MaterialTheme.colorScheme.primary,
+                        fontStyle = FontStyle.Italic,
+                        modifier = Modifier.clickable {
+                            navController.navigate("patient_detail/$selectedPatientId")
                         }
                     )
                 }
             }
-        }
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        if (selectedPatient == null) {
-            IconButton(onClick = { onAddPatient() }) { // ✅ Gọi Dialog thay vì navigate
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Thêm bệnh nhân")
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            patients.forEach { (id, name) ->
+                DropdownMenuItem(
+                    text = { Text(name) }, // Hiển thị tên bệnh nhân
+                    onClick = {
+                        onPatientSelected(id)  // Lưu ID khi chọn
+                        expanded = false
+                    }
+                )
             }
-        } else {
-            Text(
-                text = "Chi tiết",
-                color = MaterialTheme.colorScheme.primary,
-                fontStyle = FontStyle.Italic,
-                modifier = Modifier
-                    .clickable { navController.navigate("patient_detail/$selectedPatient") }
-                    .padding(8.dp)
-            )
         }
     }
-}
-
-@Composable
-fun AddPatientDialog(
-    onDismiss: () -> Unit,
-    onConfirm: (PatientEntity) -> Unit,
-    viewModel: PatientViewModel
-) {
-    var name by remember { mutableStateOf("") }
-    var dayOfBirth by remember { mutableStateOf("") }
-    var gender by remember { mutableStateOf("") }
-    var phone by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var job by remember { mutableStateOf("") }
-    var medicalCodeCard by remember { mutableStateOf("") }
-    var codeCardDayStart by remember { mutableStateOf("") }
-    val context = LocalContext.current
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Text(
-                "Thêm Bệnh Nhân",
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp
-            )
-        },
-        text = {
-            Column(modifier = Modifier.padding(8.dp)) {
-                OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("Họ tên") }, modifier = Modifier.fillMaxWidth())
-                DatePickerFieldCustomer(context, "Ngày sinh", dayOfBirth) { dayOfBirth = it }
-                OutlinedTextField(value = gender, onValueChange = { gender = it }, label = { Text("Giới tính") }, modifier = Modifier.fillMaxWidth())
-                OutlinedTextField(value = phone, onValueChange = { phone = it }, label = { Text("Số điện thoại") }, modifier = Modifier.fillMaxWidth())
-                OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email") }, modifier = Modifier.fillMaxWidth())
-                OutlinedTextField(value = job, onValueChange = { job = it }, label = { Text("Nghề nghiệp") }, modifier = Modifier.fillMaxWidth())
-                OutlinedTextField(value = medicalCodeCard, onValueChange = { medicalCodeCard = it }, label = { Text("Mã thẻ y tế") }, modifier = Modifier.fillMaxWidth())
-                DatePickerFieldCustomer(context, "Ngày cấp thẻ", codeCardDayStart) { codeCardDayStart = it }
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = {
-                    val newPatient = PatientEntity(
-                        id = 0, // Auto-generate trong Room
-                        name = name,
-                        day_of_birth = dayOfBirth,
-                        gender = gender,
-                        phone = phone,
-                        email = email,
-                        job = job,
-                        medical_code_card = medicalCodeCard,
-                        code_card_day_start = codeCardDayStart,
-                        status = 1
-                    )
-//                    viewModel.addPatient(newPatient)
-                    onConfirm(newPatient)
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = BannerColor),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Xác nhận", color = Color.Black)
-            }
-        },
-        dismissButton = {
-            OutlinedButton(
-                onClick = onDismiss,
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Gray),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Hủy")
-            }
-        },
-        shape = RoundedCornerShape(12.dp)
-    )
 }
 
 

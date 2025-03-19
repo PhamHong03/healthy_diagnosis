@@ -2,6 +2,7 @@ package com.example.healthy_diagnosis.presentation.screen.customers
 
 import android.app.DatePickerDialog
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,20 +40,24 @@ import com.example.healthy_diagnosis.core.utils.ButtonClick
 import com.example.healthy_diagnosis.core.utils.ConfirmSaveDialog
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import com.example.healthy_diagnosis.presentation.viewmodel.PatientViewModel
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 @Composable
 fun InfoCustomer(
-    navController: NavController
+    navController: NavController,
+    patientViewModel: PatientViewModel
 ){
     var name by remember { mutableStateOf("") }
-    var dayOfBirth by remember { mutableStateOf("") }
+    var day_of_birth by remember { mutableStateOf("") }
     var gender by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var job by remember { mutableStateOf("") }
-    var medicalCodeCard by remember { mutableStateOf("") }
-    var codeCardDayStart by remember { mutableStateOf("") }
+    var medical_code_card by remember { mutableStateOf("") }
+    var code_card_day_start by remember { mutableStateOf("") }
     var status by remember { mutableStateOf(-1) }
 
     val context = LocalContext.current
@@ -94,7 +99,7 @@ fun InfoCustomer(
                 onValueChange = { name = it }
             ) }
             item {
-                DatePickerFieldCustomer(context, "Chọn ngày sinh", dayOfBirth) { dayOfBirth = it }
+                DatePickerFieldCustomer(context, "Chọn ngày sinh", day_of_birth) { day_of_birth = it }
             }
             item { CustomerInput(
                 label = "Giới tính",
@@ -119,12 +124,12 @@ fun InfoCustomer(
 
             item { CustomerInput(
                 label = "Mã thẻ khám bệnh",
-                value = medicalCodeCard,
-                onValueChange = { medicalCodeCard = it }
+                value = medical_code_card,
+                onValueChange = { medical_code_card = it }
             ) }
 
             item {
-                DatePickerFieldCustomer(context, "Ngày bắt đầu khám", codeCardDayStart) { codeCardDayStart = it }
+                DatePickerFieldCustomer(context, "Ngày bắt đầu khám", code_card_day_start) { code_card_day_start = it }
             }
 
             item {
@@ -146,23 +151,32 @@ fun InfoCustomer(
         ConfirmSaveDialog(
             onDismiss = { showDialog = false },
             onConfirm = {
-
+                patientViewModel.insertPatient(
+                    name = name,
+                    day_of_birth = day_of_birth,
+                    gender = gender,
+                    phone = phone,
+                    email = email,
+                    job = job,
+                    medical_code_card = medical_code_card,
+                    code_card_day_start = code_card_day_start,
+                    status = status
+                )
                 showDialog = false
             }
         )
     }
-//    val isSaved by physicianViewModel.isSaved.collectAsState()
-//
-//    LaunchedEffect(isSaved) {
-//        if (isSaved) {
-//            Toast.makeText(context, "Đăng ký bác sĩ thành công!", Toast.LENGTH_SHORT).show()
-//            navController.navigate("home") {
-//                popUpTo("infoDoctor") { inclusive = true }
-//            }
-//        }
-//    }
-}
+    val isSaved by patientViewModel.isSaved.collectAsState()
 
+    LaunchedEffect(isSaved) {
+        if (isSaved) {
+            Toast.makeText(context, "Đăng ký bệnh nhân thành công!", Toast.LENGTH_SHORT).show()
+            navController.navigate("home_patient") {
+                popUpTo("input_patient") { inclusive = true }
+            }
+        }
+    }
+}
 @Composable
 fun DatePickerFieldCustomer(context: Context, label: String, date: String, onDateSelected: (String) -> Unit) {
     val calendar = Calendar.getInstance()
@@ -173,16 +187,17 @@ fun DatePickerFieldCustomer(context: Context, label: String, date: String, onDat
     val datePickerDialog = DatePickerDialog(
         context,
         { _, selectedYear, selectedMonth, selectedDay ->
-            onDateSelected("$selectedDay/${selectedMonth + 1}/$selectedYear")
+            val formattedDate = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
+            onDateSelected(formattedDate)
         },
         year, month, day
     )
 
     OutlinedTextField(
-        value = date,
-        onValueChange = {}, // Không cho phép nhập bằng tay
+        value = if (date.isNotEmpty()) formatDateToDisplay(date) else "",
+        onValueChange = {},
         label = { Text(label) },
-        readOnly = true, // Chặn nhập trực tiếp
+        readOnly = true,
         trailingIcon = {
             IconButton(onClick = { datePickerDialog.show() }) {
                 Icon(Icons.Default.ArrowDropDown, contentDescription = "Pick Date")
@@ -190,11 +205,20 @@ fun DatePickerFieldCustomer(context: Context, label: String, date: String, onDat
         },
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { datePickerDialog.show() } // Nhấn vào để mở DatePicker
+            .clickable { datePickerDialog.show() }
     )
 }
 
-
+fun formatDateToDisplay(date: String): String {
+    return try {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val parsedDate = inputFormat.parse(date)
+        parsedDate?.let { outputFormat.format(it) } ?: date
+    } catch (e: Exception) {
+        date
+    }
+}
 
 
 @Composable
@@ -262,83 +286,6 @@ fun CustomerDropdownField(
                     }
                 )
             }
-        }
-    }
-}
-
-
-@Composable
-fun CustomerItem(
-    value: String,
-    onValueChange: (String) -> Unit,
-    label: String,
-    isDropdown: Boolean = false,
-    options: List<String> = emptyList()
-) {
-    var expanded by remember { mutableStateOf(false) }
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 6.dp)
-    ) {
-        Text(text = label, fontSize = 14.sp, color = Color.Black)
-
-        if (isDropdown) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { expanded = true }
-                    .padding(vertical = 6.dp),
-                shape = RoundedCornerShape(8.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFECF5FF))
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = value.ifEmpty { "Select from the list" },
-                        fontSize = 14.sp,
-                        color = if (value.isEmpty()) Color(0xFF007AFF) else Color.Black
-                    )
-                    Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = "Dropdown")
-                }
-            }
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                options.forEach { option ->
-                    DropdownMenuItem(
-                        text = { Text(option) },
-                        onClick = {
-                            onValueChange(option)
-                            expanded = false
-                        }
-                    )
-                }
-            }
-        } else {
-            OutlinedTextField(
-                value = value,
-                onValueChange = onValueChange,
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-                label = {
-                    Text(text = label)
-                },
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.Gray,
-                    unfocusedBorderColor = Color.LightGray,
-                    disabledContainerColor = Color(0xFFF5F5F5),
-                    disabledTextColor = Color.Gray
-                ),
-                enabled = false
-            )
         }
     }
 }

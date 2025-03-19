@@ -7,8 +7,10 @@ import androidx.activity.viewModels
 import com.example.healthy_diagnosis.presentation.navigation.MyAppNavigation
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.EducationViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.MedicalHistoryViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.PatientViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.PhysicianViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.RoomViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.SpecializationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.lifecycle.viewmodel.compose.viewModel as viewModels
@@ -20,10 +22,20 @@ class MainActivity : ComponentActivity() {
     private val physicianViewModel : PhysicianViewModel by viewModels()
     private val specializationViewModel: SpecializationViewModel by viewModels()
     private val educationViewModel: EducationViewModel by viewModels()
+    private val roomViewModel: RoomViewModel by viewModels()
+    private val medicalHistoryViewModel: MedicalHistoryViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyAppNavigation(authViewModel,patientViewModel, physicianViewModel, specializationViewModel, educationViewModel)
+            MyAppNavigation(
+                authViewModel,
+                patientViewModel,
+                physicianViewModel,
+                specializationViewModel,
+                educationViewModel,
+                roomViewModel,
+                medicalHistoryViewModel
+            )
         }
     }
 }

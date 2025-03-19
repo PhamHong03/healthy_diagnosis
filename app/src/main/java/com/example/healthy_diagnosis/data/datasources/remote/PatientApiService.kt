@@ -14,7 +14,7 @@ interface PatientApiService {
     suspend fun getAllPatients(): List<PatientEntity>
 
     @POST("patients")
-    suspend fun insertPatient(patientEntity: PatientEntity): Response<Void>
+    suspend fun insertPatient(@Body patientEntity: PatientEntity): Response<Void>
     @PUT("patients/{id}")
     suspend fun updatePatient(@Path("id") id: Int, @Body patientEntity: PatientEntity): Response<Void>
 

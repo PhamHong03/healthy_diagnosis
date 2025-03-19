@@ -1,13 +1,11 @@
 package com.example.healthy_diagnosis.data.models
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
 
 @Entity (tableName = "patients")
 data class PatientEntity (
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0 ,
     val name: String,
     val day_of_birth : String,
     val gender : String,

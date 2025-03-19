@@ -1,5 +1,6 @@
 package com.example.healthy_diagnosis.presentation.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -24,6 +25,14 @@ class PatientViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
+    private val _addPatientResult = MutableStateFlow<String?>(null)
+    val addPatientResult = _addPatientResult
+
+
+    private val _isSaved = MutableStateFlow(false)
+    val isSaved: StateFlow<Boolean> get() = _isSaved
+
+
     init {
         fetchPatients()
     }
@@ -35,6 +44,35 @@ class PatientViewModel @Inject constructor(
         }
     }
 
+    fun insertPatient(name: String, day_of_birth: String, gender: String, phone: String, email: String, job: String,medical_code_card: String,code_card_day_start: String,status: Int) {
+        viewModelScope.launch {
+            try {
+                val patientEntity = PatientEntity(
+                    name = name,
+                    day_of_birth = day_of_birth,
+                    gender = gender,
+                    phone = phone,
+                    email = email,
+                    job = job,
+                    medical_code_card = medical_code_card,
+                    code_card_day_start = code_card_day_start,
+                    status = status
+                )
+                patientRepository.insertPatient(patientEntity)
+                Log.d("InsertPatient", "Nhập thông tin thành công")
+                _isSaved.value  = true
+                fetchPatients()
+            }catch (e:Exception){
+                Log.e("InsertPatient", "Lỗi khi thêm bệnh nhân", e)
+                _isSaved.value = false
+            }
+        }
+    }
+
+    fun resetIsSave(){
+        _isSaved.value = false
+
+    }
     fun deletePatient(patientId: Int) {
         viewModelScope.launch {
             patientRepository.deletePatient(patientId)
@@ -42,9 +80,9 @@ class PatientViewModel @Inject constructor(
         }
     }
 
-    fun addPatient(patient: PatientRepository) {
+    fun addPatient(patientEntity: PatientEntity) {
         viewModelScope.launch {
-            patientRepository.insertPatient(patient)
+            patientRepository.insertPatient(patientEntity)
             fetchPatients()
         }
     }

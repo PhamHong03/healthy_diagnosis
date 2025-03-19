@@ -2,8 +2,10 @@ package com.example.healthy_diagnosis.di
 
 import com.example.healthy_diagnosis.data.datasources.remote.ApiService
 import com.example.healthy_diagnosis.data.datasources.remote.EducationApiService
+import com.example.healthy_diagnosis.data.datasources.remote.MedicalHistoryApiService
 import com.example.healthy_diagnosis.data.datasources.remote.PatientApiService
 import com.example.healthy_diagnosis.data.datasources.remote.PhysicianApiService
+import com.example.healthy_diagnosis.data.datasources.remote.RoomApiService
 import com.example.healthy_diagnosis.data.datasources.remote.SpecializationApiService
 import dagger.Module
 import dagger.Provides
@@ -19,7 +21,7 @@ import javax.inject.Singleton
 object NetworkModule {
 
 //    private val BASE_URL = "http://192.168.1.7:5000"
-    private val BASE_URL = "http://192.168.6.161:5000"
+    private val BASE_URL = "http://172.16.43.189:5000"
 
     @Provides
     @Singleton
@@ -61,4 +63,18 @@ object NetworkModule {
     fun providePatientService(retrofit: Retrofit): PatientApiService {
         return retrofit.create(PatientApiService::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideRoomService(retrofit: Retrofit): RoomApiService {
+        return retrofit.create(RoomApiService::class.java)
+    }
+
+     @Provides
+    @Singleton
+    fun provideMedicalHistoryService(retrofit: Retrofit): MedicalHistoryApiService {
+        return retrofit.create(MedicalHistoryApiService::class.java)
+    }
+
+
 }

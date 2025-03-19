@@ -4,7 +4,7 @@ import com.example.healthy_diagnosis.data.models.PatientEntity
 
 interface PatientRepository {
 
-    suspend fun insertPatient(patientRepository: PatientRepository)
+    suspend fun insertPatient(patientEntity: PatientEntity)
 
     suspend fun getAllPatient(): List<PatientEntity>
 

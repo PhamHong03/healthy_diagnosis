@@ -3,6 +3,9 @@ package com.example.healthy_diagnosis.presentation.navigation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -21,8 +24,10 @@ import com.example.healthy_diagnosis.presentation.screen.doctors.Patient
 import com.example.healthy_diagnosis.presentation.screen.doctors.ProfileDoctor
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.EducationViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.MedicalHistoryViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.PatientViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.PhysicianViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.RoomViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.SpecializationViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -32,10 +37,15 @@ fun MyAppNavigation(
     patientViewModel: PatientViewModel,
     physicianViewModel: PhysicianViewModel,
     specializationViewModel: SpecializationViewModel,
-    educationViewModel: EducationViewModel
+    educationViewModel: EducationViewModel,
+    roomViewModel: RoomViewModel,
+    medicalHistoryViewModel: MedicalHistoryViewModel
 ) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "home") {
+    val selectPatient by remember {
+        mutableStateOf("")
+    }
+    NavHost(navController = navController, startDestination = "booking") {
 
         composable(route = "signup") {
             RegisterScreen(navController = navController, viewModel = authViewModel)
@@ -77,16 +87,19 @@ fun MyAppNavigation(
 
         //Customer screen
         composable(route = "input_patient" ) {
-            InfoCustomer(navController = navController)
+            InfoCustomer(navController = navController, patientViewModel = patientViewModel)
         }
         composable(route = "home_patient") {
             HomeScreenCustomer()
         }
 
          composable(route = "booking") {
-            BookingScreen()
+            BookingScreen(roomViewModel = roomViewModel, medicalHistoryViewModel = medicalHistoryViewModel)
         }
 
+        composable(route = "patient_detail/selectedPatient"){
+
+        }
 
     }
 }

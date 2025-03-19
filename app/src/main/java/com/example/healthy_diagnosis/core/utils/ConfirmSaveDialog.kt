@@ -33,7 +33,7 @@ fun ConfirmSaveDialog(
             Text(
                 "Bạn có chắc muốn tiếp tục?",
                 fontSize = 16.sp,
-                color = Color.Gray
+                color = Color.Black
             )
         },
         confirmButton = {
@@ -42,7 +42,7 @@ fun ConfirmSaveDialog(
                 colors = ButtonDefaults.buttonColors(containerColor = BannerColor),
                 modifier = Modifier.fillMaxWidth()
             ) {
-
+                Text(text = "Xác nhận")
             }
         },
         dismissButton = {
