@@ -1,6 +1,8 @@
 package com.example.healthy_diagnosis.infrastructure.repositories
 
 
+import android.util.Log
+import com.example.healthy_diagnosis.data.datasources.local.AccountDAO
 import com.example.healthy_diagnosis.data.datasources.remote.ApiService
 import com.example.healthy_diagnosis.data.models.AccountEntity
 import com.example.healthy_diagnosis.domain.repositories.AccountRepository
@@ -14,19 +16,22 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class AccountRepositoryImpl @Inject constructor(
-    private val database: AppDatabase,
+//    private val database: AppDatabase,
+    private val accountDao: AccountDAO,
     private val apiService: ApiService,
     private val firebaseAuthRepository: FirebaseAuthRepository
 ): AccountRepository {
-    private val accountDao = database.accountDao()
+//    private val accountDao = database.accountDao()
 
     override suspend fun insertAccount(account: AccountEntity) {
         accountDao.insertAccount(account)
     }
 
-    override suspend fun getAccountById(id: String): AccountEntity? {
-        return accountDao.getAccount(id)
+    override suspend fun getAccountById(accountId: Int): AccountEntity? {
+        return accountDao.getAccountById(accountId)
+
     }
+
 
     override suspend fun registerAccount(registerRequest: RegisterRequest): Response<ResponseBody> {
         val token = FirebaseAuthRepository(apiService).getFirebaseToken() ?: ""
@@ -60,6 +65,17 @@ class AccountRepositoryImpl @Inject constructor(
             }
         } catch (e: Exception) {
             Result.failure(e)
+        }
+    }
+
+    override suspend fun getAllAccount(): List<AccountEntity> {
+        return runCatching {
+            val accounts = apiService.getAllAccount()
+            accountDao.insertAll(accounts)
+            accounts
+        }.getOrElse {
+            Log.e("AccountRepo", "Lỗi kết nối API: ${it.message}")
+            accountDao.getAllAccount()
         }
     }
 }

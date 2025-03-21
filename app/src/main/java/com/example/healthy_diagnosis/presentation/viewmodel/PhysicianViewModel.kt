@@ -36,8 +36,10 @@ class PhysicianViewModel @Inject constructor(
 
     val isLoading = _isLoading.asStateFlow()
 
+    init {
+        fetchPhysician()
+    }
 
-    // lay list physican from database
     fun fetchPhysician(){
         viewModelScope.launch {
             _isLoading.value = true
@@ -67,26 +69,10 @@ class PhysicianViewModel @Inject constructor(
 
             } catch (e: Exception) {
                 Log.e("InsertPhysician", "Lỗi khi thêm bác sĩ", e)
-                _isSaved.value = false  // Nếu lỗi, không cập nhật trạng thái lưu thành công
+                _isSaved.value = false
             }
         }
     }
-
-//    fun insertPhysician(name: String, email: String, phone: String, address: String, gender: String, specializationId: Int, educationId: Int){
-//        viewModelScope.launch {
-//            try {
-//                val physicianEntity = PhysicianEntity(name = name, email = email, phone = phone, address = address, gender = gender, specializationId = specializationId, educationId = educationId)
-//                physicianRepository.insertPhysician(physicianEntity)
-//                _addphysicianResult.value = " Thêm thành công"
-//
-//                Log.d("Physicians", "Nhập thông tin thành công")
-//                fetchPhysician()
-//            }catch (e:Exception){
-//                _addphysicianResult.value = "Lỗi : ${e.message}"
-//                Log.e("Physicians", "Lỗi : ${e.message}")
-//            }
-//        }
-//    }
 
     fun insertPhysician1(name: String, email: String, phone: String, address: String, gender: String, specializationId: Int, educationId: Int){
         viewModelScope.launch {

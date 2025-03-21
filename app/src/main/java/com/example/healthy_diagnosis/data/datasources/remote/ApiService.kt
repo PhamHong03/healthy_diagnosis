@@ -1,11 +1,13 @@
 package com.example.healthy_diagnosis.data.datasources.remote
 
+import com.example.healthy_diagnosis.data.models.AccountEntity
 import com.example.healthy_diagnosis.domain.usecases.TokenRequest
 import com.example.healthy_diagnosis.domain.usecases.login.LoginResponse
 import com.example.healthy_diagnosis.domain.usecases.register.RegisterRequest
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 
@@ -25,5 +27,12 @@ interface ApiService {
     suspend fun sendFirebaseToken(
         @Body tokenRequest: TokenRequest
     ): Response<Unit>
+
+    @GET("accounts")
+    suspend fun getAllAccount(): List<AccountEntity>
+
+    @POST("get_account_id")
+    suspend fun getAccountIdByUid(@Body request: Map<String, String>): Response<LoginResponse>
+
 
 }

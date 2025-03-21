@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.healthy_diagnosis.data.models.AccountEntity
+import com.example.healthy_diagnosis.data.models.ApplicationFormEntity
 import com.example.healthy_diagnosis.data.models.EducationEntity
 import com.example.healthy_diagnosis.data.models.MedicalHistoryEntity
 import com.example.healthy_diagnosis.data.models.PatientEntity
@@ -22,9 +23,10 @@ import com.example.healthy_diagnosis.data.models.SpecializationEntity
         PatientEntity::class,
         SpecializationEntity::class,
         RoomEntity::class,
-        MedicalHistoryEntity::class
+        MedicalHistoryEntity::class,
+        ApplicationFormEntity::class
                ],
-    version =6,
+    version =7,
     exportSchema = false
 )
 
@@ -36,6 +38,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun patientDao(): PatientDao
     abstract fun roomDao(): RoomDao
     abstract fun medicalhistoryDao():MedicalHistoryDao
+    abstract fun applicationFormDao(): ApplicationFormDao
 
     companion object {
         fun getDatabase(context: Context): AppDatabase {
@@ -43,7 +46,7 @@ abstract class AppDatabase : RoomDatabase() {
                 context.applicationContext,
                 AppDatabase::class.java,
                 "app_database"
-            ).addMigrations(MIGRATION_2_3).build()
+            ).addMigrations(MIGRATION_2_3, MIGRATION_6_7).build()
         }
 
         val MIGRATION_2_3 = object : Migration(2, 3) {
@@ -82,34 +85,38 @@ abstract class AppDatabase : RoomDatabase() {
                 database.execSQL("ALTER TABLE patients_new RENAME TO patients")
             }
         }
-//        val MIGRATION_5_6 = object : Migration(5, 6) {
-//            override fun migrate(database: SupportSQLiteDatabase) {
-//                // Kiểm tra nếu cột "date" chưa tồn tại thì mới thêm
-//                val cursor = database.query("PRAGMA table_info(MedicalHistoryEntity)")
-//                var columnExists = false
-//                while (cursor.moveToNext()) {
-//                    val columnName = cursor.getString(cursor.getColumnIndexOrThrow("name"))
-//                    if (columnName == "date") {
-//                        columnExists = true
-//                        break
-//                    }
-//                }
-//                cursor.close()
-//
-//                if (!columnExists) {
-//                    database.execSQL(
-//                        """
-//                ALTER TABLE MedicalHistoryEntity ADD COLUMN date TEXT NOT NULL DEFAULT ''
-//                """.trimIndent()
-//                    )
-//                }
-//            }
-//        }
 
 
+        val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS patients_new (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        name TEXT NOT NULL,
+                        day_of_birth TEXT NOT NULL,
+                        gender TEXT NOT NULL,
+                        phone TEXT NOT NULL,
+                        email TEXT NOT NULL,
+                        job TEXT NOT NULL,
+                        medical_code_card TEXT NOT NULL,
+                        code_card_day_start TEXT NOT NULL,
+                        status INTEGER NOT NULL,
+                        account_id INTEGER NOT NULL DEFAULT 0
+                    )
+                    """.trimIndent()
+                )
 
+                database.execSQL(
+                    """
+                    INSERT INTO patients_new (id, name, day_of_birth, gender, phone, email, job, medical_code_card, code_card_day_start, status, account_id) 
+                    SELECT id, name, day_of_birth, gender, phone, email, job, medical_code_card, code_card_day_start, status, 0 FROM patients
+                    """.trimIndent()
+                )
 
+                database.execSQL("DROP TABLE patients")
+                database.execSQL("ALTER TABLE patients_new RENAME TO patients")
+            }
+        }
     }
-
-
 }

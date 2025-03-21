@@ -22,4 +22,8 @@ interface PatientDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(patientEntity: List<PatientEntity>)
 
+
+    @Query("SELECT * FROM patients WHERE account_id = :accountId LIMIT 1")
+    suspend fun getPatientByAccountId(accountId: Int): PatientEntity?
+
 }

@@ -40,16 +40,23 @@ import com.example.healthy_diagnosis.core.utils.ButtonClick
 import com.example.healthy_diagnosis.core.utils.ConfirmSaveDialog
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.PatientViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-
 @Composable
 fun InfoCustomer(
     navController: NavController,
-    patientViewModel: PatientViewModel
-){
+    patientViewModel: PatientViewModel,
+    onPatientInfoEntered: (Boolean) -> Unit,
+    authViewModel: AuthViewModel
+) {
+    val context = LocalContext.current
+    val accountId = remember { authViewModel.getAccountId(context)?.toString()?.toIntOrNull() ?: -1 }
+
+
+
     var name by remember { mutableStateOf("") }
     var day_of_birth by remember { mutableStateOf("") }
     var gender by remember { mutableStateOf("") }
@@ -59,8 +66,6 @@ fun InfoCustomer(
     var medical_code_card by remember { mutableStateOf("") }
     var code_card_day_start by remember { mutableStateOf("") }
     var status by remember { mutableStateOf(-1) }
-
-    val context = LocalContext.current
     val statusOptions = listOf(
         0 to "Không còn sử dụng",
         1 to "Còn sử dụng"
@@ -70,7 +75,7 @@ fun InfoCustomer(
 
     Scaffold(
         topBar = {
-            BannerInfo(padding = 0.dp, "Trung tâm khám chữa bệnh")
+//            BannerInfo(padding = 0.dp, "Trung tâm khám chữa bệnh")
         }
     ) { paddingValues ->
         LazyColumn(
@@ -79,59 +84,15 @@ fun InfoCustomer(
                 .padding(10.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            item {
-                Row (
-                ){
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 12.dp),
-                        text = "THÔNG TIN CỦA BẠN",
-                        color = Color.Black,
-                        fontSize = 20.sp, textAlign = TextAlign.Center
-
-                    )
-                }
-            }
-            item { CustomerInput(
-                label = "Họ tên",
-                value = name,
-                onValueChange = { name = it }
-            ) }
-            item {
-                DatePickerFieldCustomer(context, "Chọn ngày sinh", day_of_birth) { day_of_birth = it }
-            }
-            item { CustomerInput(
-                label = "Giới tính",
-                value = gender,
-                onValueChange = { gender = it }
-            ) }
-            item { CustomerInput(
-                label = "Số điện thoại",
-                value = phone,
-                onValueChange = { phone = it }
-            ) }
-            item { CustomerInput(
-                label = "Email",
-                value = email,
-                onValueChange = { email = it }
-            ) }
-            item { CustomerInput(
-                label = "Công việc",
-                value = job,
-                onValueChange = { job = it }
-            ) }
-
-            item { CustomerInput(
-                label = "Mã thẻ khám bệnh",
-                value = medical_code_card,
-                onValueChange = { medical_code_card = it }
-            ) }
-
-            item {
-                DatePickerFieldCustomer(context, "Ngày bắt đầu khám", code_card_day_start) { code_card_day_start = it }
-            }
-
+            item { Text("THÔNG TIN CỦA BẠN", fontSize = 20.sp, textAlign = TextAlign.Center) }
+            item { CustomerInput(label = "Họ tên", value = name, onValueChange = { name = it }) }
+            item { DatePickerFieldCustomer(context, "Chọn ngày sinh", day_of_birth) { day_of_birth = it } }
+            item { CustomerInput(label = "Giới tính", value = gender, onValueChange = { gender = it }) }
+            item { CustomerInput(label = "Số điện thoại", value = phone, onValueChange = { phone = it }) }
+            item { CustomerInput(label = "Email", value = email, onValueChange = { email = it }) }
+            item { CustomerInput(label = "Công việc", value = job, onValueChange = { job = it }) }
+            item { CustomerInput(label = "Mã thẻ khám bệnh", value = medical_code_card, onValueChange = { medical_code_card = it }) }
+            item { DatePickerFieldCustomer(context, "Ngày bắt đầu khám", code_card_day_start) { code_card_day_start = it } }
             item {
                 CustomerDropdownField(
                     label = "Tình trạng",
@@ -140,18 +101,21 @@ fun InfoCustomer(
                     options = statusOptions
                 )
             }
-            item{
-                ButtonClick(text = "Lưu thông tin", onClick = {
+            item {
+                ButtonClick(text = "Xác nhận thông tin", onClick = {
                     showDialog = true
+                    onPatientInfoEntered(true) // Báo về ApplicationForm
                 })
             }
         }
     }
+
     if (showDialog) {
         ConfirmSaveDialog(
             onDismiss = { showDialog = false },
             onConfirm = {
                 patientViewModel.insertPatient(
+                    account_id = accountId,  // Truyền ID tài khoản vào đây
                     name = name,
                     day_of_birth = day_of_birth,
                     gender = gender,
@@ -166,17 +130,8 @@ fun InfoCustomer(
             }
         )
     }
-    val isSaved by patientViewModel.isSaved.collectAsState()
-
-    LaunchedEffect(isSaved) {
-        if (isSaved) {
-            Toast.makeText(context, "Đăng ký bệnh nhân thành công!", Toast.LENGTH_SHORT).show()
-            navController.navigate("home_patient") {
-                popUpTo("input_patient") { inclusive = true }
-            }
-        }
-    }
 }
+
 @Composable
 fun DatePickerFieldCustomer(context: Context, label: String, date: String, onDateSelected: (String) -> Unit) {
     val calendar = Calendar.getInstance()

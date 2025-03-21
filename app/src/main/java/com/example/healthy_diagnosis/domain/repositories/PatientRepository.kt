@@ -9,4 +9,6 @@ interface PatientRepository {
     suspend fun getAllPatient(): List<PatientEntity>
 
     suspend fun deletePatient(id: Int)
+
+    suspend fun getPatientByAccountId(accountId: Int): PatientEntity?
 }

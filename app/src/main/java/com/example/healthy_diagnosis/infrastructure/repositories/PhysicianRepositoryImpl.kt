@@ -29,14 +29,16 @@ class PhysicianRepositoryImpl @Inject constructor(
             Log.e("PhysicianRepo", "Lỗi kết nối API : ${e.message}")
         }
     }
+
     override suspend fun getAllPhysician(): List<PhysicianEntity> {
         return runCatching {
             val physicians = physicianApiService.getAllPhysician() // Gọi API lấy danh sách bác sĩ
-            physicianDao.insertAll(physicians) // Lưu vào Room
-            physicians // Trả về danh sách từ API
+            physicianDao.insertAll(physicians)
+//            physicianDao.getAllPhysician() // Luôn lấy từ Room
+            physicians
         }.getOrElse {
             Log.e("PhysicianRepo", "Lỗi kết nối API: ${it.message}")
-            physicianDao.getAllPhysician()
+            physicianDao.getAllPhysician() // Lấy từ Room nếu lỗi API
         }
     }
 

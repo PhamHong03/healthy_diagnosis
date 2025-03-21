@@ -1,6 +1,7 @@
 package com.example.healthy_diagnosis.di
 
 import com.example.healthy_diagnosis.data.datasources.remote.ApiService
+import com.example.healthy_diagnosis.data.datasources.remote.ApplicationFormApiService
 import com.example.healthy_diagnosis.data.datasources.remote.EducationApiService
 import com.example.healthy_diagnosis.data.datasources.remote.MedicalHistoryApiService
 import com.example.healthy_diagnosis.data.datasources.remote.PatientApiService
@@ -21,7 +22,7 @@ import javax.inject.Singleton
 object NetworkModule {
 
 //    private val BASE_URL = "http://192.168.1.7:5000"
-    private val BASE_URL = "http://172.16.43.189:5000"
+    private val BASE_URL = "http://192.168.1.22:5000"
 
     @Provides
     @Singleton
@@ -76,5 +77,10 @@ object NetworkModule {
         return retrofit.create(MedicalHistoryApiService::class.java)
     }
 
+    @Provides
+    @Singleton
+    fun provideApplicationFormService(retrofit: Retrofit): ApplicationFormApiService {
+        return retrofit.create(ApplicationFormApiService::class.java)
+    }
 
 }

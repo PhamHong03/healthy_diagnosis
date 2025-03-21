@@ -1,5 +1,6 @@
 package com.example.healthy_diagnosis.presentation.screen
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -48,6 +49,8 @@ import com.example.healthy_diagnosis.core.utils.TopSection
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 import com.example.healthy_diagnosis.ui.theme.LightPink
 import com.example.healthy_diagnosis.ui.theme.Roboto
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.flow.collectLatest
 
 
 @Composable
@@ -60,45 +63,33 @@ fun LoginScreen(
     val context = LocalContext.current
 
     val role by viewModel.userRole.collectAsState()
-    val isFirstLogin = viewModel.isFirstLogin.collectAsState().value
+    LaunchedEffect(Unit) {
+        viewModel.refreshFirebaseToken()
+        viewModel.fetchAccount()
+    }
 
     LaunchedEffect(loginState) {
         loginState?.let { result ->
             result.onSuccess {
-                println("🔍 Role trong LoginScreen: $role")
-                println("🔍 ROLE NHẬN ĐƯỢC: $role")
-                println("🔍 isFirstLogin: $isFirstLogin")
+                viewModel.userRole.collectLatest { updatedRole ->
+                    if (!updatedRole.isNullOrEmpty() && updatedRole != "Unknown") {
+                        println("🔍 ROLE NHẬN ĐƯỢC: $updatedRole")
 
-                when {
-                    isFirstLogin == true && role == "Doctor" -> {
-                        navController.navigate("input_infoDoctor") {
+                        val destination = when (updatedRole) {
+                            "Doctor" -> "home"
+                            "Patient" -> "home_patient"
+                            else -> {
+                                Toast.makeText(context, "Lỗi: Role không hợp lệ ($updatedRole)", Toast.LENGTH_SHORT).show()
+                                "signup"
+                            }
+                        }
+
+                        navController.navigate(destination) {
                             Toast.makeText(context, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
                             popUpTo("login") { inclusive = true }
                         }
-                    }
-                    isFirstLogin == true && role == "Patient" -> {
-                        navController.navigate("input_patient") {
-                            Toast.makeText(context, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
-                            popUpTo("login") { inclusive = true }
-                        }
-                    }
-//                    role == "Doctor" -> {
-//                        navController.navigate("home") {
-//                            Toast.makeText(context, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
-//                            popUpTo("login") { inclusive = true }
-//                        }
-//                    }
-//                    role == "Patient" -> {
-//                        navController.navigate("home_patient") {
-//                            Toast.makeText(context, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
-//                            popUpTo("login") { inclusive = true }
-//                        }
-//                    }
-                    else -> {
-                        Toast.makeText(context, "Lỗi: Role không hợp lệ ($role)", Toast.LENGTH_SHORT).show()
-                        navController.navigate("signup") {
-                            popUpTo("login") { inclusive = true }
-                        }
+                    } else {
+                        println("⚠️ Role chưa cập nhật, đợi thêm...")
                     }
                 }
             }.onFailure { error ->

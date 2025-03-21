@@ -20,4 +20,9 @@ interface PatientApiService {
 
     @DELETE("patients/{id}")
     suspend fun deletePatient(@Path("id") id: Int): Response<Void>
+
+    @GET("patients/account/{account_id}")
+    suspend fun getPatientByAccountId(@Path("account_id") accountId: Int): PatientEntity?
+
+
 }

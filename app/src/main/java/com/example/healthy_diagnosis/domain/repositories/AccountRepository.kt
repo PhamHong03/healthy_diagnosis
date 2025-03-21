@@ -10,11 +10,14 @@ interface AccountRepository {
 
     suspend fun insertAccount(account: AccountEntity)
 
-    suspend fun getAccountById(id: String): AccountEntity?
+    suspend fun getAccountById(accountId: Int): AccountEntity?
 
     suspend fun registerAccount(account: RegisterRequest): Response<ResponseBody>
 
     suspend fun loginWithToken(token:String): Result<LoginResponse>
 
     suspend fun sendFirebaseToken(token: String): Result<Unit>
+
+    suspend fun getAllAccount(): List<AccountEntity>
+
 }

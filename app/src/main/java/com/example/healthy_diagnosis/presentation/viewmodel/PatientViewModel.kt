@@ -1,9 +1,14 @@
 package com.example.healthy_diagnosis.presentation.viewmodel
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.healthy_diagnosis.data.models.AccountEntity
 import com.example.healthy_diagnosis.data.models.PatientEntity
 import com.example.healthy_diagnosis.domain.repositories.PatientRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,6 +38,19 @@ class PatientViewModel @Inject constructor(
     val isSaved: StateFlow<Boolean> get() = _isSaved
 
 
+    private val _patientByAccount = MutableStateFlow<PatientEntity?>(null)
+    val patientByAccount: StateFlow<PatientEntity?> = _patientByAccount.asStateFlow()
+
+    fun getPatientByAccountId(accountId: Int) {
+        viewModelScope.launch {
+            try {
+                val patient = patientRepository.getPatientByAccountId(accountId)
+                _patientByAccount.value = patient
+            } catch (e: Exception) {
+                Log.e("PatientViewModel", "Lỗi khi lấy bệnh nhân theo account_id: ${e.message}")
+            }
+        }
+    }
     init {
         fetchPatients()
     }
@@ -44,10 +62,11 @@ class PatientViewModel @Inject constructor(
         }
     }
 
-    fun insertPatient(name: String, day_of_birth: String, gender: String, phone: String, email: String, job: String,medical_code_card: String,code_card_day_start: String,status: Int) {
+    fun insertPatient(name: String, day_of_birth: String, gender: String, phone: String, email: String, job: String,medical_code_card: String,code_card_day_start: String,status: Int, account_id : Int) {
         viewModelScope.launch {
             try {
                 val patientEntity = PatientEntity(
+                    account_id = account_id,
                     name = name,
                     day_of_birth = day_of_birth,
                     gender = gender,
@@ -59,7 +78,7 @@ class PatientViewModel @Inject constructor(
                     status = status
                 )
                 patientRepository.insertPatient(patientEntity)
-                Log.d("InsertPatient", "Nhập thông tin thành công")
+                Log.d("InsertPatient", "Nhập thông tin thành công: $patientEntity")
                 _isSaved.value  = true
                 fetchPatients()
             }catch (e:Exception){
@@ -86,4 +105,5 @@ class PatientViewModel @Inject constructor(
             fetchPatients()
         }
     }
+
 }

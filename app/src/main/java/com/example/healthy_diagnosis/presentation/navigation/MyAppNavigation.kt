@@ -6,14 +6,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.healthy_diagnosis.presentation.screen.LoginScreen
 import com.example.healthy_diagnosis.presentation.screen.RegisterScreen
-import com.example.healthy_diagnosis.presentation.screen.customers.BookingScreen
+import com.example.healthy_diagnosis.presentation.screen.customers.ApplicationForm
 import com.example.healthy_diagnosis.presentation.screen.customers.HomeScreenCustomer
 import com.example.healthy_diagnosis.presentation.screen.customers.InfoCustomer
 import com.example.healthy_diagnosis.presentation.screen.doctors.DiagnosisScreen
@@ -45,7 +43,7 @@ fun MyAppNavigation(
     val selectPatient by remember {
         mutableStateOf("")
     }
-    NavHost(navController = navController, startDestination = "booking") {
+    NavHost(navController = navController, startDestination = "login") {
 
         composable(route = "signup") {
             RegisterScreen(navController = navController, viewModel = authViewModel)
@@ -87,14 +85,20 @@ fun MyAppNavigation(
 
         //Customer screen
         composable(route = "input_patient" ) {
-            InfoCustomer(navController = navController, patientViewModel = patientViewModel)
+            InfoCustomer(navController = navController, patientViewModel = patientViewModel, authViewModel = authViewModel, onPatientInfoEntered = {})
         }
         composable(route = "home_patient") {
-            HomeScreenCustomer()
+            HomeScreenCustomer(navController = navController)
         }
 
          composable(route = "booking") {
-            BookingScreen(roomViewModel = roomViewModel, medicalHistoryViewModel = medicalHistoryViewModel)
+            ApplicationForm(
+                roomViewModel = roomViewModel,
+                medicalHistoryViewModel = medicalHistoryViewModel,
+                patientViewModel = patientViewModel,
+                navController = navController,
+                authViewModel = authViewModel
+            )
         }
 
         composable(route = "patient_detail/selectedPatient"){
