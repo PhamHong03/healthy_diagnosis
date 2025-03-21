@@ -41,6 +41,15 @@ class PatientViewModel @Inject constructor(
     private val _patientByAccount = MutableStateFlow<PatientEntity?>(null)
     val patientByAccount: StateFlow<PatientEntity?> = _patientByAccount.asStateFlow()
 
+    private val _patientId = MutableStateFlow<Int?>(null)
+    val patientId: StateFlow<Int?> = _patientId.asStateFlow()
+
+    fun fetchPatientIdByAccountId(accountId: Int) {
+        viewModelScope.launch {
+            val patient = patientRepository.getPatientByAccountId(accountId)
+            _patientId.value = patient?.id
+        }
+    }
     fun getPatientByAccountId(accountId: Int) {
         viewModelScope.launch {
             try {
@@ -62,7 +71,18 @@ class PatientViewModel @Inject constructor(
         }
     }
 
-    fun insertPatient(name: String, day_of_birth: String, gender: String, phone: String, email: String, job: String,medical_code_card: String,code_card_day_start: String,status: Int, account_id : Int) {
+    fun insertPatient(
+        name: String,
+        day_of_birth: String,
+        gender: String,
+        phone: String,
+        email: String,
+        job: String,
+        medical_code_card: String,
+        code_card_day_start: String,
+        status: Int,
+        account_id: Int,
+    ) {
         viewModelScope.launch {
             try {
                 val patientEntity = PatientEntity(
@@ -105,5 +125,10 @@ class PatientViewModel @Inject constructor(
             fetchPatients()
         }
     }
-
+    fun getPatientIdByAccountId(accountId: Int, onResult: (Int?) -> Unit) {
+        viewModelScope.launch {
+            val patient = patientRepository.getPatientByAccountId(accountId)
+            onResult(patient?.id)
+        }
+    }
 }

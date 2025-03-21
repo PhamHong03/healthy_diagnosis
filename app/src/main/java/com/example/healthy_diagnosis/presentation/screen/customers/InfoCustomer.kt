@@ -40,7 +40,9 @@ import com.example.healthy_diagnosis.core.utils.ButtonClick
 import com.example.healthy_diagnosis.core.utils.ConfirmSaveDialog
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import com.example.healthy_diagnosis.data.models.PatientEntity
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.MedicalHistoryViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.PatientViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -50,11 +52,12 @@ fun InfoCustomer(
     navController: NavController,
     patientViewModel: PatientViewModel,
     onPatientInfoEntered: (Boolean) -> Unit,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    medicalHistoryViewModel: MedicalHistoryViewModel
 ) {
     val context = LocalContext.current
-    val accountId = remember { authViewModel.getAccountId(context)?.toString()?.toIntOrNull() ?: -1 }
-
+    val account by authViewModel.account.collectAsState()
+    val accountId = account?.id ?: -1
 
 
     var name by remember { mutableStateOf("") }
@@ -70,8 +73,15 @@ fun InfoCustomer(
         0 to "Không còn sử dụng",
         1 to "Còn sử dụng"
     )
-
+    var isPatientInfoEntered by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
+
+//    LaunchedEffect(isPatientInfoEntered) {
+//        if (isPatientInfoEntered) {
+//            medicalHistoryViewModel.fetchMedicalHistory() // ✅ Cập nhật danh sách lịch sử khám ngay lập tức
+//        }
+//    }
+
 
     Scaffold(
         topBar = {
@@ -104,7 +114,7 @@ fun InfoCustomer(
             item {
                 ButtonClick(text = "Xác nhận thông tin", onClick = {
                     showDialog = true
-                    onPatientInfoEntered(true) // Báo về ApplicationForm
+                    onPatientInfoEntered(true)
                 })
             }
         }
@@ -115,7 +125,7 @@ fun InfoCustomer(
             onDismiss = { showDialog = false },
             onConfirm = {
                 patientViewModel.insertPatient(
-                    account_id = accountId,  // Truyền ID tài khoản vào đây
+                    account_id = accountId,
                     name = name,
                     day_of_birth = day_of_birth,
                     gender = gender,

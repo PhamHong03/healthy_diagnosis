@@ -49,16 +49,15 @@ class PatientRepositoryImpl(
     }
 
     override suspend fun getPatientByAccountId(accountId: Int): PatientEntity? {
-        return kotlin.runCatching {
+        return try {
             val patient = patientApiService.getPatientByAccountId(accountId)
-            if (patient != null) {
-                patientDao.insertPatient(patient) // Lưu vào Room DB
-            }
+            patient?.let { patientDao.insertPatient(it) } // Chỉ lưu nếu không null
             patient
-        }.getOrElse {
-            Log.e("PatientRepo", "Lỗi kết nối API: ${it.message}")
-            patientDao.getPatientByAccountId(accountId) // Nếu API lỗi, lấy từ Room DB
+        } catch (e: Exception) {
+            Log.e("PatientRepo", "Lỗi kết nối API: ${e.message}")
+            patientDao.getPatientByAccountId(accountId) // Lấy dữ liệu từ cache
         }
     }
+
 
 }

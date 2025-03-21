@@ -26,7 +26,7 @@ import com.example.healthy_diagnosis.data.models.SpecializationEntity
         MedicalHistoryEntity::class,
         ApplicationFormEntity::class
                ],
-    version =7,
+    version =8,
     exportSchema = false
 )
 
@@ -118,5 +118,36 @@ abstract class AppDatabase : RoomDatabase() {
                 database.execSQL("ALTER TABLE patients_new RENAME TO patients")
             }
         }
+
+//        val MIGRATION_7_8 = object : Migration(7, 8) {
+//            override fun migrate(database: SupportSQLiteDatabase) {
+//                // 1️⃣ Tạo bảng mới với cột patient_id
+//                database.execSQL(
+//                    """
+//            CREATE TABLE IF NOT EXISTS medical_histories_new (
+//                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+//                description TEXT NOT NULL,
+//                physician_id INTEGER NOT NULL,
+//                patient_id INTEGER NOT NULL DEFAULT 0
+//            )
+//            """.trimIndent()
+//                )
+//
+//                // 2️⃣ Copy dữ liệu từ bảng cũ sang bảng mới, gán patient_id = 0 mặc định
+//                database.execSQL(
+//                    """
+//            INSERT INTO medical_histories_new (id, description, physician_id, patient_id)
+//            SELECT id, description, physician_id, 0 FROM medical_histories
+//            """.trimIndent()
+//                )
+//
+//                // 3️⃣ Xóa bảng cũ
+//                database.execSQL("DROP TABLE medical_histories")
+//
+//                // 4️⃣ Đổi tên bảng mới thành bảng cũ
+//                database.execSQL("ALTER TABLE medical_histories_new RENAME TO medical_histories")
+//            }
+//        }
+
     }
 }

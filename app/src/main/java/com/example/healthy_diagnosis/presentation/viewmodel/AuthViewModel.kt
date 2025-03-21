@@ -30,6 +30,8 @@ class AuthViewModel @Inject constructor(
     private val apiService: ApiService
 ) : ViewModel() {
 
+    private val _account = MutableStateFlow<AccountEntity?>(null)
+    val account: StateFlow<AccountEntity?> = _account
 
     private val _userRole = MutableStateFlow<String?>(null)
     val userRole: StateFlow<String?> = _userRole
@@ -49,6 +51,13 @@ class AuthViewModel @Inject constructor(
     private val _accountList = MutableStateFlow<List<AccountEntity>>(emptyList())
     val accountList = _accountList
 
+    fun setAccount(account: AccountEntity) {
+        _account.value = account
+    }
+
+    fun getAccountId(): Int? {
+        return _account.value?.id
+    }
 
     init {
         fetchAccount()
@@ -117,6 +126,7 @@ class AuthViewModel @Inject constructor(
                     repository.insertAccount(account)
 
                     _userRole.value = response.role
+                    setAccount(account)
                     Log.d("AuthViewModel", "✅ Đăng nhập thành công: $account")
 
                     _loginState.value = Result.success("Đăng nhập thành công!")

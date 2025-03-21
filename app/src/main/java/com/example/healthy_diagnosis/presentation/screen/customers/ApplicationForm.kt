@@ -1,6 +1,8 @@
 package com.example.healthy_diagnosis.presentation.screen.customers
 
+import android.util.Log
 import android.widget.Button
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +22,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,7 +41,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.healthy_diagnosis.core.utils.BannerInfo
 import com.example.healthy_diagnosis.core.utils.ButtonClick
+import com.example.healthy_diagnosis.data.models.MedicalHistoryEntity
 import com.example.healthy_diagnosis.presentation.screen.doctors.DoctorDropdownField
+import com.example.healthy_diagnosis.presentation.viewmodel.ApplicationFormViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.MedicalHistoryViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.PatientViewModel
@@ -51,32 +56,57 @@ fun ApplicationForm(
     medicalHistoryViewModel: MedicalHistoryViewModel,
     patientViewModel: PatientViewModel,
     navController: NavController,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    applicationViewModel: ApplicationFormViewModel
 ) {
+    val currentUser by authViewModel.account.collectAsState()
+    val accountId = currentUser?.id ?:0
+    var content by remember {mutableStateOf("")}
+    val patientId by patientViewModel.patientId.collectAsState()
     var date by remember { mutableStateOf("") }
     var roomId by remember { mutableStateOf("") }
     var medicalHistoryId by remember { mutableStateOf(0) }
-    var isPatientInfoEntered by remember { mutableStateOf(false) } // Kiểm tra nhập thông tin bệnh nhân
-
+    var isPatientInfoEntered by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val isSaved by applicationViewModel.isSave.collectAsState()
+
+    val rooms by roomViewModel.roomList.collectAsState()
+
+    val roomOptions = rooms.map { it.id to it.name }
+//
+//    val medicalHistories by medicalHistoryViewModel.medicalHistoryList.collectAsState()
+//
+//    val medicalHistoriesOption = medicalHistories.map { it.id to it.physician_name }
+
+    val medicalHistories by medicalHistoryViewModel.medicalHistoryList.collectAsState()
+
+    val filteredMedicalHistories = medicalHistories.filter { it.calendar_date == date }
+
+    val medicalHistoriesOption = filteredMedicalHistories.map { it.id to it.physician_name }
+
+    LaunchedEffect(accountId) {
+        if (accountId != 0) {
+            patientViewModel.fetchPatientIdByAccountId(accountId)
+        }
+    }
 
     LaunchedEffect(Unit) {
         roomViewModel.fetchRoom()
         medicalHistoryViewModel.fetchMedicalHistory()
     }
-
-    val rooms by roomViewModel.roomList.collectAsState()
-    val medicalHistories by medicalHistoryViewModel.medicalHistoriesList.collectAsState()
-
-    val roomOptions = rooms.map { it.id to it.name }
-    val medicalHistoryOptions = medicalHistories.map { it.id to it.description }
-
-    val hasHistory = medicalHistories.isNotEmpty()
-    if (hasHistory) {
-        medicalHistoryId = medicalHistories.lastOrNull()?.id ?: 0
-
+    LaunchedEffect(isSaved) {
+        if (isSaved) {
+            Toast.makeText(context, "Đăng ký thành công!", Toast.LENGTH_SHORT).show()
+            navController.navigate("home_patient")
+        }
     }
-
+    LaunchedEffect(isSaved) {
+        Log.d("ApplicationForm", "isSaved state: $isSaved")
+        if (isSaved) {
+            Toast.makeText(context, "Đăng ký thành công!", Toast.LENGTH_SHORT).show()
+            navController.navigate("home_patient")
+        }
+    }
     Scaffold(
         topBar = {
             BannerInfo(padding = 0.dp, "Trung tâm khám chữa bệnh")
@@ -86,57 +116,77 @@ fun ApplicationForm(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(10.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
+                .padding(10.dp)
         ) {
-            DatePickerFieldCustomer(context, "Chọn ngày khám", date) { date = it }
-            BookingFieldForRoom(
-                label = "Phòng",
-                selectedValue = roomId,
-                onValueChange = { roomId = it },
-                options = roomOptions
+            Box(modifier = Modifier.weight(1f)) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    DatePickerFieldCustomer(context, "Chọn ngày khám", date) { date = it }
+                    BookingFieldForRoom(
+                        label = "Phòng",
+                        selectedValue = roomId,
+                        onValueChange = { roomId = it },
+                        options = roomOptions
+                    )
+
+                    if (patientId != null) {
+                        DoctorDropdownField(
+                            label = "Chọn bác sĩ khám khám",
+                            selectedId = medicalHistoryId,
+                            onValueChange = { selectedMedicalHistory ->
+                                medicalHistoryId = selectedMedicalHistory
+                            },
+                            options = medicalHistoriesOption
+                        )
+                    } else {
+                        Text(
+                            text = "Lần đầu khám, vui lòng nhập thông tin bệnh nhân!",
+                            color = Color.Red,
+                            fontSize = 14.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        InfoCustomer(
+                            patientViewModel = patientViewModel,
+                            navController = navController,
+                            onPatientInfoEntered = { isPatientInfoEntered = it },
+                            authViewModel = authViewModel,
+                            medicalHistoryViewModel = medicalHistoryViewModel
+                        )
+
+                    }
+                    Space()
+                    CustomerInput(
+                        label = "Mô tả triệu chứng của bạn",
+                        value = content,
+                        onValueChange = {
+                            content = it
+                        }
+                    )
+                }
+            }
+
+            ButtonClick(
+                text = "Đăng ký khám bệnh",
+                onClick = {
+                    if (patientId == 0) {
+                        Toast.makeText(context, "Vui lòng nhập thông tin bệnh nhân!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        applicationViewModel.insertApplicationForm(
+                            content = content,
+                            application_form_date = date,
+                            patient_id = patientId ?: 0,
+                            room_id = roomId,
+                            medical_history_id = medicalHistoryId
+                        )
+                    }
+                }
             )
-
-            if (hasHistory) {
-                DoctorDropdownField(
-                    label = "Chọn lịch sử khám",
-                    selectedId = medicalHistoryId,
-                    onValueChange = { selectedMedicalHistory ->
-                        medicalHistoryId = selectedMedicalHistory
-                    },
-                    options = medicalHistoryOptions
-                )
-            } else {
-                Text(
-                    text = "Lần đầu khám, vui lòng nhập thông tin bệnh nhân!",
-                    color = Color.Red,
-                    fontSize = 16.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                InfoCustomer(
-                    patientViewModel = patientViewModel,
-                    navController = navController,
-                    onPatientInfoEntered = { isPatientInfoEntered = it },
-                    authViewModel = authViewModel
-                )
-                DoctorDropdownField(
-                    label = "Chọn lịch sử khám",
-                    selectedId = 0,
-                    onValueChange = {},
-                    options = listOf(0 to "Khám lần đầu tiên")
-                )
-            }
-
-            if (hasHistory || isPatientInfoEntered) {
-                ButtonClick(text = "Đăng ký khám bệnh", onClick = {
-                    // Xử lý khi đăng ký
-                })
-            }
         }
     }
 }
-
 
 @Composable
 fun BookingFieldForRoom(
@@ -180,7 +230,7 @@ fun BookingFieldForRoom(
                 DropdownMenuItem(
                     text = { Text(name) },
                     onClick = {
-                        onValueChange(id) // id là String
+                        onValueChange(id)
                         expanded = false
                     }
                 )

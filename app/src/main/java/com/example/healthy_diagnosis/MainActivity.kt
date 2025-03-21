@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.example.healthy_diagnosis.presentation.navigation.MyAppNavigation
+import com.example.healthy_diagnosis.presentation.viewmodel.ApplicationFormViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.EducationViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.MedicalHistoryViewModel
@@ -24,6 +25,7 @@ class MainActivity : ComponentActivity() {
     private val educationViewModel: EducationViewModel by viewModels()
     private val roomViewModel: RoomViewModel by viewModels()
     private val medicalHistoryViewModel: MedicalHistoryViewModel by viewModels()
+    private val applicationFormViewModel: ApplicationFormViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -34,7 +36,8 @@ class MainActivity : ComponentActivity() {
                 specializationViewModel,
                 educationViewModel,
                 roomViewModel,
-                medicalHistoryViewModel
+                medicalHistoryViewModel,
+                applicationFormViewModel
             )
         }
     }

@@ -20,6 +20,7 @@ import com.example.healthy_diagnosis.presentation.screen.doctors.HomeScreen
 import com.example.healthy_diagnosis.presentation.screen.doctors.InfoDoctor
 import com.example.healthy_diagnosis.presentation.screen.doctors.Patient
 import com.example.healthy_diagnosis.presentation.screen.doctors.ProfileDoctor
+import com.example.healthy_diagnosis.presentation.viewmodel.ApplicationFormViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.EducationViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.MedicalHistoryViewModel
@@ -37,7 +38,8 @@ fun MyAppNavigation(
     specializationViewModel: SpecializationViewModel,
     educationViewModel: EducationViewModel,
     roomViewModel: RoomViewModel,
-    medicalHistoryViewModel: MedicalHistoryViewModel
+    medicalHistoryViewModel: MedicalHistoryViewModel,
+    applicationFormViewModel: ApplicationFormViewModel
 ) {
     val navController = rememberNavController()
     val selectPatient by remember {
@@ -85,7 +87,13 @@ fun MyAppNavigation(
 
         //Customer screen
         composable(route = "input_patient" ) {
-            InfoCustomer(navController = navController, patientViewModel = patientViewModel, authViewModel = authViewModel, onPatientInfoEntered = {})
+            InfoCustomer(
+                navController = navController,
+                patientViewModel = patientViewModel,
+                authViewModel = authViewModel,
+                onPatientInfoEntered = {},
+                medicalHistoryViewModel = medicalHistoryViewModel
+            )
         }
         composable(route = "home_patient") {
             HomeScreenCustomer(navController = navController)
@@ -97,7 +105,8 @@ fun MyAppNavigation(
                 medicalHistoryViewModel = medicalHistoryViewModel,
                 patientViewModel = patientViewModel,
                 navController = navController,
-                authViewModel = authViewModel
+                authViewModel = authViewModel,
+                applicationViewModel = applicationFormViewModel
             )
         }
 

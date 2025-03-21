@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.healthy_diagnosis.data.datasources.local.MedicalHistoryDao
 import com.example.healthy_diagnosis.data.datasources.remote.MedicalHistoryApiService
 import com.example.healthy_diagnosis.data.models.MedicalHistoryEntity
+import com.example.healthy_diagnosis.data.models.PatientEntity
 import com.example.healthy_diagnosis.domain.repositories.MedicalHistoryRepository
 
 class MedicalHistoryRepositoryImpl (
@@ -17,7 +18,9 @@ class MedicalHistoryRepositoryImpl (
             medicalhistories
         }.getOrElse {
             Log.e("MedicalHistoryRepo", "Lỗi kết nối API: ${it.message}")
-            medicalHistoryDao.getALlMedicalHistory()
+            medicalHistoryDao.getAll()
         }
     }
+
+
 }
