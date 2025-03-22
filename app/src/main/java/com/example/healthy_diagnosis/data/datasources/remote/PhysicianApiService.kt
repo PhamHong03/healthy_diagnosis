@@ -26,5 +26,6 @@ interface PhysicianApiService {
     @DELETE("physicians/{id}")
     suspend fun deletePhysican(@Path("id") id: Int): Response<Void>
 
-
+    @GET("physicians/account/{account_id}")
+    suspend fun getPhysicianByAccountId(@Path("account_id") acocuntId: Int): PhysicianEntity?
 }

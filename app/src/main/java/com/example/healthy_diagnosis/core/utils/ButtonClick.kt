@@ -15,18 +15,18 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ButtonClick(
     text: String,
-    onClick : () -> Unit
+    onClick: () -> Unit,
+    enabled: Boolean = true // Thêm tham số enabled với giá trị mặc định là true
 ) {
     Button(
         modifier = Modifier.fillMaxWidth(),
-        onClick = {
-            onClick()
-        },
+        onClick = { onClick() },
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Black,
             contentColor = Color.White
         ),
-        shape = RoundedCornerShape(size = 5.dp)
+        shape = RoundedCornerShape(size = 5.dp),
+        enabled = enabled // Thêm enabled vào Button
     ) {
         Text(
             text = text,

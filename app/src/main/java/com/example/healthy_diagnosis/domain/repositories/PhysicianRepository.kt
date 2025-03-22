@@ -12,4 +12,9 @@ interface PhysicianRepository {
 
     suspend fun deletePhysician(id: Int)
 
+    suspend fun getPhysicianByAccountId(accountId: Int): PhysicianEntity?
+
+    suspend fun getPhysicianIdByAccountId(accountId: Int): Int?
+
+    suspend fun checkPhysicianExists(accountId: Int): Boolean
 }

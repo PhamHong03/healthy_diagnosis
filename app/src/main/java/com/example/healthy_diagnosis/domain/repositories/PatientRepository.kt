@@ -11,4 +11,6 @@ interface PatientRepository {
     suspend fun deletePatient(id: Int)
 
     suspend fun getPatientByAccountId(accountId: Int): PatientEntity?
+
+//    suspend fun getPatientById(patientId: Int): PatientEntity
 }

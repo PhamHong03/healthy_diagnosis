@@ -175,9 +175,7 @@ fun DiagnosisScreen(
                     Row (
                         modifier = Modifier.padding(start = 10.dp, end = 10.dp)
                     ){
-                        ButtonClick(text = "PHÂN TÍCH ẢNH") {
-
-                        }
+                        ButtonClick(text = "PHÂN TÍCH ẢNH", onClick = {})
                     }
                 }
             }

@@ -131,4 +131,12 @@ class PatientViewModel @Inject constructor(
             onResult(patient?.id)
         }
     }
+
+//    fun getPatientNameById(patientId: Int, callback: (String?) -> Unit) {
+//        viewModelScope.launch {
+//            val patient = patientRepository.getPatientById(patientId)
+//            callback(patient?.name)
+//        }
+//    }
+
 }

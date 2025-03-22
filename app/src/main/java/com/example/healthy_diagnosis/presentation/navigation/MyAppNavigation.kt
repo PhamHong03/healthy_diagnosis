@@ -20,6 +20,7 @@ import com.example.healthy_diagnosis.presentation.screen.doctors.HomeScreen
 import com.example.healthy_diagnosis.presentation.screen.doctors.InfoDoctor
 import com.example.healthy_diagnosis.presentation.screen.doctors.Patient
 import com.example.healthy_diagnosis.presentation.screen.doctors.ProfileDoctor
+import com.example.healthy_diagnosis.presentation.screen.doctors.WorkList
 import com.example.healthy_diagnosis.presentation.viewmodel.ApplicationFormViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.EducationViewModel
@@ -60,14 +61,16 @@ fun MyAppNavigation(
                 navController = navController,
                 physicianViewModel = physicianViewModel,
                 specializationViewModel = specializationViewModel,
-                educationViewModel = educationViewModel
+                educationViewModel = educationViewModel,
+                authViewModel = authViewModel
             )
         }
         composable(route = "home") {
             HomeScreen(
                 navController = navController,
                 authViewModel = authViewModel,
-                notificationCount = 2
+                notificationCount = 2,
+                physicianViewModel = physicianViewModel
             )
         }
         composable(route = "diagnosis"){
@@ -75,7 +78,7 @@ fun MyAppNavigation(
         }
 
         composable(route = "healthcare") {
-            Education()
+            WorkList(applicationFormViewModel = applicationFormViewModel, patientViewModel = patientViewModel)
         }
         composable(route = "profile") {
             ProfileDoctor()

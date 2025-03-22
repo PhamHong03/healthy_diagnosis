@@ -18,7 +18,7 @@ import javax.inject.Singleton
 class FirebaseAuthRepository @Inject constructor(
     private val apiService: ApiService
 ) {
-    suspend fun registerFirebaseUser(username: String, email: String, phone_number: String, password: String, role: String): Result<String> =
+    suspend fun registerFirebaseUser( email: String, password: String, role: String): Result<String> =
         suspendCoroutine { continuation ->
             Firebase.auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
@@ -27,9 +27,7 @@ class FirebaseAuthRepository @Inject constructor(
                         Log.d("FirebaseAuthRepository", "User created: ${user?.uid}")
                         user?.let {
                             val userProfile = mapOf(
-                                "username" to username,
                                 "email" to email,
-                                "phone_number" to phone_number,
                                 "role" to role
                             )
                             val db = Firebase.firestore

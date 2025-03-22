@@ -28,18 +28,44 @@ class PhysicianViewModel @Inject constructor(
     private val _addphysicianResult = MutableStateFlow<String?>(null)
     val addPhysicianResult : StateFlow<String?> = _addphysicianResult
 
-
+    //Save state
     private val _isSaved = MutableStateFlow(false)
     val isSaved: StateFlow<Boolean> get() = _isSaved
 
+    //Loading state
     private val _isLoading = MutableStateFlow(false)
-
     val isLoading = _isLoading.asStateFlow()
+
+    private val _physicianAccount = MutableStateFlow<PhysicianEntity?>(null)
+    val physicianAccount: StateFlow<PhysicianEntity?> = _physicianAccount.asStateFlow()
+
+    private val _physicianId = MutableStateFlow<Int?>(null)
+    val physicianId: StateFlow<Int?> = _physicianId.asStateFlow()
+
+    fun fetchPhysicianByAccountId(accountId: Int) {
+        viewModelScope.launch {
+            Log.d("PhysicianViewModel", "Fetching physician for accountId: $accountId")
+
+            val physician = physicianRepository.getPhysicianByAccountId(accountId)
+
+            if (physician != null) {
+                Log.d("PhysicianViewModel", "Physician found: ${physician.id} - ${physician.name}")
+            } else {
+                Log.d("PhysicianViewModel", "No physician found for accountId: $accountId")
+            }
+
+            _physicianId.value = physician?.id
+            Log.d("PhysicianViewModel", "Updated physicianId: ${_physicianId.value}")
+        }
+    }
+
 
     init {
         fetchPhysician()
     }
-
+    suspend fun isDoctorExists(accountId: Int): Boolean {
+        return physicianRepository.checkPhysicianExists(accountId)
+    }
     fun fetchPhysician(){
         viewModelScope.launch {
             _isLoading.value = true
@@ -48,10 +74,11 @@ class PhysicianViewModel @Inject constructor(
 
         }
     }
-    fun insertPhysician(name: String, email: String, phone: String, address: String, gender: String, education_id: Int, specialization_id: Int){
+    fun insertPhysician(name: String, email: String, phone: String, address: String, gender: String, education_id: Int, specialization_id: Int, account_id: Int){
         viewModelScope.launch {
             try {
                 val physicianEntity = PhysicianEntity(
+                    account_id = account_id,
                     name = name,
                     email = email,
                     phone = phone,
@@ -74,10 +101,28 @@ class PhysicianViewModel @Inject constructor(
         }
     }
 
-    fun insertPhysician1(name: String, email: String, phone: String, address: String, gender: String, specializationId: Int, educationId: Int){
+    fun insertPhysician1(
+        name: String,
+        email: String,
+        phone: String,
+        address: String,
+        gender: String,
+        specializationId: Int,
+        educationId: Int,
+        accountId: Int,
+    ){
         viewModelScope.launch {
             try {
-                val physicianEntity = PhysicianEntity(name = name, email = email, phone = phone, address = address, gender = gender, education_id = educationId,  specialization_id = specializationId)
+                val physicianEntity = PhysicianEntity(
+                    name = name,
+                    email = email,
+                    phone = phone,
+                    address = address,
+                    gender = gender,
+                    education_id = educationId,
+                    specialization_id = specializationId,
+                    account_id = accountId
+                )
                 physicianRepository.insertPhysician(physicianEntity)
                 _addphysicianResult.value = " Thêm thành công"
                 fetchPhysician()
@@ -92,10 +137,11 @@ class PhysicianViewModel @Inject constructor(
             physicianRepository.deletePhysician(id)
             fetchPhysician()
         }
-
     }
 
     fun resetIsSaved() {
         _isSaved.value = false
     }
+
+
 }

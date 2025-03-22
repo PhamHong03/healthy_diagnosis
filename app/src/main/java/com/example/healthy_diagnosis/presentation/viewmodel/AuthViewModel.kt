@@ -21,6 +21,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
@@ -51,6 +54,17 @@ class AuthViewModel @Inject constructor(
     private val _accountList = MutableStateFlow<List<AccountEntity>>(emptyList())
     val accountList = _accountList
 
+    private val _isDoctorRegistered = mutableStateOf<Boolean?>(null)
+    val isDoctorRegistered: State<Boolean?> = _isDoctorRegistered
+
+    fun checkDoctorRegistration(accountId: Int) {
+        viewModelScope.launch {
+            val result = repository.getPhysicianByAccountId(accountId)
+            _isDoctorRegistered.value = result
+        }
+    }
+
+
     fun setAccount(account: AccountEntity) {
         _account.value = account
     }
@@ -75,9 +89,7 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val result = firebaseAuthRepository.registerFirebaseUser(
-                    accountRequest.username,
                     accountRequest.email,
-                    accountRequest.phone_number,
                     accountRequest.password,
                     accountRequest.role
                 )
@@ -117,8 +129,6 @@ class AuthViewModel @Inject constructor(
                     val account = AccountEntity(
                         id = response.id,
                         email = response.email,
-                        username = response.username,
-                        phone_number = response.phone_number,
                         role = response.role,
                         password = ""  // 🔹 Không cần lưu mật khẩu
                     )
@@ -270,8 +280,6 @@ class AuthViewModel @Inject constructor(
                     val account = AccountEntity(
                         id = accountId,  // Lấy ID từ server để tránh trùng lặp
                         email = document.getString("email") ?: "",
-                        username = document.getString("username") ?: "",
-                        phone_number = document.getString("phone_number") ?: "",
                         role = document.getString("role") ?: "",
                         password = ""
                     )

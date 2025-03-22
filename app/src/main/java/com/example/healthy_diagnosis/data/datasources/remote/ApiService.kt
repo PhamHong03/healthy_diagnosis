@@ -1,6 +1,7 @@
 package com.example.healthy_diagnosis.data.datasources.remote
 
 import com.example.healthy_diagnosis.data.models.AccountEntity
+import com.example.healthy_diagnosis.data.models.PhysicianEntity
 import com.example.healthy_diagnosis.domain.usecases.TokenRequest
 import com.example.healthy_diagnosis.domain.usecases.login.LoginResponse
 import com.example.healthy_diagnosis.domain.usecases.register.RegisterRequest
@@ -10,6 +11,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface ApiService {
 
@@ -34,5 +36,7 @@ interface ApiService {
     @POST("get_account_id")
     suspend fun getAccountIdByUid(@Body request: Map<String, String>): Response<LoginResponse>
 
+    @GET("physicians/account/{accountId}")
+    suspend fun getPhysicianByAccountId(@Path("accountId") accountId: Int): Response<PhysicianEntity?>
 
 }

@@ -25,6 +25,12 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,10 +43,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.healthy_diagnosis.R
+import com.example.healthy_diagnosis.core.utils.ConfirmSaveDialog
 import com.example.healthy_diagnosis.core.utils.HeaderSection
 import com.example.healthy_diagnosis.core.utils.SearchBar
 import com.example.healthy_diagnosis.data.models.MenuItemData
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.PhysicianViewModel
 import com.example.healthy_diagnosis.ui.theme.BannerColor
 import com.example.healthy_diagnosis.ui.theme.MenuItemColor
 
@@ -48,7 +56,8 @@ import com.example.healthy_diagnosis.ui.theme.MenuItemColor
 fun HomeScreen(
     authViewModel: AuthViewModel,
     navController: NavController,
-    notificationCount: Int
+    notificationCount: Int,
+    physicianViewModel: PhysicianViewModel
 ){
     val items = listOf(
         MenuItemData("Công việc", R.drawable.cssk, "healthcare" ),
@@ -60,6 +69,40 @@ fun HomeScreen(
         MenuItemData("Cá nhân", R.drawable.user, "profile"),
         MenuItemData("Cài đặt", R.drawable.setting, "settings" )
     )
+
+    val accountId by authViewModel.account.collectAsState()
+    var isDoctorRegistered by remember { mutableStateOf<Boolean?>(null) }
+
+    var showDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(accountId) {
+        accountId?.id?.let { id ->
+            physicianViewModel.fetchPhysicianByAccountId(id)
+        }
+    }
+
+    val physicianId by physicianViewModel.physicianId.collectAsState()
+
+    LaunchedEffect(physicianId) {
+        showDialog = (physicianId == null)
+    }
+
+    LaunchedEffect(physicianViewModel.physicianId.collectAsState().value) {
+        val currentPhysicianId = physicianViewModel.physicianId.value
+        Log.d("HomeScreen", "Current physicianId from ViewModel: $currentPhysicianId")
+
+        showDialog = (currentPhysicianId == null)
+    }
+
+    if(showDialog){
+        ConfirmSaveDialog(
+            onDismiss = {showDialog = false},
+            onConfirm = {
+                showDialog = false
+                navController.navigate("input_infoDoctor")
+            }
+        )
+    }
     Box(
         contentAlignment = Alignment.TopCenter
     ) {

@@ -78,4 +78,13 @@ class AccountRepositoryImpl @Inject constructor(
             accountDao.getAllAccount()
         }
     }
+
+    override suspend fun getPhysicianByAccountId(accountId: Int): Boolean {
+        return try {
+            val response = apiService.getPhysicianByAccountId(accountId)
+            response.isSuccessful && response.body() != null
+        } catch (e: Exception) {
+            false
+        }
+    }
 }

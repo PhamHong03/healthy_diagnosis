@@ -67,8 +67,6 @@ fun SignUpSection(
     navController: NavController
 ) {
     var email by remember { mutableStateOf("") }
-    var username by remember { mutableStateOf("") }
-    var phoneNumber by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
     var role by remember { mutableStateOf("") }
@@ -95,28 +93,6 @@ fun SignUpSection(
                 AccountTypeItem("Patient", role == "Patient") { role = "Patient" }
             }
         }
-
-        item {
-            TextFieldLoginRegister(
-                label = "Tên của bạn",
-                trailingIcon = { Icon(imageVector = Icons.Filled.Person, contentDescription = "User") },
-                modifier = Modifier.fillMaxWidth(),
-                textInput = username,
-                onTextChanged = { username = it }
-            )
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(10.dp))
-            TextFieldLoginRegister(
-                label = "Số điện thoại",
-                trailingIcon = { Icon(imageVector = Icons.Filled.Phone, contentDescription = "Phone") },
-                modifier = Modifier.fillMaxWidth(),
-                textInput = phoneNumber,
-                onTextChanged = { phoneNumber = it }
-            )
-        }
-
         item {
             Spacer(modifier = Modifier.height(10.dp))
             TextFieldLoginRegister(
@@ -155,8 +131,6 @@ fun SignUpSection(
                     val accountRequest = RegisterRequest(
                         email = email,
                         password = password,
-                        username = username,
-                        phone_number = phoneNumber,
                         role = role
                     )
                     viewModel.registerAccount(accountRequest)

@@ -55,4 +55,31 @@ class PhysicianRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getPhysicianByAccountId(accountId: Int): PhysicianEntity? {
+        return try {
+            val physician = physicianApiService.getPhysicianByAccountId(accountId)
+            physician?.let {
+                physicianDao.insertPhysician(it)
+                physician
+            }
+        }catch (e:Exception){
+            Log.e("PhysicianRepo", "Lỗi kết nối API: ${e.message}")
+
+            physicianDao.getPhysicianById(accountId)
+        }
+    }
+
+    override suspend fun getPhysicianIdByAccountId(accountId: Int): Int? {
+        return physicianDao.getPhysicianIdByAccountId(accountId)
+    }
+
+    override suspend fun checkPhysicianExists(accountId: Int): Boolean {
+        return try {
+            val response = physicianApiService.getPhysicianByAccountId(accountId)
+            response?.id != null  // Nếu tồn tại bác sĩ, trả về true
+        } catch (e: Exception) {
+            false // Nếu lỗi hoặc không có dữ liệu, trả về false
+        }
+    }
+
 }

@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import com.example.healthy_diagnosis.core.utils.BannerInfo
 import com.example.healthy_diagnosis.core.utils.ButtonClick
 import com.example.healthy_diagnosis.core.utils.ConfirmSaveDialog
+import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.EducationViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.PhysicianViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.SpecializationViewModel
@@ -41,7 +42,8 @@ fun InfoDoctor(
     navController: NavController,
     physicianViewModel: PhysicianViewModel,
     specializationViewModel: SpecializationViewModel,
-    educationViewModel: EducationViewModel
+    educationViewModel: EducationViewModel,
+    authViewModel: AuthViewModel
 ) {
 
     val context = LocalContext.current
@@ -69,6 +71,16 @@ fun InfoDoctor(
 
     var showDialog by remember { mutableStateOf(false) }
 
+    val account by authViewModel.account.collectAsState()
+    val currentUser by authViewModel.account.collectAsState()
+    val accountId = currentUser?.id ?: 0
+    var isProcessing by remember { mutableStateOf(false) }
+
+    LaunchedEffect (accountId){
+        if(accountId != 0){
+            physicianViewModel.fetchPhysicianByAccountId(accountId)
+        }
+    }
     Scaffold(
         topBar = {
             BannerInfo(padding = 0.dp, "Trung tâm chuẩn đoán")
@@ -143,9 +155,11 @@ fun InfoDoctor(
                 )
             }
             item{
-                ButtonClick(text = "Lưu thông tin", onClick = {
+                ButtonClick(text = "Lưu thông tin", enabled = !isProcessing, onClick = {
+                    isProcessing = true
                     showDialog = true
                 })
+
             }
         }
     }
@@ -155,6 +169,7 @@ fun InfoDoctor(
             onConfirm = {
 //                Toast.makeText(context, "Chuyên môn: $specialization_id, Học vấn: $education_id", Toast.LENGTH_SHORT).show()
                 physicianViewModel.insertPhysician(
+                    account_id = accountId,
                     name = name,
                     email = email,
                     phone = phone,
@@ -171,13 +186,16 @@ fun InfoDoctor(
 
     LaunchedEffect(isSaved) {
         if (isSaved) {
+            isProcessing = false
+            showDialog = false
             Toast.makeText(context, "Đăng ký bác sĩ thành công!", Toast.LENGTH_SHORT).show()
             navController.navigate("home") {
                 popUpTo("infoDoctor") { inclusive = true }
             }
-            physicianViewModel.resetIsSaved() // Reset trạng thái sau khi điều hướng
+            physicianViewModel.resetIsSaved()
         }
     }
+
 }
 
 @Composable

@@ -73,10 +73,6 @@ fun ApplicationForm(
     val rooms by roomViewModel.roomList.collectAsState()
 
     val roomOptions = rooms.map { it.id to it.name }
-//
-//    val medicalHistories by medicalHistoryViewModel.medicalHistoryList.collectAsState()
-//
-//    val medicalHistoriesOption = medicalHistories.map { it.id to it.physician_name }
 
     val medicalHistories by medicalHistoryViewModel.medicalHistoryList.collectAsState()
 

@@ -20,4 +20,7 @@ interface AccountRepository {
 
     suspend fun getAllAccount(): List<AccountEntity>
 
+    suspend fun getPhysicianByAccountId(accountId: Int): Boolean
+
+
 }

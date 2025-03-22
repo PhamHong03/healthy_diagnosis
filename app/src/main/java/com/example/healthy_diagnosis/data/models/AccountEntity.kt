@@ -9,8 +9,8 @@ import com.google.gson.annotations.SerializedName
 data class AccountEntity(
     @PrimaryKey val id: Int,
     val email : String,
-    val username : String,
-    val phone_number : String,
+//    val username : String,
+//    val phone_number : String,
     val role : String,
     val password: String = ""
 )

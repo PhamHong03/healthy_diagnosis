@@ -32,5 +32,6 @@ data class PhysicianEntity (
     val address: String,
     val gender: String,
     val education_id: Int,
-    val specialization_id: Int
+    val specialization_id: Int,
+    val account_id : Int
 )
