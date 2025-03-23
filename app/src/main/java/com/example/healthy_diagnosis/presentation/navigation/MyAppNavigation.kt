@@ -78,7 +78,7 @@ fun MyAppNavigation(
         }
 
         composable(route = "healthcare") {
-            WorkList(applicationFormViewModel = applicationFormViewModel, patientViewModel = patientViewModel)
+            WorkList(physicianViewModel = physicianViewModel)
         }
         composable(route = "profile") {
             ProfileDoctor()

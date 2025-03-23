@@ -1,8 +1,8 @@
 package com.example.healthy_diagnosis.data.datasources.remote
 
-import com.example.healthy_diagnosis.data.models.EducationEntity
+import androidx.room.Query
 import com.example.healthy_diagnosis.data.models.PhysicianEntity
-import com.example.healthy_diagnosis.data.models.SpecializationEntity
+import com.example.healthy_diagnosis.domain.usecases.patient.PatientWithApplicationDate
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -28,4 +28,8 @@ interface PhysicianApiService {
 
     @GET("physicians/account/{account_id}")
     suspend fun getPhysicianByAccountId(@Path("account_id") acocuntId: Int): PhysicianEntity?
+
+    @GET("physician/{physician_id}/patients")
+    suspend fun getPatientsByPhysician(@Path("physician_id") physicianId: Int): List<PatientWithApplicationDate>
+
 }

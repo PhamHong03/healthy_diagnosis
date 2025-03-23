@@ -7,6 +7,7 @@ import com.example.healthy_diagnosis.data.models.EducationEntity
 import com.example.healthy_diagnosis.data.models.PhysicianEntity
 import com.example.healthy_diagnosis.data.models.SpecializationEntity
 import com.example.healthy_diagnosis.domain.repositories.PhysicianRepository
+import com.example.healthy_diagnosis.domain.usecases.patient.PatientWithApplicationDate
 import javax.inject.Inject
 
 class PhysicianRepositoryImpl @Inject constructor(
@@ -81,5 +82,10 @@ class PhysicianRepositoryImpl @Inject constructor(
             false // Nếu lỗi hoặc không có dữ liệu, trả về false
         }
     }
+
+    override suspend fun getPatientsByPhysician(accountId: Int): List<PatientWithApplicationDate> {
+        return physicianApiService.getPatientsByPhysician(accountId)
+    }
+
 
 }

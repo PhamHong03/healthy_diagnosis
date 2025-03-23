@@ -10,6 +10,7 @@ import com.example.healthy_diagnosis.data.models.EducationEntity
 import com.example.healthy_diagnosis.data.models.PhysicianEntity
 import com.example.healthy_diagnosis.data.models.SpecializationEntity
 import com.example.healthy_diagnosis.domain.repositories.PhysicianRepository
+import com.example.healthy_diagnosis.domain.usecases.patient.PatientWithApplicationDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -41,6 +42,21 @@ class PhysicianViewModel @Inject constructor(
 
     private val _physicianId = MutableStateFlow<Int?>(null)
     val physicianId: StateFlow<Int?> = _physicianId.asStateFlow()
+
+    private val _patients = MutableLiveData<List<PatientWithApplicationDate>>()
+    val patients: LiveData<List<PatientWithApplicationDate>> = _patients
+
+    fun fetchPatients(physicianId: Int) {
+        viewModelScope.launch {
+            try {
+                _patients.value = physicianRepository.getPatientsByPhysician(physicianId)
+            } catch (e: Exception) {
+                Log.e("PhysicianViewModel", "Error fetching patients: ${e}")
+            }
+        }
+    }
+
+
 
     fun fetchPhysicianByAccountId(accountId: Int) {
         viewModelScope.launch {

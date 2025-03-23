@@ -30,4 +30,6 @@ interface PhysicianDao {
 
     @Query("SELECT id FROM physicians WHERE account_id = :accountId LIMIT 1")
     suspend fun getPhysicianIdByAccountId(accountId: Int): Int?
+
+
 }
