@@ -24,40 +24,53 @@ class ApplicationFormViewModel @Inject constructor(
     private val _isSave = MutableStateFlow(false)
     val isSave: StateFlow<Boolean> get() = _isSave
 
+    private val _isSaved = MutableStateFlow(false)
+    val isSaved: StateFlow<Boolean> get() = _isSaved
+
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
     init {
         fetchApplicationForm()
     }
-    fun fetchApplicationForm(){
+    fun fetchApplicationForm() {
         viewModelScope.launch {
             _isLoading.value = true
-            _applicationFormList.value = applicationFormRespository.getAllApplicationForm()
+
+            val localData = applicationFormRespository.getAllApplicationForm()
+            if (localData.isNotEmpty()) {
+                _applicationFormList.value = localData
+            } else {
+                Log.e("ApplicationFormViewModel", "Room rỗng, gọi API để tải dữ liệu...")
+                applicationFormRespository.getAllApplicationForm()
+            }
+
             _isLoading.value = false
         }
     }
 
-    fun insertApplicationForm(content: String, application_form_date: String, patient_id: Int, room_id: String, medical_history_id: Int){
+    fun insertApplicationForm(content: String, application_form_date: String, patient_id: Int, room_id: String, medical_history_id: Int) {
         viewModelScope.launch {
             try {
                 if (patient_id == 0) {
                     Log.e("InsertApplicationForm", "Lỗi: Thiếu thông tin đăng ký khám!")
                     return@launch
                 }
-                val applicationFormEntiry = ApplicationFormEntity(
+                val applicationFormEntity = ApplicationFormEntity(
                     content = content,
                     application_form_date = application_form_date,
                     patient_id = patient_id,
                     room_id = room_id,
                     medical_history_id = medical_history_id
                 )
-                applicationFormRespository.insertApplicationForm(applicationFormEntiry)
+                applicationFormRespository.insertApplicationForm(applicationFormEntity)
                 Log.d("InsertApplicationForm", "Đăng ký thành công")
+
                 _isSave.value = true
 
+                // Cập nhật lại UI sau khi insert
                 fetchApplicationForm()
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 Log.e("InsertApplicationForm", "Lỗi khi thêm phiếu đăng ký", e)
                 _isSave.value = false
             }

@@ -9,4 +9,5 @@ interface ApplicationFormRespository {
     suspend fun insertApplicationForm(applicationFormEntity: ApplicationFormEntity)
 
     suspend fun deleteApplicationForm(id: Int)
+
 }

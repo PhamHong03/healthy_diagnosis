@@ -56,10 +56,13 @@ fun AppointmentForm(
     } catch (e: Exception) {
         "N/A"
     }
-    LaunchedEffect(appointmentFormViewModel.eventFlow) {
+    LaunchedEffect(Unit) {
         appointmentFormViewModel.eventFlow.collectLatest { message ->
+            Log.d("AppointmentForm", "Nhận event: $message")
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+
             if (message == "Thêm phiếu khám thành công!") {
+                Log.d("AppointmentForm", "Điều hướng đến màn hình chẩn đoán")
                 navController.navigate("diagnosis/${patient.application_form_id}") {
                     popUpTo("healthcare") { inclusive = false }
                 }
@@ -76,6 +79,7 @@ fun AppointmentForm(
                 Log.d("AppointmentForm", "Patient ID: ${patient.application_form_id}")
                 Spacer(modifier = Modifier.height(8.dp))
                 Text("Ngày khám: $formattedDate", fontWeight = FontWeight.Medium)
+                Text("id application form : ${patient.application_form_id}", fontWeight = FontWeight.Medium)
                 Spacer(modifier = Modifier.height(8.dp))
                 Text("Mô tả từ bệnh nhân: ${patient.application_form_content}", fontWeight = FontWeight.Medium)
                 Spacer(modifier = Modifier.height(16.dp))
