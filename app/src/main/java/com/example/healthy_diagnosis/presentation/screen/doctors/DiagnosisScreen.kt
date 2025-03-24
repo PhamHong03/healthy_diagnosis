@@ -73,7 +73,9 @@ import kotlinx.coroutines.launch
 fun DiagnosisScreen(
     navController: NavController,
     authViewModel: AuthViewModel,
-    patientViewModel: PatientViewModel
+    patientViewModel: PatientViewModel,
+    selectedPatientId: Int?
+
 ) {
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     val notificationCount by remember { mutableStateOf(5) }

@@ -4,6 +4,7 @@ import com.example.healthy_diagnosis.domain.repositories.AccountRepository
 import com.example.healthy_diagnosis.domain.repositories.FirebaseAuthRepository
 import com.example.healthy_diagnosis.data.datasources.local.AppDatabase
 import com.example.healthy_diagnosis.data.datasources.remote.ApplicationFormApiService
+import com.example.healthy_diagnosis.data.datasources.remote.AppointmentFormApiService
 import com.example.healthy_diagnosis.data.datasources.remote.EducationApiService
 import com.example.healthy_diagnosis.data.datasources.remote.MedicalHistoryApiService
 import com.example.healthy_diagnosis.data.datasources.remote.PatientApiService
@@ -11,6 +12,7 @@ import com.example.healthy_diagnosis.data.datasources.remote.PhysicianApiService
 import com.example.healthy_diagnosis.data.datasources.remote.RoomApiService
 import com.example.healthy_diagnosis.data.datasources.remote.SpecializationApiService
 import com.example.healthy_diagnosis.domain.repositories.ApplicationFormRespository
+import com.example.healthy_diagnosis.domain.repositories.AppointmentFormRepository
 import com.example.healthy_diagnosis.domain.repositories.EducationRepository
 import com.example.healthy_diagnosis.domain.repositories.MedicalHistoryRepository
 import com.example.healthy_diagnosis.domain.repositories.PatientRepository
@@ -19,6 +21,7 @@ import com.example.healthy_diagnosis.domain.repositories.RoomRepository
 import com.example.healthy_diagnosis.domain.repositories.SpecializationRepository
 import com.example.healthy_diagnosis.infrastructure.repositories.AccountRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.ApplicationFormRepositoryImpl
+import com.example.healthy_diagnosis.infrastructure.repositories.AppointmentFormRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.EducationRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.MedicalHistoryRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.PatientRepositoryImpl
@@ -106,5 +109,14 @@ object RepositoryModule {
         applicationFormApiService: ApplicationFormApiService
     ): ApplicationFormRespository {
         return ApplicationFormRepositoryImpl(database.applicationFormDao(), applicationFormApiService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAppointmentFormRepository(
+        database: AppDatabase,
+        appointmentFormApiService: AppointmentFormApiService
+    ): AppointmentFormRepository {
+        return AppointmentFormRepositoryImpl(database.appointmentFormDao(), appointmentFormApiService)
     }
 }

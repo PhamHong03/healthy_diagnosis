@@ -11,8 +11,8 @@ import retrofit2.http.Path
 
 interface ApplicationFormApiService {
 
-    @GET("application-forms")
-    suspend fun getAllApplicationForm():  List<ApplicationFormEntity>
+    @GET("/application-forms")
+    suspend fun getAllApplicationForms(): Response<List<ApplicationFormEntity>>
 
     @POST("application-forms")
     suspend fun insertApplicationForm(@Body applicationFormEntity: ApplicationFormEntity): Response<Void>

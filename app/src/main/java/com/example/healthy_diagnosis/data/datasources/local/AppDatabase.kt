@@ -8,6 +8,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.healthy_diagnosis.data.models.AccountEntity
 import com.example.healthy_diagnosis.data.models.ApplicationFormEntity
+import com.example.healthy_diagnosis.data.models.AppointmentFormEntity
 import com.example.healthy_diagnosis.data.models.EducationEntity
 import com.example.healthy_diagnosis.data.models.MedicalHistoryEntity
 import com.example.healthy_diagnosis.data.models.PatientEntity
@@ -24,9 +25,10 @@ import com.example.healthy_diagnosis.data.models.SpecializationEntity
         SpecializationEntity::class,
         RoomEntity::class,
         MedicalHistoryEntity::class,
-        ApplicationFormEntity::class
+        ApplicationFormEntity::class,
+        AppointmentFormEntity::class
                ],
-    version =8,
+    version =9,
     exportSchema = false
 )
 
@@ -39,6 +41,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun roomDao(): RoomDao
     abstract fun medicalhistoryDao():MedicalHistoryDao
     abstract fun applicationFormDao(): ApplicationFormDao
+    abstract fun appointmentFormDao(): AppointmentFormDao
 
     companion object {
         fun getDatabase(context: Context): AppDatabase {

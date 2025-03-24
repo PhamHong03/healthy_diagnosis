@@ -28,62 +28,77 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.healthy_diagnosis.ui.theme.BannerColor
+import androidx.navigation.NavController
+import com.example.healthy_diagnosis.presentation.viewmodel.AppointmentFormViewModel
 import com.example.healthy_diagnosis.ui.theme.MenuItemColor
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
+
+
 @Composable
 fun WorkList(
-    modifier: Modifier = Modifier,
-    physicianViewModel: PhysicianViewModel
+    physicianViewModel: PhysicianViewModel,
+    appointmentFormViewModel: AppointmentFormViewModel,
+    navController: NavController
 ) {
     val physicianId by physicianViewModel.physicianId.collectAsState()
     val patients by physicianViewModel.patients.observeAsState(emptyList())
+
+    var showDialog by remember { mutableStateOf(false) }
+    var selectedPatient by remember { mutableStateOf<PatientWithApplicationDate?>(null) }
+
     LaunchedEffect(physicianId) {
-        physicianId?.let { id ->
-            physicianViewModel.fetchPatients(id)
-        }
+        physicianId?.let { id -> physicianViewModel.fetchPatients(id) }
     }
 
     Scaffold(
-        topBar = {
-            TopBarScreen(title = "Lịch khám đã đặt trước", onBackClick = { })
-        }
+        topBar = { TopBarScreen(title = "Lịch khám đã đặt trước", onBackClick = { }) }
     ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier.padding(paddingValues)
-        ) {
+        LazyColumn(modifier = Modifier.padding(paddingValues)) {
             items(patients.sortedBy { it.application_form_date }) { patient ->
                 ApplicationFormItem(
                     patient = patient,
-                    onDelete = { patientId -> /* Xử lý xóa bệnh nhân */ },
-                    onViewDetails = { patientId -> /* Xử lý xem chi tiết */ }
+                    onDelete = { /* Xử lý xóa bệnh nhân */ },
+                    onViewDetails = { /* Xử lý xem chi tiết */ },
+                    onStartExam = {
+                        selectedPatient = patient
+                        showDialog = true
+                    }
                 )
             }
         }
     }
-}
 
+    selectedPatient?.let { patient ->
+        if (showDialog) {
+            AppointmentForm(
+                patient = patient,
+                onDismiss = { showDialog = false },
+                onConfirm = { appointmentForm ->
+                    showDialog = false
+                    appointmentFormViewModel.insertAppointmentForm(appointmentForm)
+                },
+                appointmentFormViewModel = appointmentFormViewModel,
+                navController = navController
+            )
+        }
+    }
+
+}
 
 @Composable
 fun ApplicationFormItem(
     patient: PatientWithApplicationDate,
     onDelete: (Int) -> Unit,
-    onViewDetails: (Int) -> Unit
+    onViewDetails: (Int) -> Unit,
+    onStartExam: () -> Unit
 ) {
     val formattedDate = try {
-        when (val dateValue = patient.application_form_date) {
-            is String -> {
-                val inputFormat = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH) // Định dạng của dữ liệu đầu vào
-                val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) // Định dạng mong muốn
-                val date = inputFormat.parse(dateValue) // Chuyển chuỗi thành Date
-                outputFormat.format(date) // Format lại thành chuỗi chỉ chứa ngày tháng năm
-            }
-            else -> "N/A"
-        }
+        val inputFormat = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH)
+        val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        outputFormat.format(inputFormat.parse(patient.application_form_date) ?: "N/A")
     } catch (e: Exception) {
         "N/A"
     }
@@ -102,31 +117,20 @@ fun ApplicationFormItem(
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = "Bệnh nhân: ${patient.patient_name}",
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold
-                )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(text = "Bệnh nhân: ${patient.patient_name}", fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Ngày khám: ${formattedDate}",
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                Text(text = "Ngày khám: $formattedDate", style = MaterialTheme.typography.bodyMedium)
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Button(
-                    onClick = {  },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)) // Màu xanh lá
+                    onClick = onStartExam,
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
                 ) {
                     Text("Khám lịch", color = Color.White)
                 }
             }
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 IconButton(onClick = { onViewDetails(patient.patient_id) }) {
                     Icon(imageVector = Icons.Default.Info, contentDescription = "Chi tiết", tint = MenuItemColor)
                 }
@@ -137,5 +141,4 @@ fun ApplicationFormItem(
             }
         }
     }
-
 }

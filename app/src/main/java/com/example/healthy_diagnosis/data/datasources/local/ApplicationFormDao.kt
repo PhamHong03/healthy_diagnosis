@@ -17,12 +17,17 @@ interface ApplicationFormDao {
     @Query("DELETE FROM application_forms WHERE id = :id")
     suspend fun deleteApplicationForm(id: Int)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAllApplicationForm(applications: List<ApplicationFormEntity>)
-
     @Query("DELETE FROM application_forms")
     suspend fun deleteAll()
 
+
+
     @Query("SELECT * FROM application_forms")
-    suspend fun getAllApplocationForm(): List<ApplicationFormEntity>
+    suspend fun getAllApplicationForm(): List<ApplicationFormEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllApplicationForm(applicationForms: List<ApplicationFormEntity>)
+
+    @Query("DELETE FROM application_forms")
+    suspend fun deleteAllApplicationForms()
 }

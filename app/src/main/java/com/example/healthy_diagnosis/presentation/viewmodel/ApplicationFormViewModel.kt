@@ -27,6 +27,9 @@ class ApplicationFormViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
+    init {
+        fetchApplicationForm()
+    }
     fun fetchApplicationForm(){
         viewModelScope.launch {
             _isLoading.value = true
