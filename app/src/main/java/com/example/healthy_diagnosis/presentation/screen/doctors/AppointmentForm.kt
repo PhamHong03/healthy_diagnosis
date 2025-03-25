@@ -32,6 +32,7 @@ import java.util.Locale
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
@@ -47,6 +48,7 @@ fun AppointmentForm(
     appointmentFormViewModel: AppointmentFormViewModel,
     navController: NavController
 ) {
+    val isSaved by appointmentFormViewModel.isSave.collectAsState()
     var description by remember { mutableStateOf("") }
     val context = LocalContext.current
     val formattedDate = try {
@@ -56,19 +58,30 @@ fun AppointmentForm(
     } catch (e: Exception) {
         "N/A"
     }
-    LaunchedEffect(Unit) {
-        appointmentFormViewModel.eventFlow.collectLatest { message ->
-            Log.d("AppointmentForm", "Nhận event: $message")
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-
-            if (message == "Thêm phiếu khám thành công!") {
-                Log.d("AppointmentForm", "Điều hướng đến màn hình chẩn đoán")
-                navController.navigate("diagnosis/${patient.application_form_id}") {
-                    popUpTo("healthcare") { inclusive = false }
-                }
-            }
-        }
-    }
+//    LaunchedEffect(Unit) {
+//        appointmentFormViewModel.eventFlow.collectLatest { message ->
+//            Log.d("AppointmentForm", "Nhận event: $message")
+//            Toast.makeText(context, "Tạo phiếu khám thành công", Toast.LENGTH_SHORT).show()
+//
+//            if (message == "Thêm phiếu khám thành công!") {
+//                Log.d("AppointmentForm", "Điều hướng đến màn hình chẩn đoán")
+//                navController.navigate("diagnosis/${patient.application_form_id}") {
+//                    popUpTo("healthcare") { inclusive = false }
+//                }
+//            }
+//            Toast.makeText(context, "Tạo phiếu khám thành công", Toast.LENGTH_SHORT).show()
+//            navController.navigate("diagnosis/${patient.patient_id}") {
+//                popUpTo("healthcare") { inclusive = false }
+//            }
+//        }
+//    }
+//    LaunchedEffect (isSaved){
+//        if(isSaved) {
+//            Toast.makeText(context, "Đi đến chẩn đoán", Toast.LENGTH_SHORT).show()
+//            navController.navigate("diagnosis/${patient.application_form_id}")
+//
+//        }
+//    }
 
     AlertDialog(
         onDismissRequest = onDismiss,

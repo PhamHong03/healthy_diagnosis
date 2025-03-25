@@ -59,11 +59,13 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalContext
 import com.example.healthy_diagnosis.core.utils.ButtonClick
 import com.example.healthy_diagnosis.core.utils.ConfirmSaveDialog
 import com.example.healthy_diagnosis.data.models.PatientEntity
 import com.example.healthy_diagnosis.presentation.screen.customers.DatePickerFieldCustomer
+import com.example.healthy_diagnosis.presentation.viewmodel.ApplicationFormViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.PatientViewModel
 import com.example.healthy_diagnosis.ui.theme.BannerColor
 import kotlinx.coroutines.launch
@@ -74,7 +76,10 @@ fun DiagnosisScreen(
     navController: NavController,
     authViewModel: AuthViewModel,
     patientViewModel: PatientViewModel,
-    selectedPatientId: Int?
+    selectedApplicationFormId: Int?,
+    patientId: Int?,
+    patientName: String?,
+    applicationFormViewModel: ApplicationFormViewModel
 
 ) {
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
@@ -85,9 +90,8 @@ fun DiagnosisScreen(
         patientViewModel.fetchPatients()
     }
 
-    val patient by patientViewModel.patientList.collectAsState()
 
-    val patients = patient.map{it.id to it.name}
+//    val patients = patient.map{it.id to it.name}
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -98,7 +102,13 @@ fun DiagnosisScreen(
             }
         }
     }
+    LaunchedEffect(selectedApplicationFormId) {
+        selectedApplicationFormId?.let {
+            applicationFormViewModel.fetchPatientByApplicationFormId(it)
+        }
+    }
 
+    val patientId by applicationFormViewModel.patientId.observeAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var showAddPatientDialog by remember { mutableStateOf(false) }
@@ -133,12 +143,16 @@ fun DiagnosisScreen(
                     .padding(paddingValues),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                SelectedPatient(
-                    navController = navController,
-                    patients = patients,
-                    selectedPatientId = selectedPatientId,
-                    onPatientSelected = { id -> selectedPatientId = id }
-                )
+                Text(text = "Mã đơn khám: ${selectedApplicationFormId ?: "Không có"}")
+                Text(text = "Mã đơn khám: ${patientId ?: "Không có"}")
+                Text(text = "Mã đơn khám: ${patientName ?: "Không có"}")
+
+//                SelectedPatient(
+//                    navController = navController,
+//                    patients = patients,
+//                    selectedPatientId = selectedPatientId,
+//                    onPatientSelected = { id -> selectedPatientId = id }
+//                )
 
                 Diagnosis(
                     onClick = {

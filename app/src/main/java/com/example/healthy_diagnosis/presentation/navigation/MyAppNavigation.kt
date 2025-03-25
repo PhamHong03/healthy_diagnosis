@@ -1,6 +1,7 @@
 package com.example.healthy_diagnosis.presentation.navigation
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -76,13 +77,20 @@ fun MyAppNavigation(
                 physicianViewModel = physicianViewModel
             )
         }
-        composable(route = "diagnosis/{patientId}") { backStackEntry ->
-            val patientId = backStackEntry.arguments?.getString("patientId")?.toIntOrNull()
+
+        composable(route = "diagnosis/{applicationFormId}/{patientId}/{patientName}") { backStackEntry ->
+            val applicationFormId = backStackEntry.arguments?.getString("applicationFormId")?.toIntOrNull()
+            val patientID = backStackEntry.arguments?.getString("patientId")?.toIntOrNull()
+            val patientName = backStackEntry.arguments?.getString("patientName")
+
             DiagnosisScreen(
                 navController = navController,
                 authViewModel = authViewModel,
                 patientViewModel = patientViewModel,
-                selectedPatientId = patientId
+                selectedApplicationFormId = applicationFormId,
+                patientId = patientID,
+                patientName = patientName,
+                applicationFormViewModel = applicationFormViewModel
             )
         }
 
@@ -122,17 +130,18 @@ fun MyAppNavigation(
             HomeScreenCustomer(navController = navController)
         }
 
-         composable(route = "booking") {
+        composable("booking/{patientId}") { backStackEntry ->
+            val patientId = backStackEntry.arguments?.getString("patientId")?.toIntOrNull()
             ApplicationForm(
+                navController = navController,
                 roomViewModel = roomViewModel,
                 medicalHistoryViewModel = medicalHistoryViewModel,
                 patientViewModel = patientViewModel,
-                navController = navController,
                 authViewModel = authViewModel,
-                applicationViewModel = applicationFormViewModel
+                applicationViewModel = applicationFormViewModel,
+                patientId = patientId
             )
         }
-
         composable(route = "patient_detail/selectedPatient"){
 
         }

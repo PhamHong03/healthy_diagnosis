@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.healthy_diagnosis.data.datasources.local.ApplicationFormDao
 import com.example.healthy_diagnosis.data.datasources.remote.ApplicationFormApiService
 import com.example.healthy_diagnosis.data.models.ApplicationFormEntity
+import com.example.healthy_diagnosis.data.models.PatientEntity
 import com.example.healthy_diagnosis.domain.repositories.ApplicationFormRespository
 import javax.inject.Inject
 
@@ -75,5 +76,14 @@ class ApplicationFormRepositoryImpl @Inject constructor(
             Log.e("ApplicationFormRepo", " Lỗi kết nối API: ${e.message}")
         }
     }
+
+    override suspend fun getPatientByApplicationFormId(applicationFormId: Int): PatientEntity? {
+        Log.d("ApplicationFormRepo", "Fetching from DB with applicationFormId: $applicationFormId")
+        val patient = applicationFormDao.getPatientByApplicationFormId(applicationFormId)
+        Log.d("ApplicationFormRepo", "Patient from DB: $patient")
+        return patient
+
+    }
+
 
 }

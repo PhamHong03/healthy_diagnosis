@@ -1,10 +1,13 @@
 package com.example.healthy_diagnosis.presentation.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.healthy_diagnosis.data.models.ApplicationFormEntity
 import com.example.healthy_diagnosis.data.models.MedicalHistoryEntity
+import com.example.healthy_diagnosis.data.models.PatientEntity
 import com.example.healthy_diagnosis.domain.repositories.ApplicationFormRespository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,6 +32,24 @@ class ApplicationFormViewModel @Inject constructor(
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
+
+
+    private val _patientId = MutableLiveData<PatientEntity?>()
+    val patientId: LiveData<PatientEntity?> = _patientId
+
+    fun fetchPatientByApplicationFormId(applicationFormId: Int) {
+        viewModelScope.launch {
+            try {
+                Log.d("ApplicationFormVM", "Fetching patient for applicationFormId: $applicationFormId")
+                val result = applicationFormRespository.getPatientByApplicationFormId(applicationFormId)
+                Log.d("ApplicationFormVM", "Result from repo: $result")
+                _patientId.postValue(result)
+            } catch (e: Exception) {
+                Log.e("ApplicationFormVM", "Error fetching patient: ${e.message}")
+            }
+        }
+    }
+
 
     init {
         fetchApplicationForm()

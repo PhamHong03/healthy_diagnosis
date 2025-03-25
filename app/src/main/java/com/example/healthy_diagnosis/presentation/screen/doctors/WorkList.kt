@@ -2,6 +2,7 @@
 
 package com.example.healthy_diagnosis.presentation.screen.doctors
 
+import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -63,28 +64,29 @@ fun WorkList(
                     onDelete = { /* Xử lý xóa bệnh nhân */ },
                     onViewDetails = { /* Xử lý xem chi tiết */ },
                     onStartExam = {
-                        selectedPatient = patient
-                        showDialog = true
+                        val encodedName = Uri.encode(patient.patient_name)
+                        navController.navigate("diagnosis/${patient.application_form_id}/${patient.patient_id}/$encodedName")
                     }
+
                 )
             }
         }
     }
 
-    selectedPatient?.let { patient ->
-        if (showDialog) {
-            AppointmentForm(
-                patient = patient,
-                onDismiss = { showDialog = false },
-                onConfirm = { appointmentForm ->
-                    showDialog = false
-                    appointmentFormViewModel.insertAppointmentForm(appointmentForm)
-                },
-                appointmentFormViewModel = appointmentFormViewModel,
-                navController = navController
-            )
-        }
-    }
+//    selectedPatient?.let { patient ->
+//        if (showDialog) {
+//            AppointmentForm(
+//                patient = patient,
+//                onDismiss = { showDialog = false },
+//                onConfirm = { appointmentForm ->
+//                    showDialog = false
+//                    appointmentFormViewModel.insertAppointmentForm(appointmentForm)
+//                },
+//                appointmentFormViewModel = appointmentFormViewModel,
+//                navController = navController
+//            )
+//        }
+//    }
 
 }
 

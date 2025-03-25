@@ -44,6 +44,7 @@ class PatientViewModel @Inject constructor(
     private val _patientId = MutableStateFlow<Int?>(null)
     val patientId: StateFlow<Int?> = _patientId.asStateFlow()
 
+
     fun fetchPatientIdByAccountId(accountId: Int) {
         viewModelScope.launch {
             val patient = patientRepository.getPatientByAccountId(accountId)

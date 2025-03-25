@@ -24,4 +24,10 @@ interface AppointmentFormDao {
 
     @Query("SELECT * FROM appointment_forms WHERE application_form_id = :id")
     suspend fun getAppointmentFormsByApplicationFormId(id: Int): List<AppointmentFormEntity>
+
+    @Query("SELECT EXISTS(SELECT 1 FROM application_forms WHERE id = :applicationFormId)")
+    suspend fun doesApplicationFormExist(applicationFormId: Int): Boolean
+
+
+
 }

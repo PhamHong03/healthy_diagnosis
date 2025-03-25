@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.healthy_diagnosis.data.models.ApplicationFormEntity
+import com.example.healthy_diagnosis.data.models.PatientEntity
 
 @Dao
 interface ApplicationFormDao {
@@ -19,6 +20,13 @@ interface ApplicationFormDao {
 
     @Query("DELETE FROM application_forms")
     suspend fun deleteAll()
+
+    @Query("""
+        SELECT p.* FROM patients p
+        INNER JOIN application_forms af ON p.id = af.patient_id
+        WHERE af.id = :applicationFormId
+    """)
+    suspend fun getPatientByApplicationFormId(applicationFormId: Int): PatientEntity?
 
 
 
