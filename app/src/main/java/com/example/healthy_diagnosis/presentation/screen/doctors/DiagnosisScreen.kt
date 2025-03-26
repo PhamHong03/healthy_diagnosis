@@ -108,7 +108,7 @@ fun DiagnosisScreen(
         }
     }
 
-    val patientId by applicationFormViewModel.patientId.observeAsState()
+//    val patientId by applicationFormViewModel.patientId.observeAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var showAddPatientDialog by remember { mutableStateOf(false) }
