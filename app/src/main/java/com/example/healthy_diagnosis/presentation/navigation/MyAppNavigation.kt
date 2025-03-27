@@ -127,7 +127,7 @@ fun MyAppNavigation(
             )
         }
         composable(route = "home_patient") {
-            HomeScreenCustomer(navController = navController)
+            HomeScreenCustomer(navController = navController, patientViewModel = patientViewModel, authViewModel = authViewModel)
         }
 
         composable("booking/{patientId}") { backStackEntry ->

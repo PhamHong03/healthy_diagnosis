@@ -116,11 +116,17 @@ fun DiagnosisScreen(
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            DrawerMenu { selectedItem ->
-                when (selectedItem) {
-                    "Home" -> navController.navigate("home")
-                    "List" -> navController.navigate("patient_info")
-                    "Diagnosis" -> navController.navigate("diagnosis")
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.75f)
+                    .background(Color.White)
+            ) {
+                DrawerMenu { selectedItem ->
+                    when (selectedItem) {
+                        "Home" -> navController.navigate("home")
+                        "List" -> navController.navigate("patient_info")
+                        "Diagnosis" -> navController.navigate("diagnosis")
+                    }
                 }
             }
         }
@@ -130,22 +136,43 @@ fun DiagnosisScreen(
                 CenterAlignedTopAppBar(
                     title = { Text("CHẨN ĐOÁN") },
                     navigationIcon = {
-                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                        IconButton(onClick = {
+                            scope.launch { drawerState.open() } // Mở lại Drawer khi click
+                        }) {
                             Icon(Icons.Filled.Menu, contentDescription = "Menu")
                         }
+
                     }
                 )
             }
         ) { paddingValues ->
+            Row (modifier = Modifier.padding(paddingValues).padding(start = 20.dp).fillMaxSize()){
+
+                Column (){
+                    Text(
+                        text = "Chẩn đoán bệnh gan",
+                        textAlign = TextAlign.Center,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+//                Text(text = "Mã đơn khám: ${selectedApplicationFormId ?: "Không có"}")
+//                Text(text = "Mã đơn khám: ${patientId ?: "Không có"}")
+                    Text(
+                        text = "Tên bệnh nhân: ${patientName ?: "Không có"}",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(10.dp))
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Mã đơn khám: ${selectedApplicationFormId ?: "Không có"}")
-                Text(text = "Mã đơn khám: ${patientId ?: "Không có"}")
-                Text(text = "Mã đơn khám: ${patientName ?: "Không có"}")
+
+
 
 //                SelectedPatient(
 //                    navController = navController,
@@ -211,8 +238,8 @@ fun DiagnosisScreen(
 @Composable
 fun SelectedPatient(
     navController: NavController,
-    patients: List<Pair<Int, String>>,  // Danh sách (ID, Tên)
-    selectedPatientId: Int?,  // Lưu ID của bệnh nhân đã chọn
+    patients: List<Pair<Int, String>>,
+    selectedPatientId: Int?,
     onPatientSelected: (Int) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }

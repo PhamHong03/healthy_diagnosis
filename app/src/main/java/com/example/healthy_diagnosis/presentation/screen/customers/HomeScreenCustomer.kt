@@ -11,10 +11,28 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.healthy_diagnosis.core.utils.BannerInfo
 import com.example.healthy_diagnosis.core.utils.ButtonClick
+import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.PatientViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreenCustomer(navController: NavController) {
+fun HomeScreenCustomer(
+    navController: NavController,
+    patientViewModel: PatientViewModel,
+    authViewModel: AuthViewModel
+) {
+
+
+    val currentUser by authViewModel.account.collectAsState()
+    val accountId = currentUser?.id ?:0
+    val patientId by patientViewModel.patientId.collectAsState()
+
+    LaunchedEffect(accountId) {
+        if (accountId != 0) {
+            patientViewModel.fetchPatientIdByAccountId(accountId)
+        }
+    }
+
     Scaffold(
         topBar = {
             BannerInfo(padding = 0.dp, "Trang chủ bệnh nhân")
@@ -37,7 +55,7 @@ fun HomeScreenCustomer(navController: NavController) {
 
             ButtonClick(
                 text = "Đăng ký khám bệnh",
-                onClick = { navController.navigate("booking") }
+                onClick = { navController.navigate("booking/{patientId}") }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
