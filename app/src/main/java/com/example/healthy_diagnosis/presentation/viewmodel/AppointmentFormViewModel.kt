@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.healthy_diagnosis.data.models.AppointmentFormEntity
 import com.example.healthy_diagnosis.domain.repositories.AppointmentFormRepository
+import com.example.healthy_diagnosis.domain.usecases.appointment.AppointmentFormRequest
 import com.example.healthy_diagnosis.domain.usecases.appointment.AppointmentFormResponse
 import com.example.healthy_diagnosis.domain.usecases.appointment.toEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,12 +40,12 @@ class AppointmentFormViewModel  @Inject constructor(
         }
     }
 
-    fun insertAppointmentForm(appointmentFormResponse: AppointmentFormResponse) {
+    fun insertAppointmentForm(appointmentFormRequest: AppointmentFormRequest) {
         viewModelScope.launch {
             _isLoading.value = true
             kotlin.runCatching {
-                Log.d("AppointmentFormViewModel", "Gửi application_form_id: ${appointmentFormResponse.application_form_id}")
-                val appointmentEntity = appointmentFormResponse.toEntity()
+                Log.d("AppointmentFormViewModel", "Gửi application_form_id: ${appointmentFormRequest.application_form_id}")
+                val appointmentEntity = appointmentFormRequest.toEntity()
                 appointmentFormRepository.insertAppointmentForm(appointmentEntity)
 
                 _appointmentFormList.value = appointmentFormRepository.getAllAppointmentForms()

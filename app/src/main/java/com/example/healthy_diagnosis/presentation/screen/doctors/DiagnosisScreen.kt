@@ -64,8 +64,10 @@ import androidx.compose.ui.platform.LocalContext
 import com.example.healthy_diagnosis.core.utils.ButtonClick
 import com.example.healthy_diagnosis.core.utils.ConfirmSaveDialog
 import com.example.healthy_diagnosis.data.models.PatientEntity
+import com.example.healthy_diagnosis.domain.usecases.appointment.AppointmentFormRequest
 import com.example.healthy_diagnosis.presentation.screen.customers.DatePickerFieldCustomer
 import com.example.healthy_diagnosis.presentation.viewmodel.ApplicationFormViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.AppointmentFormViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.PatientViewModel
 import com.example.healthy_diagnosis.ui.theme.BannerColor
 import kotlinx.coroutines.launch
@@ -79,7 +81,8 @@ fun DiagnosisScreen(
     selectedApplicationFormId: Int?,
     patientId: Int?,
     patientName: String?,
-    applicationFormViewModel: ApplicationFormViewModel
+    applicationFormViewModel: ApplicationFormViewModel,
+    appointmentFormViewModel: AppointmentFormViewModel
 
 ) {
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
@@ -113,6 +116,9 @@ fun DiagnosisScreen(
     val scope = rememberCoroutineScope()
     var showAddPatientDialog by remember { mutableStateOf(false) }
 
+    var showDialog by remember { mutableStateOf(false) }
+    var description by remember { mutableStateOf("") }
+    var isAppointmentCreated by remember { mutableStateOf(false) }
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -146,40 +152,51 @@ fun DiagnosisScreen(
                 )
             }
         ) { paddingValues ->
-            Row (modifier = Modifier.padding(paddingValues).padding(start = 20.dp).fillMaxSize()){
 
-                Column (){
-                    Text(
-                        text = "Chẩn đoán bệnh gan",
-                        textAlign = TextAlign.Center,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-//                Text(text = "Mã đơn khám: ${selectedApplicationFormId ?: "Không có"}")
-//                Text(text = "Mã đơn khám: ${patientId ?: "Không có"}")
-                    Text(
-                        text = "Tên bệnh nhân: ${patientName ?: "Không có"}",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(10.dp))
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
-
-
-//                SelectedPatient(
-//                    navController = navController,
-//                    patients = patients,
-//                    selectedPatientId = selectedPatientId,
-//                    onPatientSelected = { id -> selectedPatientId = id }
-//                )
+                Row {
+                    Text(
+                        text = "Đơn khám: ",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = "${selectedApplicationFormId ?: "Không có"}",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Row (
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(
+                        text = "Tên bệnh nhân: ",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = "${patientName ?: "Không có"}",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Spacer(modifier = Modifier.width(50.dp))
+                    IconButton(onClick = {
+                        showDialog = true
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Add, // Sử dụng biểu tượng dấu "+"
+                            contentDescription = "Tạo phiếu khám"
+                        )
+                    }
+                }
 
                 Diagnosis(
                     onClick = {
@@ -225,6 +242,41 @@ fun DiagnosisScreen(
         }
     }
 
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text("Nhập mô tả phiếu khám") },
+            text = {
+                OutlinedTextField(
+                    value = description,
+                    onValueChange = { description = it },
+                    label = { Text("Mô tả") }
+                )
+            },
+            confirmButton = {
+                Button(onClick = {
+                    selectedApplicationFormId?.let { appId ->
+                        patientId?.let { patId ->
+                            val appointmentForm = AppointmentFormRequest(
+                                description = description,
+                                application_form_id = selectedApplicationFormId
+                            )
+                            appointmentFormViewModel.insertAppointmentForm(appointmentForm)
+                            showDialog = false
+                            description = ""
+                        }
+                    }
+                }) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showDialog = false }) {
+                    Text("Hủy")
+                }
+            }
+        )
+    }
     if (showAddPatientDialog) {
         ConfirmSaveDialog(
             onDismiss = { showAddPatientDialog = false },

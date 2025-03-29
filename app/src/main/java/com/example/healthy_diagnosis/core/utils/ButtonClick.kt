@@ -16,10 +16,11 @@ import androidx.compose.ui.unit.dp
 fun ButtonClick(
     text: String,
     onClick: () -> Unit,
-    enabled: Boolean = true // Thêm tham số enabled với giá trị mặc định là true
+    enabled: Boolean = true,
+    modifier: Modifier = Modifier// Thêm tham số enabled với giá trị mặc định là true
 ) {
     Button(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         onClick = { onClick() },
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Black,
