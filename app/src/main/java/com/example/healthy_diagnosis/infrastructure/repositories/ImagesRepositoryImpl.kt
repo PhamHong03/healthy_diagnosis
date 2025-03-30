@@ -23,6 +23,10 @@ class ImagesRepositoryImpl @Inject constructor(
         return if (response.isSuccessful) response.body() else null
     }
 
+    override suspend fun updateImageEntity(imagesEntity: ImagesEntity) {
+        imagesDao.update(imagesEntity)
+    }
+
 
     override suspend fun getAllImages(): List<ImagesEntity> {
         return try {

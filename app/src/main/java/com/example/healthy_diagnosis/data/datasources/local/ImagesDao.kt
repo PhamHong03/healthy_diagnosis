@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.healthy_diagnosis.data.models.AppointmentFormEntity
 import com.example.healthy_diagnosis.data.models.ImagesEntity
 import okhttp3.Response
@@ -20,5 +21,7 @@ interface ImagesDao {
     @Query("DELETE FROM images")
     suspend fun deleteAllImages()
 
+    @Update
+    suspend fun update(imagesEntity: ImagesEntity)
 
 }

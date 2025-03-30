@@ -13,5 +13,5 @@ interface AppointmentFormRepository {
     suspend fun insertAppointmentForm(appointmentFormEntity: AppointmentFormEntity)
 
     suspend fun getAppointmentFormById(id: Int): AppointmentFormEntity?
-
+    suspend fun getLatestAppointmentId(): Int?
 }

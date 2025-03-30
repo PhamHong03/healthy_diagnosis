@@ -12,4 +12,6 @@ interface ImagesRepository {
     suspend fun insertImages(images: List<ImagesEntity>)
     suspend fun getImages(): List<ImagesEntity>
     suspend fun getImageById(imageId: Int): ImagesEntity?
+
+    suspend fun updateImageEntity(imagesEntity: ImagesEntity)
 }

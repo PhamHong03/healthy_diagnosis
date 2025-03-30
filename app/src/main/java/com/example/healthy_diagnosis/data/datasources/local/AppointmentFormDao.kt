@@ -28,6 +28,7 @@ interface AppointmentFormDao {
     @Query("SELECT EXISTS(SELECT 1 FROM application_forms WHERE id = :applicationFormId)")
     suspend fun doesApplicationFormExist(applicationFormId: Int): Boolean
 
-
+    @Query("SELECT id FROM appointment_forms ORDER BY id DESC LIMIT 1")
+    fun getLatestAppointmentId(): Int?
 
 }

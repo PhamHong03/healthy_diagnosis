@@ -93,7 +93,9 @@ fun MyAppNavigation(
                 patientId = patientID,
                 patientName = patientName,
                 applicationFormViewModel = applicationFormViewModel,
-                appointmentFormViewModel = appointmentFormViewModel
+                appointmentFormViewModel = appointmentFormViewModel,
+                physicianViewModel = physicianViewModel,
+                imagesViewModel = imagesViewModel
             )
         }
 

@@ -8,7 +8,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,10 +20,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Text
@@ -50,27 +47,36 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.healthy_diagnosis.R
 import com.example.healthy_diagnosis.core.utils.DrawerMenu
-import com.example.healthy_diagnosis.core.utils.HeaderSection
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
-import com.example.healthy_diagnosis.ui.theme.LightPink
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.platform.LocalContext
 import com.example.healthy_diagnosis.core.utils.ButtonClick
 import com.example.healthy_diagnosis.core.utils.ConfirmSaveDialog
-import com.example.healthy_diagnosis.data.models.PatientEntity
+import com.example.healthy_diagnosis.data.models.ImagesEntity
 import com.example.healthy_diagnosis.domain.usecases.appointment.AppointmentFormRequest
-import com.example.healthy_diagnosis.presentation.screen.customers.DatePickerFieldCustomer
 import com.example.healthy_diagnosis.presentation.viewmodel.ApplicationFormViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.AppointmentFormViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.ImagesViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.PatientViewModel
-import com.example.healthy_diagnosis.ui.theme.BannerColor
+import com.example.healthy_diagnosis.presentation.viewmodel.PhysicianViewModel
 import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
+val client = OkHttpClient()
+
+fun generateImagePath(physicianId: Int, appointmentId: Int): String {
+    val dateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+    val currentDate = dateFormat.format(Date())
+    return "IMG_${physicianId}_${appointmentId}_$currentDate.jpg"
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,9 +88,12 @@ fun DiagnosisScreen(
     patientId: Int?,
     patientName: String?,
     applicationFormViewModel: ApplicationFormViewModel,
-    appointmentFormViewModel: AppointmentFormViewModel
+    appointmentFormViewModel: AppointmentFormViewModel,
+    physicianViewModel : PhysicianViewModel,
+    imagesViewModel: ImagesViewModel
 
 ) {
+    val accountId by authViewModel.account.collectAsState()
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     val notificationCount by remember { mutableStateOf(5) }
     var selectedPatientId by remember { mutableStateOf<Int?>(null) }
@@ -92,8 +101,12 @@ fun DiagnosisScreen(
     LaunchedEffect(Unit) {
         patientViewModel.fetchPatients()
     }
-
-
+    LaunchedEffect(accountId) {
+        accountId?.id?.let { id ->
+            physicianViewModel.fetchPhysicianByAccountId(id)
+        }
+    }
+    val physicianId by physicianViewModel.physicianId.collectAsState()
 //    val patients = patient.map{it.id to it.name}
 
     val launcher = rememberLauncherForActivityResult(
@@ -119,6 +132,9 @@ fun DiagnosisScreen(
     var showDialog by remember { mutableStateOf(false) }
     var description by remember { mutableStateOf("") }
     var isAppointmentCreated by remember { mutableStateOf(false) }
+    val appointmentId by appointmentFormViewModel.appointmentId.collectAsState()
+    val dateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+    val currentDate = dateFormat.format(Date())
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -143,7 +159,7 @@ fun DiagnosisScreen(
                     title = { Text("CHẨN ĐOÁN") },
                     navigationIcon = {
                         IconButton(onClick = {
-                            scope.launch { drawerState.open() } // Mở lại Drawer khi click
+                            scope.launch { drawerState.open() }
                         }) {
                             Icon(Icons.Filled.Menu, contentDescription = "Menu")
                         }
@@ -192,7 +208,7 @@ fun DiagnosisScreen(
                         showDialog = true
                     }) {
                         Icon(
-                            imageVector = Icons.Default.Add, // Sử dụng biểu tượng dấu "+"
+                            imageVector = Icons.Default.Add,
                             contentDescription = "Tạo phiếu khám"
                         )
                     }
@@ -235,7 +251,19 @@ fun DiagnosisScreen(
                     Row (
                         modifier = Modifier.padding(start = 10.dp, end = 10.dp)
                     ){
-                        ButtonClick(text = "PHÂN TÍCH ẢNH", onClick = {})
+                        ButtonClick(text = "PHÂN TÍCH ẢNH", onClick = {
+                            val images = ImagesEntity(
+                                images_path = generateImagePath(
+                                    physicianId = physicianId ?: 0,
+                                    appointmentId = appointmentId ?: 0
+                                ),
+                                created_at = currentDate,
+                                physician_id = physicianId ?: 0,
+                                diseases_id = 0,
+                                appointment_id = appointmentId ?: 0
+                            )
+
+                        })
                     }
                 }
             }

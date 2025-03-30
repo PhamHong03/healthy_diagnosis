@@ -1,6 +1,8 @@
 package com.example.healthy_diagnosis.presentation.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.healthy_diagnosis.data.models.ImagesEntity
@@ -26,6 +28,33 @@ class ImagesViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
+    private val _imageUpdateStatus = MutableLiveData<Boolean>()
+    val imageUpdateStatus: LiveData<Boolean> get() = _imageUpdateStatus
+
+    fun uploadImage(image: MultipartBody.Part, physicianId: Int, appointmentId: Int, diseasesId: Int?) {
+        viewModelScope.launch {
+            val isUploaded = imagesRepository.uploadImage(image, physicianId, appointmentId, diseasesId)
+            _imageUpdateStatus.value = isUploaded
+        }
+    }
+    fun updateDiseaseId(imageId: Int, newDiseaseId: Int) {
+        viewModelScope.launch {
+            try {
+                val image = imagesRepository.getImageById(imageId)
+                image?.let {
+                    val updatedImage = it.copy(diseases_id = newDiseaseId)
+                    imagesRepository.updateImageEntity(updatedImage)
+                    _imageUpdateStatus.value = true
+                } ?: run {
+                    _imageUpdateStatus.value = false
+                }
+            } catch (e: Exception) {
+                Log.e("ImagesViewModel", "Lỗi khi cập nhật disease ID: ${e.message}")
+                _imageUpdateStatus.value = false
+            }
+        }
+    }
+
 
     fun fetchImages(){
         viewModelScope.launch {
@@ -47,8 +76,8 @@ class ImagesViewModel @Inject constructor(
                 val isUploaded = imagesRepository.uploadImage(image, physicianId, appointmentId, diseasesId)
                 if (isUploaded) {
                     val newImage = ImagesEntity(
-                        path_name = "your_image_path_here",
-                        images_created = "current_timestamp_here",
+                        images_path = "your_image_path_here",
+                        created_at = "current_timestamp_here",
                         physician_id = physicianId,
                         diseases_id = diseasesId,
                         appointment_id = appointmentId

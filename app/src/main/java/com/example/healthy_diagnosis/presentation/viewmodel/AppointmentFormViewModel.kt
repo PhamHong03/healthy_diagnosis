@@ -51,8 +51,6 @@ class AppointmentFormViewModel  @Inject constructor(
                 val appointmentEntity = appointmentFormRequest.toEntity()
                 appointmentFormRepository.insertAppointmentForm(appointmentEntity)
 
-                val insertedId = appointmentFormRepository.insertAppointmentForm(appointmentEntity)
-                _appointmentId.value = insertedId
                 _appointmentFormList.value = appointmentFormRepository.getAllAppointmentForms()
                 _isSave.value = true
                 _eventFlow.emit("Thêm phiếu khám thành công!")

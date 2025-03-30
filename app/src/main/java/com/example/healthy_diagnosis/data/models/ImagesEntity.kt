@@ -30,9 +30,9 @@ import androidx.room.PrimaryKey
 
 data class ImagesEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val path_name : String,
-    val images_created: String,
+    val images_path : String,
+    val created_at: String,
     val physician_id: Int,
-    val diseases_id :Int? = 0 ,
+    var diseases_id :Int? = 0 ,
     val appointment_id: Int
 )
