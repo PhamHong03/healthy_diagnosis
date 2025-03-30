@@ -27,6 +27,7 @@ import com.example.healthy_diagnosis.presentation.viewmodel.ApplicationFormViewM
 import com.example.healthy_diagnosis.presentation.viewmodel.AppointmentFormViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.EducationViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.ImagesViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.MedicalHistoryViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.PatientViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.PhysicianViewModel
@@ -44,7 +45,8 @@ fun MyAppNavigation(
     roomViewModel: RoomViewModel,
     medicalHistoryViewModel: MedicalHistoryViewModel,
     applicationFormViewModel: ApplicationFormViewModel,
-    appointmentFormViewModel: AppointmentFormViewModel
+    appointmentFormViewModel: AppointmentFormViewModel,
+    imagesViewModel: ImagesViewModel
 ) {
     val navController = rememberNavController()
     val selectPatient by remember {

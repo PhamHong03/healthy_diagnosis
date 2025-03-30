@@ -9,6 +9,7 @@ import com.example.healthy_diagnosis.presentation.viewmodel.ApplicationFormViewM
 import com.example.healthy_diagnosis.presentation.viewmodel.AppointmentFormViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.EducationViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.ImagesViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.MedicalHistoryViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.PatientViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.PhysicianViewModel
@@ -28,6 +29,7 @@ class MainActivity : ComponentActivity() {
     private val medicalHistoryViewModel: MedicalHistoryViewModel by viewModels()
     private val applicationFormViewModel: ApplicationFormViewModel by viewModels()
     private val appointmentFormViewModel: AppointmentFormViewModel by viewModels()
+    private val imagesViewModel: ImagesViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -40,7 +42,8 @@ class MainActivity : ComponentActivity() {
                 roomViewModel,
                 medicalHistoryViewModel,
                 applicationFormViewModel,
-                appointmentFormViewModel
+                appointmentFormViewModel,
+                imagesViewModel
             )
         }
     }

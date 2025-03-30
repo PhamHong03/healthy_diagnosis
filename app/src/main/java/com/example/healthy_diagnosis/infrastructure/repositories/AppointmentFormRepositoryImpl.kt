@@ -25,7 +25,7 @@ class AppointmentFormRepositoryImpl @Inject constructor(
             appointmentFormDao.getAllAppointmentForms()
         }
     }
-    override suspend fun insertAppointmentForm(appointmentFormEntity: AppointmentFormEntity) {
+    override suspend fun insertAppointmentForm(appointmentFormEntity: AppointmentFormEntity) : Int{
         kotlin.runCatching {
             val request = AppointmentFormRequest(
                 description = appointmentFormEntity.description,
@@ -55,8 +55,6 @@ class AppointmentFormRepositoryImpl @Inject constructor(
             Log.e("AppointmentFormRepo", "Lỗi Exception: ${it.message}")
         }
     }
-
-
 
     override suspend fun getAppointmentFormById(id: Int): AppointmentFormEntity? {
         return kotlin.runCatching {

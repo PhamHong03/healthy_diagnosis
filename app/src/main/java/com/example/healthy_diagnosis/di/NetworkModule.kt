@@ -3,7 +3,10 @@ package com.example.healthy_diagnosis.di
 import com.example.healthy_diagnosis.data.datasources.remote.ApiService
 import com.example.healthy_diagnosis.data.datasources.remote.ApplicationFormApiService
 import com.example.healthy_diagnosis.data.datasources.remote.AppointmentFormApiService
+import com.example.healthy_diagnosis.data.datasources.remote.CategoryDiseaseApiService
+import com.example.healthy_diagnosis.data.datasources.remote.DiseaseApiService
 import com.example.healthy_diagnosis.data.datasources.remote.EducationApiService
+import com.example.healthy_diagnosis.data.datasources.remote.ImagesApiService
 import com.example.healthy_diagnosis.data.datasources.remote.MedicalHistoryApiService
 import com.example.healthy_diagnosis.data.datasources.remote.PatientApiService
 import com.example.healthy_diagnosis.data.datasources.remote.PhysicianApiService
@@ -88,6 +91,24 @@ object NetworkModule {
     @Singleton
     fun provideAppointmentFormService(retrofit: Retrofit): AppointmentFormApiService {
         return retrofit.create(AppointmentFormApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideImagesService(retrofit: Retrofit): ImagesApiService {
+        return retrofit.create(ImagesApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCategoryDisease(retrofit: Retrofit): CategoryDiseaseApiService {
+        return retrofit.create(CategoryDiseaseApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDisease(retrofit: Retrofit) : DiseaseApiService {
+        return retrofit.create(DiseaseApiService::class.java)
     }
 
 }

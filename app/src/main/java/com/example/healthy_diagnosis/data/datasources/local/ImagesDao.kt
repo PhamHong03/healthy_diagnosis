@@ -11,17 +11,14 @@ import okhttp3.Response
 @Dao
 interface ImagesDao {
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertImages(images: List<ImagesEntity>)
+
     @Query("SELECT * FROM images")
-    suspend fun getAllImagesFormAppointment(appointmentFormEntity: AppointmentFormEntity)
+    suspend fun getAllImages(): List<ImagesEntity>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertImage(imagesEntity: ImagesEntity)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAllImages(images: List<ImagesEntity>)
-
-    @Query("UPDATE images SET diseases_id = :diseaseId WHERE id = :imageId")
-    suspend fun updateDiseaseId(imageId: Int, diseaseId: Int)
+    @Query("DELETE FROM images")
+    suspend fun deleteAllImages()
 
 
 }

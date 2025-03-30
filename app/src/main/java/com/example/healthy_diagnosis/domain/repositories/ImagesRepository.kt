@@ -1,13 +1,15 @@
 package com.example.healthy_diagnosis.domain.repositories
 
-import androidx.lifecycle.LiveData
 import com.example.healthy_diagnosis.data.models.ImagesEntity
-import com.example.healthy_diagnosis.domain.usecases.diagnoise.DiagnosisResponse
+import com.example.healthy_diagnosis.domain.usecases.images.ImageResponse
+import okhttp3.MultipartBody
 import java.io.File
 
 interface ImagesRepository {
+    suspend fun uploadImage(image: MultipartBody.Part, physicianId: Int, appointmentId: Int, diseasesId: Int?): Boolean
 
-    suspend fun uploadImage(file: File, imageId: Int): DiagnosisResponse?
-    suspend fun updateDiseaseId(imageId: Int, diseaseId: Int)
-    fun getDiagnosisHistory(): LiveData<List<ImagesEntity>>
+    suspend fun getAllImages(): List<ImagesEntity>
+    suspend fun insertImages(images: List<ImagesEntity>)
+    suspend fun getImages(): List<ImagesEntity>
+    suspend fun getImageById(imageId: Int): ImagesEntity?
 }

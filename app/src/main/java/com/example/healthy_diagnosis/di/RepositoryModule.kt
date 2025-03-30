@@ -5,7 +5,9 @@ import com.example.healthy_diagnosis.domain.repositories.FirebaseAuthRepository
 import com.example.healthy_diagnosis.data.datasources.local.AppDatabase
 import com.example.healthy_diagnosis.data.datasources.remote.ApplicationFormApiService
 import com.example.healthy_diagnosis.data.datasources.remote.AppointmentFormApiService
+import com.example.healthy_diagnosis.data.datasources.remote.CategoryDiseaseApiService
 import com.example.healthy_diagnosis.data.datasources.remote.EducationApiService
+import com.example.healthy_diagnosis.data.datasources.remote.ImagesApiService
 import com.example.healthy_diagnosis.data.datasources.remote.MedicalHistoryApiService
 import com.example.healthy_diagnosis.data.datasources.remote.PatientApiService
 import com.example.healthy_diagnosis.data.datasources.remote.PhysicianApiService
@@ -13,7 +15,9 @@ import com.example.healthy_diagnosis.data.datasources.remote.RoomApiService
 import com.example.healthy_diagnosis.data.datasources.remote.SpecializationApiService
 import com.example.healthy_diagnosis.domain.repositories.ApplicationFormRespository
 import com.example.healthy_diagnosis.domain.repositories.AppointmentFormRepository
+import com.example.healthy_diagnosis.domain.repositories.CategoryDiseaseRepository
 import com.example.healthy_diagnosis.domain.repositories.EducationRepository
+import com.example.healthy_diagnosis.domain.repositories.ImagesRepository
 import com.example.healthy_diagnosis.domain.repositories.MedicalHistoryRepository
 import com.example.healthy_diagnosis.domain.repositories.PatientRepository
 import com.example.healthy_diagnosis.domain.repositories.PhysicianRepository
@@ -22,7 +26,9 @@ import com.example.healthy_diagnosis.domain.repositories.SpecializationRepositor
 import com.example.healthy_diagnosis.infrastructure.repositories.AccountRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.ApplicationFormRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.AppointmentFormRepositoryImpl
+import com.example.healthy_diagnosis.infrastructure.repositories.CategoryDiseaseRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.EducationRepositoryImpl
+import com.example.healthy_diagnosis.infrastructure.repositories.ImagesRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.MedicalHistoryRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.PatientRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.PhysicianRepositoryImpl
@@ -119,4 +125,24 @@ object RepositoryModule {
     ): AppointmentFormRepository {
         return AppointmentFormRepositoryImpl(database.appointmentFormDao(), appointmentFormApiService)
     }
+
+    @Provides
+    @Singleton
+    fun provideImagesRepository(
+        database: AppDatabase,
+        imagesApiService: ImagesApiService
+    ): ImagesRepository {
+        return ImagesRepositoryImpl(database.imagesDao(), imagesApiService)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideCategoryDiseaseRepository(
+        database: AppDatabase,
+        categoryDiseaseApiService: CategoryDiseaseApiService
+    ): CategoryDiseaseRepository {
+        return CategoryDiseaseRepositoryImpl(database.categoryDiseaseDao(), categoryDiseaseApiService)
+    }
+
 }

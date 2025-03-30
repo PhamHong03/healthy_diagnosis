@@ -32,6 +32,9 @@ class AppointmentFormViewModel  @Inject constructor(
     private val _eventFlow = MutableSharedFlow<String>()
     val eventFlow: SharedFlow<String> = _eventFlow
 
+    private val _appointmentId = MutableStateFlow<Int?>(null) // State để lưu appointment_id
+    val appointmentId: StateFlow<Int?> = _appointmentId
+
     fun fetchAppointmentForm(){
         viewModelScope.launch {
             _isLoading.value = true
@@ -48,6 +51,8 @@ class AppointmentFormViewModel  @Inject constructor(
                 val appointmentEntity = appointmentFormRequest.toEntity()
                 appointmentFormRepository.insertAppointmentForm(appointmentEntity)
 
+                val insertedId = appointmentFormRepository.insertAppointmentForm(appointmentEntity)
+                _appointmentId.value = insertedId
                 _appointmentFormList.value = appointmentFormRepository.getAllAppointmentForms()
                 _isSave.value = true
                 _eventFlow.emit("Thêm phiếu khám thành công!")

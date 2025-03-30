@@ -9,7 +9,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.healthy_diagnosis.data.models.AccountEntity
 import com.example.healthy_diagnosis.data.models.ApplicationFormEntity
 import com.example.healthy_diagnosis.data.models.AppointmentFormEntity
+import com.example.healthy_diagnosis.data.models.CategoryDiseaseEntity
+import com.example.healthy_diagnosis.data.models.DiseaseEntity
 import com.example.healthy_diagnosis.data.models.EducationEntity
+import com.example.healthy_diagnosis.data.models.ImagesEntity
 import com.example.healthy_diagnosis.data.models.MedicalHistoryEntity
 import com.example.healthy_diagnosis.data.models.PatientEntity
 import com.example.healthy_diagnosis.data.models.PhysicianEntity
@@ -26,9 +29,12 @@ import com.example.healthy_diagnosis.data.models.SpecializationEntity
         RoomEntity::class,
         MedicalHistoryEntity::class,
         ApplicationFormEntity::class,
-        AppointmentFormEntity::class
+        AppointmentFormEntity::class,
+        ImagesEntity::class,
+        CategoryDiseaseEntity::class,
+        DiseaseEntity::class
                ],
-    version =9,
+    version =10,
     exportSchema = false
 )
 
@@ -42,6 +48,9 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun medicalhistoryDao():MedicalHistoryDao
     abstract fun applicationFormDao(): ApplicationFormDao
     abstract fun appointmentFormDao(): AppointmentFormDao
+    abstract fun imagesDao() : ImagesDao
+    abstract fun categoryDiseaseDao() : CategoryDiseaseDao
+    abstract fun diseaseDao(): DiseaseDao
 
     companion object {
         fun getDatabase(context: Context): AppDatabase {
