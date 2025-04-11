@@ -11,9 +11,11 @@ import retrofit2.http.Path
 
 interface ApplicationFormApiService {
 
-    @GET("/application-forms")
-    suspend fun getAllApplicationForms(): Response<List<ApplicationFormEntity>>
+//    @GET("/application-forms")
+//    suspend fun getAllApplicationForms(): Response<List<ApplicationFormEntity>>
 
+    @GET("/application-forms")
+    suspend fun getAllApplicationForms(): List<ApplicationFormEntity>
     @POST("application-forms")
     suspend fun insertApplicationForm(@Body applicationFormEntity: ApplicationFormEntity): Response<Void>
 
@@ -22,6 +24,4 @@ interface ApplicationFormApiService {
 
     @DELETE("application-forms/{id}")
     suspend fun deleteApplication(@Path("id") id: Int): Response<Void>
-
-
 }

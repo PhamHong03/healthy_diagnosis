@@ -22,7 +22,7 @@ class ApplicationFormViewModel @Inject constructor(
 ): ViewModel() {
 
     private val _applicationFormList = MutableStateFlow<List<ApplicationFormEntity>>(emptyList())
-    val applicationFormList: StateFlow<List<ApplicationFormEntity>> = _applicationFormList
+    val applicationFormList = _applicationFormList
 
     private val _isSave = MutableStateFlow(false)
     val isSave: StateFlow<Boolean> get() = _isSave
@@ -57,15 +57,7 @@ class ApplicationFormViewModel @Inject constructor(
     fun fetchApplicationForm() {
         viewModelScope.launch {
             _isLoading.value = true
-
-            val localData = applicationFormRespository.getAllApplicationForm()
-            if (localData.isNotEmpty()) {
-                _applicationFormList.value = localData
-            } else {
-                Log.e("ApplicationFormViewModel", "Room rỗng, gọi API để tải dữ liệu...")
-                applicationFormRespository.getAllApplicationForm()
-            }
-
+            _applicationFormList.value = applicationFormRespository.getAllApplicationForm()
             _isLoading.value = false
         }
     }

@@ -7,4 +7,5 @@ interface MedicalHistoryApiService {
 
     @GET("medical_histories")
     suspend fun getAllMedicalHistory(): List<MedicalHistoryEntity>
+
 }

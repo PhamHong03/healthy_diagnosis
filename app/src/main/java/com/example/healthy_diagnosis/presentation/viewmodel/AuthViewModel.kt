@@ -24,7 +24,6 @@ import javax.inject.Inject
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 
-
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val registerUsecase: RegisterUsecase,

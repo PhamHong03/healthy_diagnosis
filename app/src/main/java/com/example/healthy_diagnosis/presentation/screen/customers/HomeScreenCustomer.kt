@@ -55,7 +55,7 @@ fun HomeScreenCustomer(
 
             ButtonClick(
                 text = "Đăng ký khám bệnh",
-                onClick = { navController.navigate("booking/{patientId}") }
+                onClick = { navController.navigate("booking/${patientId}") }
             )
 
             Spacer(modifier = Modifier.height(16.dp))

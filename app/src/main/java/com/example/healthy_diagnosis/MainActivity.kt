@@ -1,9 +1,13 @@
 package com.example.healthy_diagnosis
 
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.healthy_diagnosis.presentation.navigation.MyAppNavigation
 import com.example.healthy_diagnosis.presentation.viewmodel.ApplicationFormViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.AppointmentFormViewModel
@@ -46,5 +50,6 @@ class MainActivity : ComponentActivity() {
                 imagesViewModel
             )
         }
+
     }
 }

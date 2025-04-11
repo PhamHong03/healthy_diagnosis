@@ -124,6 +124,8 @@ dependencies {
 
     // Store
     implementation(libs.androidx.datastore.core.android)
+
+    implementation(platform("com.google.android.gms:play-services-safetynet:17.0.1"))
 }
 
 hilt {

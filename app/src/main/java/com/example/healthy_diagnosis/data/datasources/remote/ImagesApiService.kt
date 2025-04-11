@@ -13,14 +13,23 @@ import retrofit2.http.Path
 
 interface ImagesApiService {
 
+//    @Multipart
+//    @POST("upload_image")
+//    suspend fun uploadImage(
+//        @Part image: MultipartBody.Part,
+//        @Part("physician_id") physicianId: Int,
+//        @Part("appointment_id") appointmentId: Int,
+//        @Part("diseases_id") diseasesId: Int?
+//    ): Response<ResponseBody>
+
     @Multipart
     @POST("upload_image")
     suspend fun uploadImage(
-        @Part image: MultipartBody.Part,
-        @Part("physician_id") physicianId: Int,
-        @Part("appointment_id") appointmentId: Int,
-        @Part("diseases_id") diseasesId: Int?
-    ): Response<ResponseBody>
+        @Part file: MultipartBody.Part,
+        @Part("physicianId") physicianId: Int,
+        @Part("appointmentId") appointmentId: Int,
+        @Part("diseasesId") diseasesId: Int?
+    ): Response<Any>
 
     @GET("get_images")
     suspend fun getImages(): List<ImagesEntity>

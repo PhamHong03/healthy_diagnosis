@@ -17,7 +17,7 @@ import androidx.room.PrimaryKey
     ]
 )
 data class MedicalHistoryEntity (
-    @PrimaryKey(autoGenerate = true) val id : Int = 0,
+    @PrimaryKey val id : Int = 0,
     val description: String,
     val physician_id: Int,
     val physician_name: String,

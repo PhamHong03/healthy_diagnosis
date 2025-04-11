@@ -35,6 +35,11 @@ class AppointmentFormViewModel  @Inject constructor(
     private val _appointmentId = MutableStateFlow<Int?>(null) // State để lưu appointment_id
     val appointmentId: StateFlow<Int?> = _appointmentId
 
+
+    init {
+        fetchAppointmentForm()
+    }
+
     fun fetchAppointmentForm(){
         viewModelScope.launch {
             _isLoading.value = true

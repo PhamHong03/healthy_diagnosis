@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "724351087660-ln5arn2hknq40elj8sqq6dh0v4gr03f1.apps.googleusercontent.com",
+          "client_id": "724351087660-bkdna9urjvr3asgrla2kdff07cko6019.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.healthy_diagnosis",
-            "certificate_hash": "3ed6a72a792e0f6c6548ee8730facc9dc040aa8f"
+            "certificate_hash": "cba21b16f6b1ddb994d398922dea112b308a29eb"
           }
         },
         {

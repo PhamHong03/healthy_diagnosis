@@ -34,7 +34,7 @@ import com.example.healthy_diagnosis.data.models.SpecializationEntity
         CategoryDiseaseEntity::class,
         DiseaseEntity::class
                ],
-    version =10,
+    version =11,
     exportSchema = false
 )
 

@@ -72,11 +72,9 @@ fun ApplicationForm(
     val isSaved by applicationViewModel.isSave.collectAsState()
 
     val rooms by roomViewModel.roomList.collectAsState()
-
     val roomOptions = rooms.map { it.id to it.name }
 
     val medicalHistories by medicalHistoryViewModel.medicalHistoryList.collectAsState()
-
     val filteredMedicalHistories = medicalHistories.filter { it.calendar_date == date }
 
     val medicalHistoriesOption = filteredMedicalHistories.map { it.id to it.physician_name }
@@ -128,7 +126,7 @@ fun ApplicationForm(
                         options = roomOptions
                     )
 
-                    if (patientId != null) {
+                    if (patientId != null && patientId != 0) {
                         DoctorDropdownField(
                             label = "Chọn bác sĩ khám khám",
                             selectedId = medicalHistoryId,
@@ -138,6 +136,7 @@ fun ApplicationForm(
                             options = medicalHistoriesOption
                         )
                     } else {
+
                         Text(
                             text = "Lần đầu khám, vui lòng nhập thông tin bệnh nhân!",
                             color = Color.Red,

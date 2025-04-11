@@ -14,35 +14,10 @@ class ApplicationFormRepositoryImpl @Inject constructor(
 ): ApplicationFormRespository {
 
     override suspend fun getAllApplicationForm(): List<ApplicationFormEntity> {
-//        return try {
-//            val response = applicationFormApiService.getAllApplicationForms()
-//
-//            if (response.isSuccessful) {
-//                response.body()?.let { applicationForms ->
-//                    applicationFormDao.insertAllApplicationForm(applicationForms)
-//
-//                    Log.d("ApplicationFormRepo", "Dữ liệu đã lưu vào Room DB")
-//                }
-//            } else {
-//                Log.e("ApplicationFormRepo", "Lỗi tải dữ liệu: ${response.code()} - ${response.errorBody()?.string()}")
-//            }
-//
-//            applicationFormDao.getAllApplicationForm()
-//        } catch (e: Exception) {
-//            Log.e("ApplicationFormRepo", "Lỗi kết nối API: ${e.message}")
-//            applicationFormDao.getAllApplicationForm()
-//        }
         return runCatching {
-            val response = applicationFormApiService.getAllApplicationForms()
-
-            if (response.isSuccessful) {
-                val applicationforms = response.body() ?: emptyList() // Lấy dữ liệu từ response
+                val applicationforms = applicationFormApiService.getAllApplicationForms()
                 applicationFormDao.insertAllApplicationForm(applicationforms) // Lưu vào Room
                 applicationforms
-            } else {
-                Log.e("ApplicationFormRepo", "Lỗi API: ${response.errorBody()?.string()}")
-                applicationFormDao.getAllApplicationForm() // Lấy dữ liệu cũ từ Room nếu lỗi
-            }
         }.getOrElse {
             Log.e("ApplicationFormRepo", "Lỗi kết nối API: ${it.message}")
             applicationFormDao.getAllApplicationForm() // Lấy từ Room nếu lỗi

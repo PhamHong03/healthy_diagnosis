@@ -18,6 +18,5 @@ interface MedicalHistoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(medicalhistories: List<MedicalHistoryEntity>)
 
-    @Query("SELECT * FROM medical_histories")
-    fun getAllMedicalHistory(): Flow<List<MedicalHistoryEntity>>
+
 }
