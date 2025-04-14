@@ -7,21 +7,18 @@ import com.example.healthy_diagnosis.data.models.ImagesEntity
 import com.example.healthy_diagnosis.domain.repositories.ImagesRepository
 import com.example.healthy_diagnosis.domain.usecases.images.ImageResponse
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import javax.inject.Inject
 
 class ImagesRepositoryImpl @Inject constructor(
     private val imagesDao: ImagesDao,
     private val imagesApiService: ImagesApiService
 ) : ImagesRepository{
-//    override suspend fun uploadImage(image: MultipartBody.Part, physicianId: Int, appointmentId: Int, diseasesId: Int?): Boolean {
-//        val response = imagesApiService.uploadImage(image, physicianId, appointmentId, diseasesId)
-//        return response.isSuccessful
-//    }
     override suspend fun uploadImage(
         image: MultipartBody.Part,
-        physicianId: Int,
-        appointmentId: Int,
-        diseasesId: Int?
+        physicianId: RequestBody,
+        appointmentId: RequestBody,
+        diseasesId: RequestBody?
     ): Boolean {
         return try {
             val response = imagesApiService.uploadImage(image, physicianId, appointmentId, diseasesId)
@@ -29,7 +26,7 @@ class ImagesRepositoryImpl @Inject constructor(
                 Log.d("Upload", "Image uploaded successfully")
                 true
             } else {
-                Log.e("Upload", "Failed to upload image: ${response.code()} - ${response.message()}")
+                Log.e("Upload", "Failed to upload image: ${response.code()} - ${response.message()}, $response")
                 false
             }
         } catch (e: Exception) {
@@ -37,6 +34,7 @@ class ImagesRepositoryImpl @Inject constructor(
             false
         }
     }
+
 
 
     override suspend fun getImageById(imageId: Int): ImagesEntity? {

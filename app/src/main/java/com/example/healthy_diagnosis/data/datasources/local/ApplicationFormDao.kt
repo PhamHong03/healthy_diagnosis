@@ -36,6 +36,4 @@ interface ApplicationFormDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllApplicationForm(applicationForms: List<ApplicationFormEntity>)
 
-    @Query("DELETE FROM application_forms")
-    suspend fun deleteAllApplicationForms()
 }

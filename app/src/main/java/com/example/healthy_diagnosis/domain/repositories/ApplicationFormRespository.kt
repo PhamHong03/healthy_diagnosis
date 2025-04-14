@@ -7,6 +7,7 @@ interface ApplicationFormRespository {
 
     suspend fun getAllApplicationForm(): List<ApplicationFormEntity>
 
+
     suspend fun insertApplicationForm(applicationFormEntity: ApplicationFormEntity)
 
     suspend fun deleteApplicationForm(id: Int)

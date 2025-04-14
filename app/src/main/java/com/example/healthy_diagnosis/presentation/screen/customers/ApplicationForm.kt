@@ -63,7 +63,6 @@ fun ApplicationForm(
     val currentUser by authViewModel.account.collectAsState()
     val accountId = currentUser?.id ?:0
     var content by remember {mutableStateOf("")}
-//    val patientId by patientViewModel.patientId.collectAsState()
     var date by remember { mutableStateOf("") }
     var roomId by remember { mutableStateOf("") }
     var medicalHistoryId by remember { mutableStateOf(0) }

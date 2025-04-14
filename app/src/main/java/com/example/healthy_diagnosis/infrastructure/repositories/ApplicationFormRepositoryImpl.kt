@@ -14,15 +14,23 @@ class ApplicationFormRepositoryImpl @Inject constructor(
 ): ApplicationFormRespository {
 
     override suspend fun getAllApplicationForm(): List<ApplicationFormEntity> {
-        return runCatching {
-                val applicationforms = applicationFormApiService.getAllApplicationForms()
-                applicationFormDao.insertAllApplicationForm(applicationforms) // Lưu vào Room
-                applicationforms
+        return kotlin.runCatching {
+            val response = applicationFormApiService.getAllApplicationForms()
+            if (response.isSuccessful) {
+                val applicationForms = response.body() ?: emptyList()
+                applicationFormDao.insertAllApplicationForm(applicationForms)
+                applicationForms
+            } else {
+                Log.e("ApplicationFormRepo", "Lỗi response: ${response.code()} - ${response.errorBody()?.string()}")
+                applicationFormDao.getAllApplicationForm()
+            }
         }.getOrElse {
             Log.e("ApplicationFormRepo", "Lỗi kết nối API: ${it.message}")
-            applicationFormDao.getAllApplicationForm() // Lấy từ Room nếu lỗi
+            applicationFormDao.getAllApplicationForm()
         }
     }
+
+
 
     override suspend fun insertApplicationForm(applicationFormEntity: ApplicationFormEntity) {
         applicationFormDao.insertApplicationForm(applicationFormEntity)

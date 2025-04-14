@@ -12,15 +12,16 @@ import com.example.healthy_diagnosis.domain.repositories.ImagesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import java.io.File
 import javax.inject.Inject
 import android.content.Context
 import android.database.Cursor
 import android.provider.MediaStore
+import com.example.healthy_diagnosis.core.utils.prepareImagePart
 import com.example.healthy_diagnosis.data.datasources.remote.ImagesApiService
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 
@@ -41,68 +42,55 @@ class ImagesViewModel @Inject constructor(
     private val _imageUpdateStatus = MutableLiveData<Boolean>()
     val imageUpdateStatus: LiveData<Boolean> get() = _imageUpdateStatus
 
-//    fun uploadImage(image: MultipartBody.Part, physicianId: Int, appointmentId: Int, diseasesId: Int?) {
-//        viewModelScope.launch {
-//            val isUploaded = imagesRepository.uploadImage(image, physicianId, appointmentId, diseasesId)
-//            _imageUpdateStatus.value = isUploaded
-//        }
-//    }
-
-//    fun uploadImage(imageUri: Uri, physicianId: Int, appointmentId: Int, diseasesId: Int?) {
-//        val context = application.applicationContext
-//
-//        val filePath = getRealPathFromURI(imageUri, context) ?: return
-//        val file = File(filePath)
-//
-//        val requestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
-//
-//        val part = MultipartBody.Part.createFormData("file", file.name, requestBody)
-//
-//        viewModelScope.launch {
-//            try {
-//                val response = imagesApiService.uploadImage(part, physicianId, appointmentId, diseasesId)
-//                if (response.isSuccessful) {
-//                    Log.d("Upload", "Image uploaded successfully")
-//                } else {
-//                    Log.e("Upload", "Failed to upload image")
-//                }
-//            } catch (e: Exception) {
-//                Log.e("Upload", "Error: ${e.message}")
-//            }
-//        }
-//    }
-
     fun uploadImage(uri: Uri, physicianId: Int, appointmentId: Int, diseasesId: Int?) {
         val context = application.applicationContext
-
         viewModelScope.launch {
             try {
                 val inputStream = context.contentResolver.openInputStream(uri)
-                val byteArray = inputStream?.readBytes()
+                if (inputStream == null) {
+                    Log.e("Upload", "Không thể mở InputStream từ URI.")
+                    return@launch
+                }
 
-                if (byteArray != null) {
-//                    val requestBody = byteArray.toRequestBody("image/*".toMediaTypeOrNull())
-                    val requestBody = byteArray.toRequestBody("image/jpeg".toMediaTypeOrNull())
+                val filePart = prepareImagePart(context, uri)
+                val physicianIdBody = physicianId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+                val appointmentIdBody = appointmentId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+                val diseasesIdBody = (diseasesId ?: 0).toString().toRequestBody("text/plain".toMediaTypeOrNull())
 
-                    val part = MultipartBody.Part.createFormData("file", "image.jpg", requestBody)
+                Log.d("Upload", "physicianId=$physicianId, appointmentId=$appointmentId, diseasesId=${diseasesId ?: 0}")
 
-                    val response = imagesApiService.uploadImage(part, physicianId, appointmentId, diseasesId)
-                    if (response.isSuccessful) {
-                        Log.d("Upload", "Image uploaded successfully")
-                    } else {
-                        val baseUrl = "http://172.16.43.219:5000"
-                        Log.d("Upload", "API Base URL: $baseUrl")
-                        Log.e("Upload", "Failed to upload image: ${response.code()} - ${response.message()}")
+                val isUploaded = imagesRepository.uploadImage(
+                    image = filePart,
+                    physicianId = physicianIdBody,
+                    appointmentId = appointmentIdBody,
+                    diseasesId = diseasesIdBody
+                )
+
+                if (isUploaded) {
+                    val newImage = ImagesEntity(
+                        images_path = uri.toString(),
+                        created_at = getCurrentTimestamp(),
+                        physician_id = physicianId,
+                        diseases_id = diseasesId,
+                        appointment_id = appointmentId
+                    )
+                    imagesRepository.insertImages(listOf(newImage))
+
+                    withContext(Dispatchers.IO) {
+                        val updatedList = _imagesList.value.toMutableList().apply {
+                            add(newImage)
+                        }
+                        _imagesList.value = updatedList
                     }
+                    Log.d("Upload", "Upload thành công và lưu vào Room!")
                 } else {
-                    Log.e("Upload", "InputStream is null")
+                    Log.e("Upload", "Upload thất bại!")
                 }
             } catch (e: Exception) {
-                Log.e("Upload", "Upload failed: ${e.message}", e)
+                Log.e("Upload", "Lỗi khi upload: ${e.message}", e)
             }
         }
     }
-
 
 
     fun getRealPathFromURI(uri: Uri, context: Context): String? {
@@ -133,6 +121,9 @@ class ImagesViewModel @Inject constructor(
         }
     }
 
+    fun getCurrentTimestamp(): String {
+        return java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())
+    }
 
     fun fetchImages(){
         viewModelScope.launch {
@@ -147,30 +138,4 @@ class ImagesViewModel @Inject constructor(
     init {
         fetchImages()
     }
-
-    fun uploadImages(image: MultipartBody.Part, physicianId: Int, appointmentId: Int, diseasesId: Int?) {
-        viewModelScope.launch {
-            try {
-                val isUploaded = imagesRepository.uploadImage(image, physicianId, appointmentId, diseasesId)
-                if (isUploaded) {
-                    val newImage = ImagesEntity(
-                        images_path = "your_image_path_here",
-                        created_at = "current_timestamp_here",
-                        physician_id = physicianId,
-                        diseases_id = diseasesId,
-                        appointment_id = appointmentId
-                    )
-                    imagesRepository.insertImages(listOf(newImage))
-                    println("Upload và lưu vào Room thành công!")
-                } else {
-                    println("Upload thất bại!")
-                }
-            } catch (e: Exception) {
-                println("Lỗi khi upload: ${e.message}")
-            }
-        }
-    }
-
-
-
 }

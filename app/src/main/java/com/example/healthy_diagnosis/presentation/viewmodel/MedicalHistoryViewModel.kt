@@ -31,5 +31,4 @@ class MedicalHistoryViewModel @Inject constructor(
             _isLoading.value = false
         }
     }
-
 }

@@ -32,9 +32,8 @@ class AppointmentFormViewModel  @Inject constructor(
     private val _eventFlow = MutableSharedFlow<String>()
     val eventFlow: SharedFlow<String> = _eventFlow
 
-    private val _appointmentId = MutableStateFlow<Int?>(null) // State để lưu appointment_id
+    private val _appointmentId = MutableStateFlow<Int?>(null)
     val appointmentId: StateFlow<Int?> = _appointmentId
-
 
     init {
         fetchAppointmentForm()
@@ -51,20 +50,29 @@ class AppointmentFormViewModel  @Inject constructor(
     fun insertAppointmentForm(appointmentFormRequest: AppointmentFormRequest) {
         viewModelScope.launch {
             _isLoading.value = true
-            kotlin.runCatching {
-                Log.d("AppointmentFormViewModel", "Gửi application_form_id: ${appointmentFormRequest.application_form_id}")
+            try {
                 val appointmentEntity = appointmentFormRequest.toEntity()
-                appointmentFormRepository.insertAppointmentForm(appointmentEntity)
+                val response = appointmentFormRepository.insertAppointmentForm(appointmentEntity)
 
-                _appointmentFormList.value = appointmentFormRepository.getAllAppointmentForms()
-                _isSave.value = true
-                _eventFlow.emit("Thêm phiếu khám thành công!")
-            }.onFailure {
+                if (response != null) {
+                    _appointmentId.value = response.id
+
+                    _appointmentFormList.value = appointmentFormRepository.getAllAppointmentForms()
+
+                    _isSave.value = true
+                    _eventFlow.emit("Thêm phiếu khám thành công!")
+                } else {
+                    _isSave.value = false
+                    _eventFlow.emit("Không thể thêm phiếu khám!")
+                }
+            } catch (e: Exception) {
                 _isSave.value = false
                 _eventFlow.emit("Thêm phiếu khám thất bại!")
+            } finally {
+                _isLoading.value = false
             }
-            _isLoading.value = false
         }
     }
+
 
 }

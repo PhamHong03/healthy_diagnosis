@@ -26,7 +26,7 @@ import javax.inject.Singleton
 object NetworkModule {
 
 //    private val BASE_URL = "http://10.0.2.2:5000"
-    private val BASE_URL = "http://172.16.41.50:5000/"
+    private val BASE_URL = "http://172.16.42.146:5000/"
 
     @Provides
     @Singleton

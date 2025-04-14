@@ -95,7 +95,8 @@ fun MyAppNavigation(
                 applicationFormViewModel = applicationFormViewModel,
                 appointmentFormViewModel = appointmentFormViewModel,
                 physicianViewModel = physicianViewModel,
-                imagesViewModel = imagesViewModel
+                imagesViewModel = imagesViewModel,
+                medicalHistoryViewModel = medicalHistoryViewModel
             )
         }
 
@@ -103,8 +104,9 @@ fun MyAppNavigation(
         composable(route = "healthcare") {
             WorkList(
                 physicianViewModel = physicianViewModel,
-                appointmentFormViewModel = appointmentFormViewModel,
-                navController = navController
+                applicationFormViewModel = applicationFormViewModel,
+                navController = navController,
+                medicalHistoryViewModel = medicalHistoryViewModel
             )
         }
         composable(route = "profile") {

@@ -50,10 +50,10 @@ class ApplicationFormViewModel @Inject constructor(
         }
     }
 
-
     init {
         fetchApplicationForm()
     }
+
     fun fetchApplicationForm() {
         viewModelScope.launch {
             _isLoading.value = true
@@ -81,19 +81,11 @@ class ApplicationFormViewModel @Inject constructor(
 
                 _isSave.value = true
 
-                // Cập nhật lại UI sau khi insert
                 fetchApplicationForm()
             } catch (e: Exception) {
                 Log.e("InsertApplicationForm", "Lỗi khi thêm phiếu đăng ký", e)
                 _isSave.value = false
             }
-        }
-    }
-
-    fun deleteApplicationForm(id: Int){
-        viewModelScope.launch {
-            applicationFormRespository.deleteApplicationForm(id)
-            fetchApplicationForm()
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.example.healthy_diagnosis.data.datasources.remote
 
-import com.example.healthy_diagnosis.data.models.AppointmentFormEntity
 import com.example.healthy_diagnosis.domain.usecases.appointment.AppointmentFormRequest
 import com.example.healthy_diagnosis.domain.usecases.appointment.AppointmentFormResponse
 import retrofit2.Response
@@ -14,12 +13,12 @@ interface AppointmentFormApiService {
     @GET("appointment-forms")
     suspend fun getAllAppointmentForms(): List<AppointmentFormResponse>
 
-    @GET("appointment-forms/{id}")
-    suspend fun getAppointmentFormById(@Path("id") id: Int): AppointmentFormResponse
+    @GET("appointment_form/{id}")
+    suspend fun getAppointmentFormById(
+        @Path("id") applicationFormId: Int
+    ): Response<AppointmentFormResponse>
 
     @POST("appointment-forms")
     suspend fun insertAppointmentForm(@Body request: AppointmentFormRequest): Response<AppointmentFormResponse>
 
-    @POST("appointment-forms")
-    suspend fun createAppointmentForm(@Body appointmentForm: AppointmentFormResponse)
 }

@@ -15,5 +15,3 @@ fun AppointmentFormResponse.toEntity(): AppointmentFormEntity {
         application_form_id = this.application_form_id
     )
 }
-
-

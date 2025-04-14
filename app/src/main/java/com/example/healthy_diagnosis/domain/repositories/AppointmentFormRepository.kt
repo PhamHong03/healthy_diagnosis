@@ -10,8 +10,9 @@ interface AppointmentFormRepository {
 
     suspend fun getAllAppointmentForms(): List<AppointmentFormEntity>
 
-    suspend fun insertAppointmentForm(appointmentFormEntity: AppointmentFormEntity)
+    suspend fun insertAppointmentForm(appointmentFormEntity: AppointmentFormEntity): AppointmentFormResponse?
 
     suspend fun getAppointmentFormById(id: Int): AppointmentFormEntity?
     suspend fun getLatestAppointmentId(): Int?
+
 }

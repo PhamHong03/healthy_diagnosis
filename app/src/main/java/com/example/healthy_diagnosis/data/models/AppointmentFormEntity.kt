@@ -16,7 +16,7 @@ import androidx.room.PrimaryKey
     ]
 )
 data class AppointmentFormEntity(
-    @PrimaryKey(autoGenerate = true) val id : Int = 0,
+    @PrimaryKey(autoGenerate = false) val id : Int = 0,
     val description: String,
     val application_form_id: Int
 )

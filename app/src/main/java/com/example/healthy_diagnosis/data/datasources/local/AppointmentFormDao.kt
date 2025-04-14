@@ -10,8 +10,11 @@ import com.example.healthy_diagnosis.domain.usecases.appointment.AppointmentForm
 @Dao
 interface AppointmentFormDao {
 
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    suspend fun insertAppointmentForm(appointmentFormEntity: AppointmentFormEntity)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAppointmentForm(appointmentFormEntity: AppointmentFormEntity)
+    suspend fun insertAppointmentForm(appointmentFormEntity: AppointmentFormEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllAppointmentForm(appointments: List<AppointmentFormEntity>)

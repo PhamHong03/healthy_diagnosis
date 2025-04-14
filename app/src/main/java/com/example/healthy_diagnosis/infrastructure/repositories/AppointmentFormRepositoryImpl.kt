@@ -25,36 +25,79 @@ class AppointmentFormRepositoryImpl @Inject constructor(
             appointmentFormDao.getAllAppointmentForms()
         }
     }
-    override suspend fun insertAppointmentForm(appointmentFormEntity: AppointmentFormEntity){
-        kotlin.runCatching {
+
+//    override suspend fun insertAppointmentForm(appointmentFormEntity: AppointmentFormEntity): AppointmentFormResponse? {
+//        return runCatching {
+//            val request = AppointmentFormRequest(
+//                description = appointmentFormEntity.description,
+//                application_form_id = appointmentFormEntity.application_form_id
+//            )
+//            Log.d("InsertAppointmentForm", "application_form_id: ${appointmentFormEntity.application_form_id}")
+//            val response = appointmentFormApiService.insertAppointmentForm(request)
+//
+//            if (response.isSuccessful) {
+//                val body = response.body()
+//
+//                val exists = appointmentFormDao.doesApplicationFormExist(appointmentFormEntity.application_form_id)
+//                if (exists && body != null) {
+//                    appointmentFormDao.insertAppointmentForm(appointmentFormEntity)
+//                    return@runCatching body
+//                } else {
+//                    Log.e("Repo", "Không tồn tại hoặc body null")
+//                    null
+//                }
+//            } else {
+//                Log.e("Repo", "Lỗi API: ${response.code()}")
+//                null
+//            }
+//        }.getOrElse {
+//            Log.e("Repo", "Lỗi Exception: ${it.message}")
+//            null
+//        }
+//    }
+
+    override suspend fun insertAppointmentForm(appointmentFormEntity: AppointmentFormEntity): AppointmentFormResponse? {
+        return runCatching {
             val request = AppointmentFormRequest(
                 description = appointmentFormEntity.description,
                 application_form_id = appointmentFormEntity.application_form_id
             )
 
-            Log.d("AppointmentFormRepo", "Gửi request API: $request")
-
             val response = appointmentFormApiService.insertAppointmentForm(request)
+            val body = response.body()
 
-            if (response.isSuccessful) {
-                Log.d("AppointmentFormRepo", "Phản hồi API thành công: ${response.body()}")
-
-                // Kiểm tra application_form_id có tồn tại trước khi insert
-                val exists = appointmentFormDao.doesApplicationFormExist(appointmentFormEntity.application_form_id)
-                if (!exists) {
-                    Log.e("AppointmentFormRepo", "Lỗi: application_form_id ${appointmentFormEntity.application_form_id} không tồn tại")
-                    return@runCatching
-                }
-
-                // Nếu tồn tại thì mới insert
-                appointmentFormDao.insertAppointmentForm(appointmentFormEntity)
+            if (response.isSuccessful && body != null) {
+                appointmentFormDao.insertAppointmentForm(body.toEntity())
+                body
             } else {
-                Log.e("AppointmentFormRepo", "API lỗi: ${response.code()} - ${response.errorBody()?.string()}")
+                Log.e("Repo", "Insert thất bại - response: ${response.code()}, body: $body")
+                null
             }
-        }.onFailure {
-            Log.e("AppointmentFormRepo", "Lỗi Exception: ${it.message}")
+        }.getOrElse {
+            Log.e("Repo", "Lỗi Exception: ${it.message}")
+            null
         }
     }
+
+
+
+//    override suspend fun getAppointmentFormById(id: Int): AppointmentFormEntity? {
+//        return kotlin.runCatching {
+//            val localAppointment = appointmentFormDao.getAppointmentFormById(id)
+//            if (localAppointment != null) {
+//                return@runCatching localAppointment
+//            }
+//
+//            val apiResponse = appointmentFormApiService.getAppointmentFormById(id)
+//            val appointmentEntity = apiResponse.toEntity()
+//
+//            appointmentFormDao.insertAppointmentForm(appointmentEntity)
+//            appointmentEntity
+//        }.getOrElse {
+//            Log.e("AppointmentFormRepo", "Lỗi khi lấy phiếu khám: ${it.message}")
+//            null
+//        }
+//    }
 
     override suspend fun getAppointmentFormById(id: Int): AppointmentFormEntity? {
         return kotlin.runCatching {
@@ -64,18 +107,30 @@ class AppointmentFormRepositoryImpl @Inject constructor(
             }
 
             val apiResponse = appointmentFormApiService.getAppointmentFormById(id)
-            val appointmentEntity = apiResponse.toEntity()
 
-            appointmentFormDao.insertAppointmentForm(appointmentEntity)
-            appointmentEntity
+            if (apiResponse.isSuccessful) {
+                val appointmentEntity = apiResponse.body()?.toEntity()
+
+                if (appointmentEntity != null) {
+                    appointmentFormDao.insertAppointmentForm(appointmentEntity)
+                    return@runCatching appointmentEntity
+                } else {
+                    Log.e("AppointmentFormRepo", "Dữ liệu trả về từ API là null")
+                    null
+                }
+            } else {
+                Log.e("AppointmentFormRepo", "Lỗi API: ${apiResponse.code()}")
+                null
+            }
         }.getOrElse {
             Log.e("AppointmentFormRepo", "Lỗi khi lấy phiếu khám: ${it.message}")
             null
         }
     }
-
     override suspend fun getLatestAppointmentId(): Int? {
         return appointmentFormDao.getLatestAppointmentId()
+
     }
+
 }
 

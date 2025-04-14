@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import com.example.healthy_diagnosis.presentation.viewmodel.AppointmentFormViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.MedicalHistoryViewModel
 import com.example.healthy_diagnosis.ui.theme.MenuItemColor
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -42,8 +43,9 @@ import java.util.Locale
 @Composable
 fun WorkList(
     physicianViewModel: PhysicianViewModel,
-    appointmentFormViewModel: AppointmentFormViewModel,
-    navController: NavController
+    applicationFormViewModel: ApplicationFormViewModel,
+    navController: NavController,
+    medicalHistoryViewModel: MedicalHistoryViewModel
 ) {
     val physicianId by physicianViewModel.physicianId.collectAsState()
     val patients by physicianViewModel.patients.observeAsState(emptyList())
@@ -54,9 +56,15 @@ fun WorkList(
     LaunchedEffect(physicianId) {
         physicianId?.let { id -> physicianViewModel.fetchPatients(id) }
     }
+    LaunchedEffect(Unit) {
+//        medicalHistoryViewModel.fetchMedicalHistory()
+//        applicationFormViewModel.fetchApplicationForm()
+    }
+
+
 
     Scaffold(
-        topBar = { TopBarScreen(title = "Lịch khám đã đặt trước", onBackClick = { }) }
+        topBar = { TopBarScreen(title = "Lịch khám đã đặt trước", onBackClick = { navController.popBackStack()}) }
     ) { paddingValues ->
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
             items(patients.sortedBy { it.application_form_date }) { patient ->

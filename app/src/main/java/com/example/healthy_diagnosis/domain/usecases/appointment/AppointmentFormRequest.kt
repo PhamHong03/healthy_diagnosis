@@ -6,6 +6,7 @@ data class AppointmentFormRequest(
     val description: String,
     val application_form_id: Int
 )
+
 fun AppointmentFormRequest.toEntity(): AppointmentFormEntity {
     return AppointmentFormEntity(
         description = this.description,
