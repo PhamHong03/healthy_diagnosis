@@ -20,10 +20,12 @@ import com.example.healthy_diagnosis.core.utils.prepareImagePart
 import com.example.healthy_diagnosis.data.datasources.remote.ImagesApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 
 
 @HiltViewModel
@@ -42,13 +44,74 @@ class ImagesViewModel @Inject constructor(
     private val _imageUpdateStatus = MutableLiveData<Boolean>()
     val imageUpdateStatus: LiveData<Boolean> get() = _imageUpdateStatus
 
-    fun uploadImage(uri: Uri, physicianId: Int, appointmentId: Int, diseasesId: Int?) {
+//    fun uploadImage(uri: Uri, physicianId: Int, appointmentId: Int, diseasesId: Int?, onResult: (Boolean) -> Unit  ) {
+//        val context = application.applicationContext
+//        viewModelScope.launch {
+//            try {
+//                val inputStream = context.contentResolver.openInputStream(uri)
+//                if (inputStream == null) {
+//                    Log.e("Upload", "Không thể mở InputStream từ URI.")
+//                    onResult(false)
+//                    return@launch
+//                }
+//
+//                val filePart = prepareImagePart(context, uri)
+//                val physicianIdBody = physicianId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+//                val appointmentIdBody = appointmentId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+//                val diseasesIdBody = (diseasesId ?: 0).toString().toRequestBody("text/plain".toMediaTypeOrNull())
+//
+//                Log.d("Upload", "physicianId=$physicianId, appointmentId=$appointmentId, diseasesId=${diseasesId ?: 0}")
+//
+//                val isUploaded = imagesRepository.uploadImage(
+//                    image = filePart,
+//                    physicianId = physicianIdBody,
+//                    appointmentId = appointmentIdBody,
+//                    diseasesId = diseasesIdBody
+//                )
+//
+//                if (isUploaded) {
+//                    val newImage = ImagesEntity(
+//                        images_path = uri.toString(),
+//                        created_at = getCurrentTimestamp(),
+//                        physician_id = physicianId,
+//                        diseases_id = diseasesId,
+//                        appointment_id = appointmentId
+//                    )
+//                    imagesRepository.insertImages(listOf(newImage))
+//
+//                    withContext(Dispatchers.IO) {
+//                        val updatedList = _imagesList.value.toMutableList().apply {
+//                            add(newImage)
+//                        }
+//                        _imagesList.value = updatedList
+//                    }
+//                    Log.d("Upload", "Upload thành công và lưu vào Room!")
+//                    onResult(true)
+//                } else {
+//                    Log.e("Upload", "Upload thất bại!")
+//                    onResult(false)
+//                }
+//            } catch (e: Exception) {
+//                Log.e("Upload", "Lỗi khi upload: ${e.message}", e)
+//                onResult(false)
+//            }
+//        }
+//    }
+    fun uploadImage(
+        uri: Uri,
+        physicianId: Int,
+        appointmentId: Int,
+        diseasesId: Int?,
+        onResult: (Boolean) -> Unit
+    ) {
         val context = application.applicationContext
         viewModelScope.launch {
             try {
+
                 val inputStream = context.contentResolver.openInputStream(uri)
                 if (inputStream == null) {
                     Log.e("Upload", "Không thể mở InputStream từ URI.")
+                    onResult(false)
                     return@launch
                 }
 
@@ -57,41 +120,52 @@ class ImagesViewModel @Inject constructor(
                 val appointmentIdBody = appointmentId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
                 val diseasesIdBody = (diseasesId ?: 0).toString().toRequestBody("text/plain".toMediaTypeOrNull())
 
-                Log.d("Upload", "physicianId=$physicianId, appointmentId=$appointmentId, diseasesId=${diseasesId ?: 0}")
-
-                val isUploaded = imagesRepository.uploadImage(
+                // Gọi uploadImage từ repository
+                val response = imagesRepository.uploadImage(
                     image = filePart,
                     physicianId = physicianIdBody,
                     appointmentId = appointmentIdBody,
                     diseasesId = diseasesIdBody
                 )
 
-                if (isUploaded) {
-                    val newImage = ImagesEntity(
-                        images_path = uri.toString(),
-                        created_at = getCurrentTimestamp(),
-                        physician_id = physicianId,
-                        diseases_id = diseasesId,
-                        appointment_id = appointmentId
-                    )
-                    imagesRepository.insertImages(listOf(newImage))
+                if (response.isSuccessful) {
+                    val imageResponse = response.body()
+                    if (imageResponse != null) {
+                        Log.d("Upload", "Phản hồi từ server: $imageResponse")
+                        val diseaseIdFromServer = imageResponse.diseases_id
+                        val images_path = imageResponse.images_path ?: "Chưa lưu được giá trị"
+                        val newImage = ImagesEntity(
+                            images_path = images_path,
+                            created_at = getCurrentTimestamp(),
+                            physician_id = physicianId,
+                            diseases_id = diseaseIdFromServer,
+                            appointment_id = appointmentId
+                        )
+                        imagesRepository.insertImages(listOf(newImage))
 
-                    withContext(Dispatchers.IO) {
-                        val updatedList = _imagesList.value.toMutableList().apply {
-                            add(newImage)
+                        withContext(Dispatchers.IO) {
+                            val updatedList = _imagesList.value.toMutableList().apply {
+                                add(newImage)
+                            }
+                            _imagesList.value = updatedList
                         }
-                        _imagesList.value = updatedList
+
+                        Log.d("Upload", "Upload thành công và đã lưu Room")
+                        onResult(true)
+                    } else {
+                        Log.e("Upload", "Phản hồi từ server không hợp lệ")
+                        onResult(false)
                     }
-                    Log.d("Upload", "Upload thành công và lưu vào Room!")
                 } else {
-                    Log.e("Upload", "Upload thất bại!")
+                    Log.e("Upload", "Upload lỗi: ${response.errorBody()?.string()}")
+                    onResult(false)
                 }
             } catch (e: Exception) {
                 Log.e("Upload", "Lỗi khi upload: ${e.message}", e)
+                onResult(false)
             }
         }
     }
-
 
     fun getRealPathFromURI(uri: Uri, context: Context): String? {
         val projection = arrayOf(MediaStore.Images.Media.DATA)

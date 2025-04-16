@@ -21,6 +21,9 @@ class CategoryDiseaseViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
+    init {
+        fetchCategoryDisease()
+    }
     fun fetchCategoryDisease(){
         viewModelScope.launch {
             _isLoading.value = true

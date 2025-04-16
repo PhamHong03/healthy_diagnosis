@@ -6,6 +6,7 @@ import com.example.healthy_diagnosis.data.datasources.local.AppDatabase
 import com.example.healthy_diagnosis.data.datasources.remote.ApplicationFormApiService
 import com.example.healthy_diagnosis.data.datasources.remote.AppointmentFormApiService
 import com.example.healthy_diagnosis.data.datasources.remote.CategoryDiseaseApiService
+import com.example.healthy_diagnosis.data.datasources.remote.DiseaseApiService
 import com.example.healthy_diagnosis.data.datasources.remote.EducationApiService
 import com.example.healthy_diagnosis.data.datasources.remote.ImagesApiService
 import com.example.healthy_diagnosis.data.datasources.remote.MedicalHistoryApiService
@@ -16,6 +17,7 @@ import com.example.healthy_diagnosis.data.datasources.remote.SpecializationApiSe
 import com.example.healthy_diagnosis.domain.repositories.ApplicationFormRespository
 import com.example.healthy_diagnosis.domain.repositories.AppointmentFormRepository
 import com.example.healthy_diagnosis.domain.repositories.CategoryDiseaseRepository
+import com.example.healthy_diagnosis.domain.repositories.DiseaseRepository
 import com.example.healthy_diagnosis.domain.repositories.EducationRepository
 import com.example.healthy_diagnosis.domain.repositories.ImagesRepository
 import com.example.healthy_diagnosis.domain.repositories.MedicalHistoryRepository
@@ -27,6 +29,7 @@ import com.example.healthy_diagnosis.infrastructure.repositories.AccountReposito
 import com.example.healthy_diagnosis.infrastructure.repositories.ApplicationFormRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.AppointmentFormRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.CategoryDiseaseRepositoryImpl
+import com.example.healthy_diagnosis.infrastructure.repositories.DiseaseRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.EducationRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.ImagesRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.MedicalHistoryRepositoryImpl
@@ -145,4 +148,12 @@ object RepositoryModule {
         return CategoryDiseaseRepositoryImpl(database.categoryDiseaseDao(), categoryDiseaseApiService)
     }
 
+    @Provides
+    @Singleton
+    fun provideDiseaseRepository(
+        database: AppDatabase,
+        diseaseApiService: DiseaseApiService
+    ): DiseaseRepository {
+        return DiseaseRepositoryImpl(database.diseaseDao(), diseaseApiService)
+    }
 }

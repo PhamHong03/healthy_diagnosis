@@ -41,6 +41,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 import androidx.compose.material3.Text
 import com.example.healthy_diagnosis.core.utils.ConfirmSaveDialog
+import androidx.compose.material3.CircularProgressIndicator
+import kotlinx.coroutines.delay
+
 
 fun generateImagePath(physicianId: Int, appointmentId: Int): String {
     val dateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
@@ -61,7 +64,9 @@ fun DiagnosisScreen(
     appointmentFormViewModel: AppointmentFormViewModel,
     physicianViewModel: PhysicianViewModel,
     imagesViewModel: ImagesViewModel,
-    medicalHistoryViewModel: MedicalHistoryViewModel
+    medicalHistoryViewModel: MedicalHistoryViewModel,
+    categoryDiseaseViewModel: CategoryDiseaseViewModel,
+    diseaseViewModel: DiseaseViewModel
 ) {
     val accountId by authViewModel.account.collectAsState()
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
@@ -72,7 +77,6 @@ fun DiagnosisScreen(
     val appointmentId by appointmentFormViewModel.appointmentId.collectAsState()
     val currentDate = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
     val context = LocalContext.current
-
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -84,7 +88,6 @@ fun DiagnosisScreen(
         }
     }
 
-
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
@@ -94,21 +97,12 @@ fun DiagnosisScreen(
             Log.e("Permission", "Permission denied")
         }
     }
-
-//
-//    val permissionLauncher = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.RequestPermission()
-//    ) { isGranted ->
-//        if (isGranted) {
-//            imagePickerLauncher.launch("image/*")
-//        }
-//    }
-
     LaunchedEffect(Unit) {
         medicalHistoryViewModel.fetchMedicalHistory()
         patientViewModel.fetchPatients()
 //        applicationFormViewModel.fetchApplicationForm()
-
+        categoryDiseaseViewModel.fetchCategoryDisease()
+        diseaseViewModel.fetchDisease()
     }
     LaunchedEffect(accountId) {
         accountId?.id?.let { physicianViewModel.fetchPhysicianByAccountId(it) }
@@ -119,6 +113,7 @@ fun DiagnosisScreen(
         selectedApplicationFormId?.let {
             applicationFormViewModel.fetchApplicationForm()
             applicationFormViewModel.fetchPatientByApplicationFormId(it)
+//            diseaseViewModel.fetchDisease()
         }
 
     }
@@ -218,16 +213,25 @@ fun DiagnosisScreen(
                 Spacer(modifier = Modifier.height(10.dp))
                 if (selectedImageUri != null && appointmentId != null) {
                     Row(modifier = Modifier.padding(horizontal = 10.dp)) {
-                        ButtonClick(text = "PHÂN TÍCH ẢNH", onClick = {
-                            Log.d("UploadImage", "URI: $selectedImageUri")
-                            Log.d("Upload", "physicianId=$physicianId, appointmentId=$appointmentId, diseasesId=0")
-                            imagesViewModel.uploadImage(
-                                uri = selectedImageUri!!,
-                                physicianId = physicianId ?: 0,
-                                appointmentId = appointmentId ?: 0,
-                                diseasesId = null
-                            )
-                        })
+                        ButtonClick(
+                            text = "PHÂN TÍCH ẢNH",
+                            onClick = {
+                                Log.d("UploadImage", "URI: $selectedImageUri")
+                                Log.d("Upload", "physicianId=$physicianId, appointmentId=$appointmentId, diseasesId=0")
+                                imagesViewModel.uploadImage(
+                                    uri = selectedImageUri!!,
+                                    physicianId = physicianId ?: 0,
+                                    appointmentId = appointmentId ?: 0,
+                                    diseasesId = null
+                                ){ result ->
+                                    if (result) {
+                                        navController.navigate("result_screen/$appointmentId")
+                                    } else {
+
+                                    }
+                                }
+                            }
+                        )
                     }
                 }
             }

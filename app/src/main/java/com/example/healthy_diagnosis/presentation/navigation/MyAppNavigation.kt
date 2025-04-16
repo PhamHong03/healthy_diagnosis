@@ -22,10 +22,13 @@ import com.example.healthy_diagnosis.presentation.screen.doctors.HomeScreen
 import com.example.healthy_diagnosis.presentation.screen.doctors.InfoDoctor
 import com.example.healthy_diagnosis.presentation.screen.doctors.Patient
 import com.example.healthy_diagnosis.presentation.screen.doctors.ProfileDoctor
+import com.example.healthy_diagnosis.presentation.screen.doctors.ResultScreen
 import com.example.healthy_diagnosis.presentation.screen.doctors.WorkList
 import com.example.healthy_diagnosis.presentation.viewmodel.ApplicationFormViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.AppointmentFormViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.CategoryDiseaseViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.DiseaseViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.EducationViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.ImagesViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.MedicalHistoryViewModel
@@ -46,7 +49,9 @@ fun MyAppNavigation(
     medicalHistoryViewModel: MedicalHistoryViewModel,
     applicationFormViewModel: ApplicationFormViewModel,
     appointmentFormViewModel: AppointmentFormViewModel,
-    imagesViewModel: ImagesViewModel
+    imagesViewModel: ImagesViewModel,
+    categoryDiseaseViewModel: CategoryDiseaseViewModel,
+    diseaseViewModel: DiseaseViewModel
 ) {
     val navController = rememberNavController()
     val selectPatient by remember {
@@ -96,10 +101,16 @@ fun MyAppNavigation(
                 appointmentFormViewModel = appointmentFormViewModel,
                 physicianViewModel = physicianViewModel,
                 imagesViewModel = imagesViewModel,
-                medicalHistoryViewModel = medicalHistoryViewModel
+                medicalHistoryViewModel = medicalHistoryViewModel,
+                categoryDiseaseViewModel = categoryDiseaseViewModel,
+                diseaseViewModel = diseaseViewModel
             )
         }
 
+        composable(route = "result_screen/{appointmentId}"){backStackEntry ->
+            val applicationFormId = backStackEntry.arguments?.getString("applicationFormId")?.toIntOrNull()
+            ResultScreen()
+        }
 
         composable(route = "healthcare") {
             WorkList(

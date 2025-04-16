@@ -4,11 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.healthy_diagnosis.data.models.DiseaseEntity
 import com.example.healthy_diagnosis.domain.repositories.DiseaseRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class DiseaseViewModel @Inject constructor(
     private val diseaseRepository: DiseaseRepository
 ): ViewModel() {
@@ -18,6 +20,9 @@ class DiseaseViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
+    init {
+        fetchDisease()
+    }
     fun fetchDisease(){
         viewModelScope.launch {
             _isLoading.value = true

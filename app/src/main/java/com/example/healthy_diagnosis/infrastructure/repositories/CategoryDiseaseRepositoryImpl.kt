@@ -14,6 +14,7 @@ class CategoryDiseaseRepositoryImpl @Inject constructor(
     override suspend fun getAllCategoryDisease(): List<CategoryDiseaseEntity> {
         return runCatching {
             val categoryDisease = categoryDiseaseApiService.getAllCategoryDisease()
+            Log.d("DiseaseRepo", "Dữ liệu từ API: $categoryDisease")
             categoryDiseaseDao.insertAll(categoryDisease)
             categoryDisease
         }.getOrElse {

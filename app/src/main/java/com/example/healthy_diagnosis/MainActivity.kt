@@ -12,6 +12,8 @@ import com.example.healthy_diagnosis.presentation.navigation.MyAppNavigation
 import com.example.healthy_diagnosis.presentation.viewmodel.ApplicationFormViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.AppointmentFormViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.CategoryDiseaseViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.DiseaseViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.EducationViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.ImagesViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.MedicalHistoryViewModel
@@ -34,6 +36,9 @@ class MainActivity : ComponentActivity() {
     private val applicationFormViewModel: ApplicationFormViewModel by viewModels()
     private val appointmentFormViewModel: AppointmentFormViewModel by viewModels()
     private val imagesViewModel: ImagesViewModel by viewModels()
+    private val categoryDiseaseViewModel: CategoryDiseaseViewModel by viewModels()
+    private val diseaseViewModel: DiseaseViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -47,7 +52,9 @@ class MainActivity : ComponentActivity() {
                 medicalHistoryViewModel,
                 applicationFormViewModel,
                 appointmentFormViewModel,
-                imagesViewModel
+                imagesViewModel,
+                categoryDiseaseViewModel,
+                diseaseViewModel
             )
         }
 

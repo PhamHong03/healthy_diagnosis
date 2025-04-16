@@ -14,11 +14,14 @@ class DiseaseRepositoryImpl @Inject constructor(
     override suspend fun getAllDisease(): List<DiseaseEntity> {
         return kotlin.runCatching {
             val diseases = diseaseApiService.getAllDisease()
+            Log.d("DiseaseRepo", "Dữ liệu từ API: $diseases")
             diseaseDao.insertAll(diseases)
             diseases
         }.getOrElse {
-            Log.e("RoomRepo", "Lỗi kết nối API: ${it.message}")
-            diseaseDao.getAllDisease()
+            Log.e("DiseaseRepo", "Lỗi kết nối API: ${it.message}")
+            val localDiseases = diseaseDao.getAllDisease()
+            Log.d("DiseaseRepo", "Dữ liệu từ RoomDB: $localDiseases") // ✅ Log dữ liệu từ local
+            localDiseases
         }
     }
 
