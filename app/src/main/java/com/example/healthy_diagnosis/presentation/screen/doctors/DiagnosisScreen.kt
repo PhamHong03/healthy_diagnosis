@@ -225,7 +225,7 @@ fun DiagnosisScreen(
                                     diseasesId = null
                                 ){ result ->
                                     if (result) {
-                                        navController.navigate("result_screen/$appointmentId")
+                                        navController.navigate("result_screen/${appointmentId}")
                                     } else {
 
                                     }

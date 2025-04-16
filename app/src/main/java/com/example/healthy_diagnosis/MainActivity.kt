@@ -13,6 +13,7 @@ import com.example.healthy_diagnosis.presentation.viewmodel.ApplicationFormViewM
 import com.example.healthy_diagnosis.presentation.viewmodel.AppointmentFormViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.CategoryDiseaseViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.DiagnosisViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.DiseaseViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.EducationViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.ImagesViewModel
@@ -38,6 +39,7 @@ class MainActivity : ComponentActivity() {
     private val imagesViewModel: ImagesViewModel by viewModels()
     private val categoryDiseaseViewModel: CategoryDiseaseViewModel by viewModels()
     private val diseaseViewModel: DiseaseViewModel by viewModels()
+    private val diagnosisViewModel: DiagnosisViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +56,8 @@ class MainActivity : ComponentActivity() {
                 appointmentFormViewModel,
                 imagesViewModel,
                 categoryDiseaseViewModel,
-                diseaseViewModel
+                diseaseViewModel,
+                diagnosisViewModel
             )
         }
 

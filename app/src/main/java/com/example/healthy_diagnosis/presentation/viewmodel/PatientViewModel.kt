@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.healthy_diagnosis.data.models.AccountEntity
 import com.example.healthy_diagnosis.data.models.PatientEntity
+import com.example.healthy_diagnosis.domain.repositories.AppointmentFormRepository
 import com.example.healthy_diagnosis.domain.repositories.PatientRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -113,6 +114,7 @@ class PatientViewModel @Inject constructor(
         _isSaved.value = false
 
     }
+
     fun deletePatient(patientId: Int) {
         viewModelScope.launch {
             patientRepository.deletePatient(patientId)
@@ -132,12 +134,5 @@ class PatientViewModel @Inject constructor(
             onResult(patient?.id)
         }
     }
-
-//    fun getPatientNameById(patientId: Int, callback: (String?) -> Unit) {
-//        viewModelScope.launch {
-//            val patient = patientRepository.getPatientById(patientId)
-//            callback(patient?.name)
-//        }
-//    }
 
 }

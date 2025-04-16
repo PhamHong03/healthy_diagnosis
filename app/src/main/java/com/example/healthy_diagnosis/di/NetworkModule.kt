@@ -110,5 +110,4 @@ object NetworkModule {
     fun provideDisease(retrofit: Retrofit) : DiseaseApiService {
         return retrofit.create(DiseaseApiService::class.java)
     }
-
 }

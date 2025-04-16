@@ -58,5 +58,7 @@ class PatientRepositoryImpl(
             patientDao.getPatientByAccountId(accountId) // Lấy dữ liệu từ cache
         }
     }
-
+    override suspend fun getPatientById(patientId: Int): PatientEntity? {
+        return patientDao.getPatientById(patientId)  // Gọi hàm Dao để lấy bệnh nhân
+    }
 }

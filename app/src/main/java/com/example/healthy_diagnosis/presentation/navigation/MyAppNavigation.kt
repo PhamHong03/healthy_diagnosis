@@ -28,6 +28,7 @@ import com.example.healthy_diagnosis.presentation.viewmodel.ApplicationFormViewM
 import com.example.healthy_diagnosis.presentation.viewmodel.AppointmentFormViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.AuthViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.CategoryDiseaseViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.DiagnosisViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.DiseaseViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.EducationViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.ImagesViewModel
@@ -51,7 +52,8 @@ fun MyAppNavigation(
     appointmentFormViewModel: AppointmentFormViewModel,
     imagesViewModel: ImagesViewModel,
     categoryDiseaseViewModel: CategoryDiseaseViewModel,
-    diseaseViewModel: DiseaseViewModel
+    diseaseViewModel: DiseaseViewModel,
+    diagnosisViewModel: DiagnosisViewModel
 ) {
     val navController = rememberNavController()
     val selectPatient by remember {
@@ -108,8 +110,12 @@ fun MyAppNavigation(
         }
 
         composable(route = "result_screen/{appointmentId}"){backStackEntry ->
-            val applicationFormId = backStackEntry.arguments?.getString("applicationFormId")?.toIntOrNull()
-            ResultScreen()
+            val appointmentId = backStackEntry.arguments?.getString("appointmentId")?.toIntOrNull()
+            ResultScreen(
+                navController = navController,
+                appointmentFormId = appointmentId,
+                diagnosisViewModel = diagnosisViewModel
+            )
         }
 
         composable(route = "healthcare") {

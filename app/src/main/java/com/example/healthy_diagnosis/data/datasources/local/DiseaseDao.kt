@@ -12,10 +12,10 @@ import retrofit2.http.POST
 @Dao
 interface DiseaseDao {
 
-    @Query("SELECT * FROM diseases WHERE id = :id")
+    @Query("SELECT * FROM diagnose_disease WHERE id = :id")
     suspend fun getLocalDiseaseById(id: Int): DiseaseEntity?
 
-    @Query("SELECT * FROM diseases")
+    @Query("SELECT * FROM diagnose_disease")
     suspend fun getAllDisease(): List<DiseaseEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

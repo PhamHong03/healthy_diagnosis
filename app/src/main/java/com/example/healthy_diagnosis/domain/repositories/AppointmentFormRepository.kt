@@ -14,5 +14,4 @@ interface AppointmentFormRepository {
 
     suspend fun getAppointmentFormById(id: Int): AppointmentFormEntity?
     suspend fun getLatestAppointmentId(): Int?
-
 }

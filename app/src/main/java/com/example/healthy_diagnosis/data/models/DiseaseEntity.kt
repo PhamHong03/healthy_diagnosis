@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity(
-    tableName = "diseases",
+    tableName = "diagnose_disease",
     foreignKeys = [
         ForeignKey(
             entity = CategoryDiseaseEntity::class,
