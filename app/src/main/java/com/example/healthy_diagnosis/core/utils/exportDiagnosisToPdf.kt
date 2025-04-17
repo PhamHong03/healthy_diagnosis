@@ -125,8 +125,6 @@ suspend fun exportDiagnosisToPdf(context: Context, detail: DiagnosisFullInfo): F
         labelX, y, paint
     )
 
-
-
     // ======= HÌNH ẢNH VÀ CHỮ "HÌNH ẢNH CHẨN ĐOÁN" ========
     val imageTopY = y + 30f
     val imageUrl = "http://192.168.1.9:5000/${detail.image_path}"
@@ -156,7 +154,6 @@ suspend fun exportDiagnosisToPdf(context: Context, detail: DiagnosisFullInfo): F
         paint.color = Color.RED
         canvas.drawText("Không thể tải ảnh", imageRightX, imageTopY, paint)
     }
-
 
     // ======= PHẦN XÁC NHẬN CUỐI TRANG ========
     val sectionY = imageTopY + 250f
