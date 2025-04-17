@@ -27,7 +27,8 @@ fun TopBarScreen(
     title: String,
     onBackClick: () -> Unit,
     actionIcon: ImageVector? = null,
-    onActionClick: (() -> Unit)? = null
+    onActionClick: (() -> Unit)? = null,
+    onMoreClick: (() -> Unit)? = null
 ) {
     CenterAlignedTopAppBar(
         title = {
@@ -48,6 +49,12 @@ fun TopBarScreen(
                 IconButton(onClick = onActionClick) {
                     Icon(imageVector = actionIcon, contentDescription = "Action")
                 }
+            }
+            IconButton(onClick = { onMoreClick?.invoke() }) {
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = "More"
+                )
             }
         },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
