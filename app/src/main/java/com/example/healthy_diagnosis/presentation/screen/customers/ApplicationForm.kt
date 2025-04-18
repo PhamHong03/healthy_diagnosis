@@ -3,6 +3,7 @@ package com.example.healthy_diagnosis.presentation.screen.customers
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Card
@@ -32,15 +34,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.healthy_diagnosis.core.utils.BannerInfo
 import com.example.healthy_diagnosis.core.utils.ButtonClick
+import com.example.healthy_diagnosis.core.utils.TopBarScreen
 import com.example.healthy_diagnosis.data.models.MedicalHistoryEntity
 import com.example.healthy_diagnosis.presentation.screen.doctors.DoctorDropdownField
 import com.example.healthy_diagnosis.presentation.viewmodel.ApplicationFormViewModel
@@ -102,9 +107,7 @@ fun ApplicationForm(
         }
     }
     Scaffold(
-        topBar = {
-            BannerInfo(padding = 0.dp, "Trung tâm khám chữa bệnh")
-        }
+        topBar = { TopBarScreen(title = "Đặt lịch khám bệnh", onBackClick = { navController.popBackStack()}) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -112,11 +115,29 @@ fun ApplicationForm(
                 .padding(paddingValues)
                 .padding(10.dp)
         ) {
+
             Box(modifier = Modifier.weight(1f)) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                     modifier = Modifier.fillMaxSize()
                 ) {
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(150.dp)
+                            .background(Color(0xFFBBDEFB), shape = RoundedCornerShape(12.dp)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "🩺 Chăm sóc sức khỏe toàn diện\nDành cho bạn & gia đình",
+                            textAlign = TextAlign.Center,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF0D47A1)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
                     DatePickerFieldCustomer(context, "Chọn ngày khám", date) { date = it }
                     BookingFieldForRoom(
                         label = "Phòng",

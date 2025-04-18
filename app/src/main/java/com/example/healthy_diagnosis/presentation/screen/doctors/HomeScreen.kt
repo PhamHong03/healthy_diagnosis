@@ -22,6 +22,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,6 +39,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -61,11 +63,11 @@ fun HomeScreen(
 ){
     val items = listOf(
         MenuItemData("Công việc", R.drawable.cssk, "healthcare" ),
-        MenuItemData("Chẩn đoán", R.drawable.cameraa, "diagnosis"),
+//        MenuItemData("Chẩn đoán", R.drawable.cameraa, "diagnosis"),
         MenuItemData("Danh sách", R.drawable.note_stroke_rounded, "patients" ),
-        MenuItemData("Kết quả", R.drawable.result, "results"),
+        MenuItemData("Kết qưuả", R.drawable.result, "results"),
         MenuItemData("Ghi chú", R.drawable.note, "notes" ),
-        MenuItemData("Hội chuẩn", R.drawable.video, "meetings"),
+//        MenuItemData("Hội chuẩn", R.drawable.video, "meetings"),
         MenuItemData("Cá nhân", R.drawable.user, "profile"),
         MenuItemData("Cài đặt", R.drawable.setting, "settings" )
     )
@@ -112,11 +114,53 @@ fun HomeScreen(
                 .padding(top = 20.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            HeaderSection(authViewModel, notificationCount, "Hello Dr. ")
-            SearchBar()
+//            HeaderSection(authViewModel, notificationCount, "Hello Dr. ")
+//            SearchBar()
             Spacer(modifier = Modifier.height(10.dp))
             Banner(padding = 10.dp)
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(150.dp)
+//                    .background(Color(0xFFBBDEFB), shape = RoundedCornerShape(12.dp)),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                Text(
+//                    text = "🩺 Chăm sóc sức khỏe toàn diện\nDành cho bạn & gia đình",
+//                    textAlign = TextAlign.Center,
+//                    fontSize = 18.sp,
+//                    fontWeight = FontWeight.Bold,
+//                    color = Color(0xFF0D47A1)
+//                )
+//            }
+            Spacer(modifier = Modifier.height(20.dp))
             MenuGridWithRows(items, navController)
+
+            Spacer(modifier = Modifier.height(20.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 20.dp)
+            ) {
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 16.dp)
+                ) {
+                    Divider(modifier = Modifier.padding(vertical = 12.dp))
+
+                    Text(
+                        text = "💙 Trung tâm y tế H&D - Sức khỏe là ưu tiên hàng đầu",
+                        fontSize = 14.sp,
+                        color = Color(0xFF1565C0),
+                        fontWeight = FontWeight.Medium,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+
         }
 
     }

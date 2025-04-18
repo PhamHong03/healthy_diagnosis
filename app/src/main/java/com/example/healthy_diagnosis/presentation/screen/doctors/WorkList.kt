@@ -35,6 +35,7 @@ import com.example.healthy_diagnosis.presentation.viewmodel.AppointmentFormViewM
 import com.example.healthy_diagnosis.presentation.viewmodel.MedicalHistoryViewModel
 import com.example.healthy_diagnosis.ui.theme.MenuItemColor
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -67,7 +68,29 @@ fun WorkList(
         topBar = { TopBarScreen(title = "Lịch khám đã đặt trước", onBackClick = { navController.popBackStack()}) }
     ) { paddingValues ->
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
-            items(patients.sortedBy { it.application_form_date }) { patient ->
+            val today = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
+
+            val calendar = Calendar.getInstance()
+            calendar.add(Calendar.DAY_OF_YEAR, 1)
+            val tomorrow = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(calendar.time)
+
+            val displayPatients = patients.filter { patient ->
+                try {
+                    val inputFormat = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH)
+                    val appointmentDate = inputFormat.parse(patient.application_form_date)
+
+                    val today = Calendar.getInstance().apply {
+                        set(Calendar.HOUR_OF_DAY, 0)
+                        set(Calendar.MINUTE, 0)
+                        set(Calendar.SECOND, 0)
+                        set(Calendar.MILLISECOND, 0)
+                    }.time
+                    appointmentDate != null && !appointmentDate.before(today)
+                } catch (e: Exception) {
+                    false
+                }
+            }.sortedBy { it.application_form_date }
+            items(displayPatients) { patient ->
                 ApplicationFormItem(
                     patient = patient,
                     onDelete = { /* Xử lý xóa bệnh nhân */ },
@@ -77,9 +100,9 @@ fun WorkList(
                         Log.d("Upload", "patientId=${patient.application_form_id}")
                         navController.navigate("diagnosis/${patient.application_form_id}/${patient.patient_id}/$encodedName")
                     }
-
                 )
             }
+
         }
     }
 }
