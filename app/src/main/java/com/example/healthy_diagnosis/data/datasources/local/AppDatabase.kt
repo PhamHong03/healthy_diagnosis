@@ -34,7 +34,7 @@ import com.example.healthy_diagnosis.data.models.SpecializationEntity
         CategoryDiseaseEntity::class,
         DiseaseEntity::class
                ],
-    version =15,
+    version =16,
     exportSchema = false
 )
 
@@ -52,6 +52,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDiseaseDao() : CategoryDiseaseDao
     abstract fun diseaseDao(): DiseaseDao
     abstract fun diagnosisDao(): DiagnosisDao
+    abstract fun patientDetailDao(): PatientDetailsDao
 
     companion object {
         fun getDatabase(context: Context): AppDatabase {

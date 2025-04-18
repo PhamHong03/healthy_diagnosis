@@ -18,6 +18,7 @@ import com.example.healthy_diagnosis.presentation.viewmodel.DiseaseViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.EducationViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.ImagesViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.MedicalHistoryViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.PatientDetailsViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.PatientViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.PhysicianViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.RoomViewModel
@@ -40,6 +41,7 @@ class MainActivity : ComponentActivity() {
     private val categoryDiseaseViewModel: CategoryDiseaseViewModel by viewModels()
     private val diseaseViewModel: DiseaseViewModel by viewModels()
     private val diagnosisViewModel: DiagnosisViewModel by viewModels()
+    private val patientDetailsViewModel: PatientDetailsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +59,8 @@ class MainActivity : ComponentActivity() {
                 imagesViewModel,
                 categoryDiseaseViewModel,
                 diseaseViewModel,
-                diagnosisViewModel
+                diagnosisViewModel,
+                patientDetailsViewModel
             )
         }
 

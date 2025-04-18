@@ -6,22 +6,41 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.healthy_diagnosis.presentation.viewmodel.PatientViewModel
 import com.example.healthy_diagnosis.core.utils.PatientItem
 import com.example.healthy_diagnosis.core.utils.TopBarScreen
+import com.example.healthy_diagnosis.presentation.viewmodel.ApplicationFormViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.AppointmentFormViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.PhysicianViewModel
 
 
 @Composable
 fun Patient(
     navController: NavController,
-    viewModel: PatientViewModel
+    physicianViewModel: PhysicianViewModel,
+    viewModel: PatientViewModel ,
+    appointmentFormViewModel : AppointmentFormViewModel
 ) {
-    val patientList by viewModel.patientList.collectAsState()
+    val physicianId by physicianViewModel.physicianId.collectAsState()
+    val patients by physicianViewModel.patients.observeAsState(emptyList())
+    val uniquePatients = patients.distinctBy { it.patient_id }
+
+    LaunchedEffect(physicianId) {
+        physicianId?.let { id ->
+            physicianViewModel.fetchPatients(id)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        appointmentFormViewModel.fetchAppointmentForm()
+    }
     Scaffold(
         topBar = {
             TopBarScreen(
@@ -34,14 +53,18 @@ fun Patient(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp)
+                .padding(8.dp)
         ) {
             LazyColumn {
-                items(patientList) { patient ->
+                items(uniquePatients) { patient ->
                     PatientItem(
                         patient = patient,
-                        onDetailClick = { navController.navigate("patient_detail/${patient.id}") },
-                        onDeleteClick = { viewModel.deletePatient(patient.id) }
+                        onDetailClick = {
+                            navController.navigate("patient_detail/${patient.patient_id}")
+                        },
+                        onDeleteClick = {
+                            viewModel.deletePatient(patient.patient_id)
+                        }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }

@@ -16,6 +16,7 @@ import com.example.healthy_diagnosis.data.datasources.remote.RoomApiService
 import com.example.healthy_diagnosis.data.datasources.remote.SpecializationApiService
 import com.example.healthy_diagnosis.domain.repositories.ApplicationFormRespository
 import com.example.healthy_diagnosis.domain.repositories.AppointmentFormRepository
+import com.example.healthy_diagnosis.domain.repositories.AppointmentListForPatientRepository
 import com.example.healthy_diagnosis.domain.repositories.CategoryDiseaseRepository
 import com.example.healthy_diagnosis.domain.repositories.DiagnosisRepository
 import com.example.healthy_diagnosis.domain.repositories.DiseaseRepository
@@ -29,6 +30,7 @@ import com.example.healthy_diagnosis.domain.repositories.SpecializationRepositor
 import com.example.healthy_diagnosis.infrastructure.repositories.AccountRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.ApplicationFormRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.AppointmentFormRepositoryImpl
+import com.example.healthy_diagnosis.infrastructure.repositories.AppointmentListForPatientRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.CategoryDiseaseRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.DiagnosisRepositoryImpl
 import com.example.healthy_diagnosis.infrastructure.repositories.DiseaseRepositoryImpl
@@ -164,5 +166,13 @@ object RepositoryModule {
         database: AppDatabase
     ): DiagnosisRepository{
         return DiagnosisRepositoryImpl(database.diagnosisDao())
+    }
+
+    @Provides
+    @Singleton
+    fun provideAppointmentListForPatientRepository(
+        database: AppDatabase
+    ): AppointmentListForPatientRepository{
+        return AppointmentListForPatientRepositoryImpl(database.patientDetailDao())
     }
 }
