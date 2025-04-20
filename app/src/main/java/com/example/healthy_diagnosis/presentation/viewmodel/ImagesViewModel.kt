@@ -44,59 +44,23 @@ class ImagesViewModel @Inject constructor(
     private val _imageUpdateStatus = MutableLiveData<Boolean>()
     val imageUpdateStatus: LiveData<Boolean> get() = _imageUpdateStatus
 
-//    fun uploadImage(uri: Uri, physicianId: Int, appointmentId: Int, diseasesId: Int?, onResult: (Boolean) -> Unit  ) {
-//        val context = application.applicationContext
-//        viewModelScope.launch {
-//            try {
-//                val inputStream = context.contentResolver.openInputStream(uri)
-//                if (inputStream == null) {
-//                    Log.e("Upload", "Không thể mở InputStream từ URI.")
-//                    onResult(false)
-//                    return@launch
-//                }
-//
-//                val filePart = prepareImagePart(context, uri)
-//                val physicianIdBody = physicianId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-//                val appointmentIdBody = appointmentId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-//                val diseasesIdBody = (diseasesId ?: 0).toString().toRequestBody("text/plain".toMediaTypeOrNull())
-//
-//                Log.d("Upload", "physicianId=$physicianId, appointmentId=$appointmentId, diseasesId=${diseasesId ?: 0}")
-//
-//                val isUploaded = imagesRepository.uploadImage(
-//                    image = filePart,
-//                    physicianId = physicianIdBody,
-//                    appointmentId = appointmentIdBody,
-//                    diseasesId = diseasesIdBody
-//                )
-//
-//                if (isUploaded) {
-//                    val newImage = ImagesEntity(
-//                        images_path = uri.toString(),
-//                        created_at = getCurrentTimestamp(),
-//                        physician_id = physicianId,
-//                        diseases_id = diseasesId,
-//                        appointment_id = appointmentId
-//                    )
-//                    imagesRepository.insertImages(listOf(newImage))
-//
-//                    withContext(Dispatchers.IO) {
-//                        val updatedList = _imagesList.value.toMutableList().apply {
-//                            add(newImage)
-//                        }
-//                        _imagesList.value = updatedList
-//                    }
-//                    Log.d("Upload", "Upload thành công và lưu vào Room!")
-//                    onResult(true)
-//                } else {
-//                    Log.e("Upload", "Upload thất bại!")
-//                    onResult(false)
-//                }
-//            } catch (e: Exception) {
-//                Log.e("Upload", "Lỗi khi upload: ${e.message}", e)
-//                onResult(false)
-//            }
-//        }
-//    }
+    init {
+        fetchImages()
+    }
+    fun fetchImages() {
+        viewModelScope.launch {
+            try {
+                _isLoading.value = true
+                _imagesList.value = imagesRepository.getAllImages()
+                Log.d("ImagesViewModel", "Fetched ${_imagesList.value.size} images from repository")
+                _isLoading.value = false
+            } catch (e: Exception) {
+                Log.e("ImagesViewModel", "Error fetching images: ${e.message}")
+                _isLoading.value = false
+            }
+        }
+    }
+
     fun uploadImage(
         uri: Uri,
         physicianId: Int,
@@ -199,17 +163,4 @@ class ImagesViewModel @Inject constructor(
         return java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())
     }
 
-    fun fetchImages(){
-        viewModelScope.launch {
-            try {
-                _imagesList.value = imagesRepository.getAllImages()
-            }catch (e: Exception) {
-                Log.e("ImagesViewModel", "Error fetching patients: ${e}")
-            }
-        }
-    }
-
-    init {
-        fetchImages()
-    }
 }

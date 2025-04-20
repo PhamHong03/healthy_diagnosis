@@ -127,7 +127,7 @@ suspend fun exportDiagnosisToPdf(context: Context, detail: DiagnosisFullInfo): F
 
     // ======= HÌNH ẢNH VÀ CHỮ "HÌNH ẢNH CHẨN ĐOÁN" ========
     val imageTopY = y + 30f
-    val imageUrl = "http://192.168.1.9:5000/${detail.image_path}"
+    val imageUrl = "http://192.168.70.24:5000/${detail.image_path}"
 
     val textLeftX = 40f
     val imageWidth = 300

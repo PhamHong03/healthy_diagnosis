@@ -137,7 +137,13 @@ fun MyAppNavigation(
                 navController = navController,
                 viewModel = patientViewModel,
                 physicianViewModel = physicianViewModel,
-                appointmentFormViewModel = appointmentFormViewModel
+                appointmentFormViewModel = appointmentFormViewModel,
+                patientViewModel = patientViewModel,
+                applicationFormViewModel = applicationFormViewModel,
+                medicalHistoryViewModel = medicalHistoryViewModel,
+                categoryDiseaseViewModel = categoryDiseaseViewModel,
+                diseaseViewModel = diseaseViewModel,
+                imagesViewModel = imagesViewModel
             )
         }
 
@@ -146,7 +152,8 @@ fun MyAppNavigation(
             PatientDetail(
                 patientId = patient_id,
                 viewModel = patientDetailsViewModel,
-                navController
+                navController = navController,
+                imagesViewModel = imagesViewModel
             )
         }
 

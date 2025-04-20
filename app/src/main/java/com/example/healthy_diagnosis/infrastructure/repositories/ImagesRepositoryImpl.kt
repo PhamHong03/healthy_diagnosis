@@ -16,28 +16,6 @@ class ImagesRepositoryImpl @Inject constructor(
     private val imagesDao: ImagesDao,
     private val imagesApiService: ImagesApiService
 ) : ImagesRepository{
-//    override suspend fun uploadImage(
-//        image: MultipartBody.Part,
-//        physicianId: RequestBody,
-//        appointmentId: RequestBody,
-//        diseasesId: RequestBody?
-//    ): Boolean {
-//        return try {
-//            val response = imagesApiService.uploadImage(image, physicianId, appointmentId, diseasesId)
-//            if (response.isSuccessful) {
-//                Log.d("Upload", "Image uploaded successfully")
-//                true
-//            } else {
-//                Log.e("Upload", "Failed to upload image: ${response.code()} - ${response.message()}, $response")
-//                false
-//            }
-//        } catch (e: Exception) {
-//            Log.e("Upload", "Upload failed: ${e.message}", e)
-//            false
-//        }
-//    }
-
-
 
     override suspend fun getImageById(imageId: Int): ImagesEntity? {
         val response = imagesApiService.getImageById(imageId)
@@ -64,15 +42,34 @@ class ImagesRepositoryImpl @Inject constructor(
         }
     }
 
+//    override suspend fun getAllImages(): List<ImagesEntity> {
+//        return try {
+//            imagesApiService.getImages()
+//        } catch (e: Exception) {
+//            emptyList()
+//        }
+//    }
     override suspend fun getAllImages(): List<ImagesEntity> {
-        return try {
-            imagesApiService.getImages()
-        } catch (e: Exception) {
-            emptyList()
+//        return try {
+//            val images = imagesDao.getAllImages()
+//            Log.d("ImagesRepositoryImpl", "Fetched ${images.size} images from Room")
+//            images
+//        } catch (e: Exception) {
+//            Log.e("ImagesRepositoryImpl", "Error fetching images from Room: ${e.message}")
+//            emptyList()
+//        }
+        return runCatching {
+            val images = imagesApiService.getImages()
+            imagesDao.insertAll(images)
+            images
+        }.getOrElse {
+            Log.e("ImagesRepo", "Lỗi kết nối API:: ${it.message}")
+            imagesDao.getAllImages()
         }
     }
 
     override suspend fun insertImages(images: List<ImagesEntity>) {
+        Log.d("ImagesRepositoryImpl", "Inserting ${images.size} images into Room")
         imagesDao.insertImages(images)
     }
 

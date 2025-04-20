@@ -20,8 +20,12 @@ import javax.inject.Inject
 class AppointmentFormViewModel  @Inject constructor(
     private val appointmentFormRepository: AppointmentFormRepository
 ): ViewModel(){
+//    private val _appointmentFormList = MutableStateFlow<List<AppointmentFormEntity>>(emptyList())
+//    val appointmentFormList: StateFlow<List<AppointmentFormEntity>> = _appointmentFormList
+
+
     private val _appointmentFormList = MutableStateFlow<List<AppointmentFormEntity>>(emptyList())
-    val appointmentFormList: StateFlow<List<AppointmentFormEntity>> = _appointmentFormList
+    val appointmentFormList = _appointmentFormList
 
     private val _isSave = MutableStateFlow(false)
     val isSave: StateFlow<Boolean> get() = _isSave

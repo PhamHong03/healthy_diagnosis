@@ -38,6 +38,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import androidx.compose.material.icons.filled.Share
 
 
 
@@ -125,8 +126,8 @@ fun ApplicationFormItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        shape = RoundedCornerShape(16.dp),
+            .padding(10.dp),
+        shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Row(
@@ -137,14 +138,17 @@ fun ApplicationFormItem(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = "Bệnh nhân: ${patient.patient_name}", fontWeight = FontWeight.Bold)
+                Text(text = "Bệnh nhân: ${patient.patient_name}", fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = "Ngày khám: $formattedDate", style = MaterialTheme.typography.bodyMedium)
                 Spacer(modifier = Modifier.height(8.dp))
+//                Text(text = "Phòng khám: ${patient.application_form_room_id}", style = MaterialTheme.typography.bodyMedium)
+//                Spacer(modifier = Modifier.height(8.dp))
 
                 Button(
                     onClick = onStartExam,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+                    shape = RoundedCornerShape(4.dp)
                 ) {
                     Text("Khám lịch", color = Color.White)
                 }
@@ -155,7 +159,7 @@ fun ApplicationFormItem(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 IconButton(onClick = { onDelete(patient.patient_id) }) {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Xoá", tint = Color.Red)
+                    Icon(imageVector = Icons.Default.Share, contentDescription = "Xoá", tint = MenuItemColor)
                 }
             }
         }

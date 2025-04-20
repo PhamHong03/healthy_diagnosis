@@ -134,8 +134,9 @@ fun DiagnosisScreen(
                 DrawerMenu { selectedItem ->
                     when (selectedItem) {
                         "Home" -> navController.navigate("home")
-                        "List" -> navController.navigate("patient_info")
-                        "Diagnosis" -> navController.navigate("diagnosis")
+                        "Healthcare" -> navController.navigate("healthcare")
+                        "Patients" -> navController.navigate("patients")
+
                     }
                 }
             }

@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.healthy_diagnosis.data.models.AppointmentFormEntity
 import com.example.healthy_diagnosis.data.models.ImagesEntity
+import com.example.healthy_diagnosis.data.models.RoomEntity
 import okhttp3.Response
 
 @Dao
@@ -20,6 +21,10 @@ interface ImagesDao {
 
     @Query("DELETE FROM images")
     suspend fun deleteAllImages()
+
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(room: List<ImagesEntity>)
 
     @Update
     suspend fun update(imagesEntity: ImagesEntity)

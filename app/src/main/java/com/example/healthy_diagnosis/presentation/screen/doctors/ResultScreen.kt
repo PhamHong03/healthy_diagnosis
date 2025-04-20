@@ -44,7 +44,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-private const val BASE_URL = "http://192.168.1.9:5000/"
+private const val BASE_URL = "http://192.168.70.24:5000/"
 @Composable
 fun ResultScreen(
     navController: NavController,

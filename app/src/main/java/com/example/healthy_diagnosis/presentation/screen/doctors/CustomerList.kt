@@ -18,6 +18,10 @@ import com.example.healthy_diagnosis.core.utils.PatientItem
 import com.example.healthy_diagnosis.core.utils.TopBarScreen
 import com.example.healthy_diagnosis.presentation.viewmodel.ApplicationFormViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.AppointmentFormViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.CategoryDiseaseViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.DiseaseViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.ImagesViewModel
+import com.example.healthy_diagnosis.presentation.viewmodel.MedicalHistoryViewModel
 import com.example.healthy_diagnosis.presentation.viewmodel.PhysicianViewModel
 
 
@@ -26,7 +30,13 @@ fun Patient(
     navController: NavController,
     physicianViewModel: PhysicianViewModel,
     viewModel: PatientViewModel ,
-    appointmentFormViewModel : AppointmentFormViewModel
+    appointmentFormViewModel : AppointmentFormViewModel,
+    medicalHistoryViewModel: MedicalHistoryViewModel,
+    patientViewModel: PatientViewModel,
+    categoryDiseaseViewModel: CategoryDiseaseViewModel,
+    diseaseViewModel: DiseaseViewModel,
+    applicationFormViewModel: ApplicationFormViewModel,
+    imagesViewModel: ImagesViewModel
 ) {
     val physicianId by physicianViewModel.physicianId.collectAsState()
     val patients by physicianViewModel.patients.observeAsState(emptyList())
@@ -37,9 +47,14 @@ fun Patient(
             physicianViewModel.fetchPatients(id)
         }
     }
-
     LaunchedEffect(Unit) {
+        medicalHistoryViewModel.fetchMedicalHistory()
+        patientViewModel.fetchPatients()
+        applicationFormViewModel.fetchApplicationForm()
+        categoryDiseaseViewModel.fetchCategoryDisease()
+        diseaseViewModel.fetchDisease()
         appointmentFormViewModel.fetchAppointmentForm()
+        imagesViewModel.fetchImages()
     }
     Scaffold(
         topBar = {

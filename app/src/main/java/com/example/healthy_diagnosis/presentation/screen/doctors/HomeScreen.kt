@@ -65,7 +65,7 @@ fun HomeScreen(
         MenuItemData("Công việc", R.drawable.cssk, "healthcare" ),
 //        MenuItemData("Chẩn đoán", R.drawable.cameraa, "diagnosis"),
         MenuItemData("Danh sách", R.drawable.note_stroke_rounded, "patients" ),
-        MenuItemData("Kết qưuả", R.drawable.result, "results"),
+        MenuItemData("Kết quả", R.drawable.result, "results"),
         MenuItemData("Ghi chú", R.drawable.note, "notes" ),
 //        MenuItemData("Hội chuẩn", R.drawable.video, "meetings"),
         MenuItemData("Cá nhân", R.drawable.user, "profile"),
@@ -111,12 +111,12 @@ fun HomeScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 20.dp)
+//                .padding(top = 8.dp)
                 .verticalScroll(rememberScrollState())
         ) {
 //            HeaderSection(authViewModel, notificationCount, "Hello Dr. ")
 //            SearchBar()
-            Spacer(modifier = Modifier.height(10.dp))
+//            Spacer(modifier = Modifier.height(10.dp))
             Banner(padding = 10.dp)
 //            Box(
 //                modifier = Modifier
@@ -133,10 +133,26 @@ fun HomeScreen(
 //                    color = Color(0xFF0D47A1)
 //                )
 //            }
-            Spacer(modifier = Modifier.height(20.dp))
+//            Spacer(modifier = Modifier.height(10.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    .padding(horizontal = 30.dp)
+                    .background(Color(0xFFBBDEFB), shape = RoundedCornerShape(12.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "🩺 Khám và chẩn đoán bệnh là trách nhiệm hàng đầu của bác sĩ!",
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF0D47A1)
+                )
+            }
             MenuGridWithRows(items, navController)
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(4.dp))
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -169,7 +185,7 @@ fun HomeScreen(
 @Composable
 fun Banner(padding : Dp) {
     Card(
-        shape = RoundedCornerShape(10.dp),
+        shape = RoundedCornerShape(8.dp),
         modifier = Modifier
             .fillMaxWidth()
             .padding(padding),
@@ -193,7 +209,7 @@ fun Banner(padding : Dp) {
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Hãy chăm sóc bản thân vì đó là sức khỏe của bạn!",
+                        text = "Hãy luôn chăm sóc bản thân mỗi ngày, vì đó chính là cách bạn bảo vệ sức khỏe – tài sản quý giá nhất của mình.",
                         fontSize = 14.sp,
                         color = Color.White
                     )
@@ -231,10 +247,10 @@ fun Banner(padding : Dp) {
 fun MenuItemCard(item: MenuItemData, navController: NavController, modifier: Modifier) {
     Box(
         modifier = Modifier
-            .size(140.dp)
+            .size(130.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(Color(0xFFFFFFFF))
-            .padding(16.dp)
+            .background(Color(0xFFF1F5F9))
+            .padding(8.dp)
             .clickable {
                 navController.navigate(item.destination)
                 try {
@@ -253,7 +269,7 @@ fun MenuItemCard(item: MenuItemData, navController: NavController, modifier: Mod
                 painter = painterResource(id = item.iconRes),
                 contentDescription = item.title,
                 tint = MenuItemColor,
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier.size(30.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = item.title, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.Black)
@@ -266,7 +282,7 @@ fun MenuGridWithRows(menuItems: List<MenuItemData>, navController: NavController
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 10.dp),
+            .padding(top = 5.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         menuItems.chunked(2).forEach { rowItems ->

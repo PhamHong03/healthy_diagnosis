@@ -85,12 +85,10 @@ fun DrawerMenu(
                 )
             }
             Divider()
-            MenuItemDrawer(text = "Danh sách", iconResId = R.drawable.note_stroke_rounded) { onMenuItemClick("list") }
-            MenuItemDrawer(text = "Chẩn đoán", iconResId = R.drawable.cameradiag) { onMenuItemClick("Diagnosis") }
-            MenuItemDrawer(text = "CSSK", iconResId = R.drawable.cssk) { onMenuItemClick("CSSK") }
+            MenuItemDrawer(text = "Công việc", iconResId = R.drawable.cssk) { onMenuItemClick("Healthcare") }
+            MenuItemDrawer(text = "Danh sách", iconResId = R.drawable.note_stroke_rounded) { onMenuItemClick("Patients") }
             MenuItemDrawer(text = "Kết quả", iconResId = R.drawable.result) { onMenuItemClick("Result") }
             MenuItemDrawer(text = "Ghi chú", iconResId = R.drawable.note) { onMenuItemClick("Notes") }
-            MenuItemDrawer(text = "Hội chuẩn", iconResId = R.drawable.video) { onMenuItemClick("HoiChuan") }
             MenuItemDrawer(text = "Cá nhân", iconResId = R.drawable.user) { onMenuItemClick("Personal") }
             MenuItemDrawer(text = "Cài đặt", iconResId = R.drawable.setting) { onMenuItemClick("Setting") }
             MenuItemDrawer(text = "Logout", iconResId = R.drawable.user) { onMenuItemClick("Logout") }

@@ -11,10 +11,10 @@ data class AppointmentDetails(
     val category_description: String?,
     val application_form_id: Int,
     val application_content: String?,
-    val application_form_date: String,
+    val application_form_date: String?,
     val patient_id: Int,
-    val patient_name: String,
+    val patient_name: String?,
     val phone: String?,
-    val gender: String,
-    val day_of_birth: String
+    val gender: String?,
+    val day_of_birth: String?
 )
