@@ -173,7 +173,9 @@ suspend fun exportDiagnosisToPdf(context: Context, detail: DiagnosisFullInfo): F
     paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
 
     document.finishPage(page)
-    val file = File(context.getExternalFilesDir(null), "phieu_kham.pdf")
+//    val file = File(context.getExternalFilesDir(null), "phieu_kham.pdf")
+    val fileName = "phieu_kham_${SimpleDateFormat("ddMMyyyy", Locale.getDefault()).format(Date())}.pdf"
+    val file = File(context.getExternalFilesDir(null), fileName)
     document.writeTo(FileOutputStream(file))
     document.close()
 

@@ -58,21 +58,30 @@ class ImagesRepositoryImpl @Inject constructor(
 //            Log.e("ImagesRepositoryImpl", "Error fetching images from Room: ${e.message}")
 //            emptyList()
 //        }
-        return runCatching {
-            val images = imagesApiService.getImages()
-            imagesDao.insertAll(images)
-            images
-        }.getOrElse {
-            Log.e("ImagesRepo", "Lỗi kết nối API:: ${it.message}")
+        return try {
+            val imagesFromApi = imagesApiService.getImages()
+            try {
+                imagesDao.insertAll(imagesFromApi)
+            } catch (e: Exception) {
+                Log.e("ImagesRepo", "Lỗi lưu vào Room: ${e.message}")
+            }
+            imagesFromApi
+        } catch (e: Exception) {
+            Log.e("ImagesRepo", "Lỗi kết nối API: ${e.message}")
             imagesDao.getAllImages()
         }
     }
 
     override suspend fun insertImages(images: List<ImagesEntity>) {
         Log.d("ImagesRepositoryImpl", "Inserting ${images.size} images into Room")
-        imagesDao.insertImages(images)
-    }
 
+        // Insert dữ liệu vào Room
+        imagesDao.insertImages(images)
+
+        // Kiểm tra lại xem dữ liệu có thật sự được insert chưa
+        val allImages = imagesDao.getAllImages()
+        Log.d("ImagesRepositoryImpl", "Currently stored images: ${allImages.size}")
+    }
     override suspend fun getImages(): List<ImagesEntity> {
         return imagesDao.getAllImages()
     }

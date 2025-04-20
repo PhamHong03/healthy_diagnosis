@@ -17,6 +17,8 @@ import com.example.healthy_diagnosis.domain.usecases.appointment.AppointmentDeta
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.healthy_diagnosis.presentation.viewmodel.ImagesViewModel
 
@@ -73,22 +75,34 @@ fun AppointmentItem(appointment: AppointmentDetails) {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
+        Column(modifier = Modifier.padding(10.dp)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column {
-                    Text("Ngày khám: ${appointment.application_form_date}")
-                    Text("Bệnh: ${appointment.category_name ?: "Chưa có"}")
-                    Text("Giai đoạn: ${appointment.disease_description ?: "Không xác định"}")
-                    Text("Giai đoạn: ${appointment.patient_name ?: "Không xác định"}")
-                    Text("Giai đoạn: ${appointment.category_description ?: "Không xác định"}")
-                    Text("Giai đoạn: ${appointment.phone ?: "Không xác định"}")
+                    Text(
+                        text = "Ngày khám: ${appointment.application_form_date}",
+                        fontSize = 18.sp
+                    )
+                    Text(
+                        text = "Tên bệnh nhân: ${appointment.patient_name ?: "Không xác định"}",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "Bệnh: ${appointment.category_name ?: "Chưa có"}",
+                        fontSize = 16.sp
+                    )
+                    Text(
+                        text = "Giai đoạn: ${appointment.disease_description ?: "Không xác định"}",
+                        fontSize = 16.sp,
+                        color = Color.Red
+                    )
                 }
 
                 IconButton(onClick = { expanded = !expanded }) {
@@ -108,8 +122,8 @@ fun AppointmentItem(appointment: AppointmentDetails) {
                         contentDescription = "Ảnh kết quả chẩn đoán",
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(200.dp)
-                            .padding(vertical = 16.dp)
+                            .height(250.dp)
+                            .padding(vertical = 2.dp)
                     )
                 } ?: run {
                     Text(

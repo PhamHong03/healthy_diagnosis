@@ -77,6 +77,4 @@ class AppointmentFormViewModel  @Inject constructor(
             }
         }
     }
-
-
 }

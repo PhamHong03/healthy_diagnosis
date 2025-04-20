@@ -106,12 +106,13 @@ class ImagesViewModel @Inject constructor(
                             appointment_id = appointmentId
                         )
                         imagesRepository.insertImages(listOf(newImage))
-
                         withContext(Dispatchers.IO) {
                             val updatedList = _imagesList.value.toMutableList().apply {
                                 add(newImage)
                             }
                             _imagesList.value = updatedList
+
+                            fetchImages()
                         }
 
                         Log.d("Upload", "Upload thành công và đã lưu Room")

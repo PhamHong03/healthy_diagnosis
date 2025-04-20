@@ -63,8 +63,6 @@ fun WorkList(
 //        applicationFormViewModel.fetchApplicationForm()
     }
 
-
-
     Scaffold(
         topBar = { TopBarScreen(title = "Lịch khám đã đặt trước", onBackClick = { navController.popBackStack()}) }
     ) { paddingValues ->
@@ -142,8 +140,6 @@ fun ApplicationFormItem(
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = "Ngày khám: $formattedDate", style = MaterialTheme.typography.bodyMedium)
                 Spacer(modifier = Modifier.height(8.dp))
-//                Text(text = "Phòng khám: ${patient.application_form_room_id}", style = MaterialTheme.typography.bodyMedium)
-//                Spacer(modifier = Modifier.height(8.dp))
 
                 Button(
                     onClick = onStartExam,

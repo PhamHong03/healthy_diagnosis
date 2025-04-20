@@ -64,9 +64,13 @@ fun DrawerMenu(
             .padding(16.dp),
         verticalArrangement = Arrangement.Top
     ){
-        ModalDrawerSheet {
+        ModalDrawerSheet (
+            modifier = Modifier.background(Color(0xFFE3F2FD))
+        ){
+
             Row (
-                modifier = Modifier.clickable { onMenuItemClick("Home") },
+                modifier = Modifier
+                    .clickable { onMenuItemClick("Home") },
                 verticalAlignment = Alignment.CenterVertically
             ){
                 Icon(
